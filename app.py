@@ -47,6 +47,9 @@ except Exception as e:
 # -----------------------------------------------------------------------------
 # Constantes y Rutas de Archivos
 # -----------------------------------------------------------------------------
+app.wsgi_app = ProxyFix(
+    app.wsgi_app, x_for=1, x_host=1, x_proto=1, x_prefix=1
+)
 
 CREDENTIALS_COOKIE = 'google_drive_credentials' # Nombre de la cookie para credenciales de Drive
 CLIENT_SECRETS_FILE = "credenciales.json"      # Archivo de secretos del cliente OAuth 2.0 de Google
@@ -1481,6 +1484,4 @@ def delete_equipo_api():
 if __name__ == '__main__':
     
     app.run(host='0.0.0.0', debug=True)
-    app.wsgi_app = ProxyFix(
-    app.wsgi_app, x_for=1, x_host=1, x_proto=1, x_prefix=1
-)
+    
