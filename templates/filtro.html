@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Buscar Equipo</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles-filtro.css') }}">
+    <link rel="icon" href="{{ url_for('static', filename='images/icono-mv.JPG') }}" type="image/x-icon">
+    {# Asegúrate de que solo haya un enlace a script.js y sea el correcto para Flask #}
+</head>
+<body>
+    {# Wrapper principal para contener y centrar los contenedores hijos #}
+    <div class="wrapper"> 
+
+        {# ========================================= #}
+        {# --- Contenedor Superior: Filtros y Conteo --- #}
+        {# ========================================= #}
+        <div class="container filter-container"> 
+            
+            {# Título principal de la página con icono #}
+            <div class="header-title">
+                <h1><img src="{{ url_for('static', filename='images/icono-mv.JPG') }}" alt="Icono Hospital" class="icono-mv"> ESE SAGRADO CORAZON DE JESUS</h1>
+            </div>
+
+            {# Área para mostrar el conteo de equipos en el formato "Icono Equipos: Encontrados / Totales" #}
+            <div class="equipment-count"> 
+                {# Icono de equipos #}
+                <img src="{{ url_for('static', filename='images/equipo-filtro.svg') }}" alt="Total Equipos" class="count-icon">
+                {# Texto fijo "Equipos:" y los spans con los números pasados por Flask #}
+                Equipos: <span id="filteredEquiposCount">{{ filtered_equipos_count }}</span> / <span id="totalEquiposDisplay">{{ total_equipos_count }}</span> 
+            </div>
+
+            {# Formulario para los inputs de filtro y botón de búsqueda #}
+            {# action apunta a la ruta de filtro y method="get" para enviar params en URL #}
+            {# Cuando se envía este formulario (con method="get"), el navegador navega a la URL con los parámetros #}
+            <form id="filterForm" class="filter-form" action="{{ url_for('filtro') }}" method="get"> 
+                
+                {# Grupo de inputs de filtro, alineados en fila con flexbox #}
+                <div class="form-inputs"> 
+                    <div class="filter-group">
+                        <label for="filterNombre">Nombre:</label>
+                        {# Input de Nombre - Rellenado con el valor actual del filtro pasado por Flask #}
+                        <input type="text" id="filterNombre" name="nombre" value="{{ current_filters.get('nombre', '') }}">
+                    </div>
+                    
+                    {# Campo combinado Marca/Modelo #}
+                    <div class="filter-group">
+                        <label for="filterMarcaModelo">Marca/Modelo:</label>
+                        {# Input para Marca/Modelo con name="marca_modelo" #}
+                        <input type="text" id="filterMarcaModelo" name="marca_modelo" value="{{ current_filters.get('marca_modelo', '') }}">
+                    </div>
+                    
+                    {# Campo Servicio #}
+                    <div class="filter-group">
+                        <label for="filterServicio">Servicio:</label>
+                        {# Input para Servicio con name="service_label" #}
+                        <input type="text" id="filterServicio" name="service_label" value="{{ current_filters.get('service_label', '') }}">
+                    </div>
+                    
+                    <div class="filter-group">
+                        <label for="filterSerie">Serie:</label>
+                        {# Input de Serie - se mantiene con name="serie" #}
+                        <input type="text" id="filterSerie" name="serie" value="{{ current_filters.get('serie', '') }}">
+                    </div>
+                </div>
+                
+                {# Botón para activar la búsqueda - type="submit" enviará el form a la ruta #}
+                <button type="submit" id="searchButton">Buscar</button> 
+                 {# <button type="button" id="clearButton">Limpiar</button> #} {# Opcional: Botón para limpiar filtros (necesita JS o href) #}
+            </form>
+        </div> {# Fin .filter-container #}
+
+        {# ====================================== #}
+        {# --- Contenedor Inferior: Lista Simple --- #}
+        {# ====================================== #}
+        <div class="container list-container"> 
+            <h2>Listado de Equipos</h2>
+            
+            {# Contenedor donde Jinja2 iterará sobre la lista de equipos pasada por Flask #}
+            <div id="equipmentList"> 
+                
+                {# --- INICIO: ITERACIÓN DE LA LISTA DE EQUIPOS PASADA POR FLASK --- #}
+                {# Verificamos si la lista 'equipos' pasada por Flask no está vacía #}
+                {% if equipos %}
+                    {# Iteramos sobre cada diccionario 'equipo' en la lista 'equipos' #}
+                    {% for equipo in equipos %}
+                        {# Creamos la estructura HTML para cada ítem, usando los datos del diccionario 'equipo' #}
+                        {# El atributo data-id es útil para JS, contiene el ID de Drive del equipo #}
+                        <div class="equipment-item" data-id="{{ equipo.get('drive_id') }}"> 
+                            <div class="equipment-details">
+                                {# Mostramos los detalles principales del equipo usando los keys del diccionario. Usar .get() es seguro. #}
+                                <p><strong>Nombre:</strong> {{ equipo.get('nombre', 'N/A') }}</p>
+                                {# Muestra Marca/Modelo del JSON #}
+                                <p><strong>Marca/Modelo:</strong> {{ equipo.get('marca_modelo', 'N/A') }}</p> 
+                                <p><strong>Serie:</strong> {{ equipo.get('serie', 'N/A') }}</p>
+                                {# Muestra Ubicación del JSON #}
+                                <p><strong>Ubicación:</strong> {{ equipo.get('ubicacion', 'N/A') }}</p>
+                                <p><strong>Dependencia:</strong> {{ equipo.get('dependencia', 'N/A') }}</p> 
+                                {# Opcional: añadir más detalles si están en tu JSON #}
+                                {# Muestra la etiqueta del servicio JSON si quieres, aunque el filtro sea por Dependencia si ese campo está en el JSON #}
+                                {# <p><small>Servicio (JSON): {{ equipo.get('service_label', 'N/A') }}</small></p> #} 
+                                {# Quitado visualmente el ID de Drive según tu solicitud #}
+                                {# <p><small>ID Drive: {{ equipo.get('drive_id', 'N/A') }}</small></p> #} 
+                            </div>
+                            {# Contenedor para los botones - Apilados verticalmente por CSS y con mismo ancho #}
+                            <div class="equipment-actions">
+                                {# Botón "Ver documentación" - Necesita JS para navegar a la URL de la carpeta de Drive usando el data-id del padre #}
+                                <button class="access-button view-docs-button">Ver documentación</button> 
+                                {# Botón "Realizar mantenimiento" - Necesita JS para navegar a /Mantenimiento/drive_id #}
+                                <button class="access-button maintenance-button">Realizar mantenimiento</button> 
+                            </div>
+                        </div>
+                    {% endfor %}
+                {# --- FIN: ITERACIÓN DE LA LISTA --- #}
+
+                {% else %} {# Si la lista 'equipos' pasada por Flask está vacía #}
+                    {# Mensaje que se muestra si no hay equipos en la lista filtrada #}
+                    {# Ponemos display: block para anular el display: none del CSS si Jinja2 lo renderiza #}
+                    <div id="noResultsMessage" style="display: block; text-align: center; color: #888; margin-top: 20px;">
+                        {% if current_filters.values() | join('') | length > 0 %}
+                            {# Si hay filtros aplicados (algún valor no vacío en current_filters) #}
+                            No se encontraron equipos que coincidan con la búsqueda.
+                        {% else %}
+                            {# Si no hay filtros aplicados (es la carga inicial o filtros vacíos) #}
+                            {# Y la lista equipos está vacía, significa que no hay datos en el JSON o falló la carga #}
+                            No se encontraron equipos en el inventario. Verifique el archivo JSON o la carga.
+                        {% endif %}
+                    </div>
+                {% endif %}
+
+            </div> {# Fin #equipmentList #}
+
+        </div> {# Fin .list-container #}
+    </div> {# Fin .wrapper #}
+
+    {# Script de JavaScript que maneja la lógica del cliente #}
+    {# Ahora el JS no necesita cargar/filtrar datos si el backend lo hace #}
+    {# Su tarea es manejar clics de botones y opcionalmente ajustar el comportamiento del formulario #}
+    {# Debe estar al final del body o usar 'defer' #}
+    <script src="{{ url_for('static', filename='js/script-filtro.js') }}" defer> </script> 
+
+    <!-- Botón flotante -->
+    <button class="btn-add-inside" onclick="toggleMenu()">+</button>
+
+    <!-- Menú desplegable -->
+    <div id="menuOpciones" class="menu-opciones">
+        <a href="{{ url_for('formato_mantenimiento') }}" class="menu-opcion" target="_blank" rel="noopener noreferrer">Formato mantenimiento</a>
+        <a href="/logout" class="menu-opcion">Cerrar Sesión</a>
+    </div>
+</body>
+    
+</html>

@@ -1,0 +1,387 @@
+body {
+    font-family: sans-serif;
+    margin: 0;
+    padding: 0;
+}
+
+@page {
+    size: 13in 22in; /* Tamaño tabloide (11x17 pulgadas) */
+    margin: 5mm;
+    margin-top: 30mm;
+    margin-bottom: 10mm;
+    
+}
+@media print {
+    .no-print {
+        display: none !important;
+    }
+    #formPreventivo, #formCorrectivo {
+        width: 80% !important;
+    }
+    
+}
+
+/* Contenedor Principal */
+#tipoMantenimientoContainer {
+    background: #e9f5e9;
+    padding: 20px;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    margin: 20px auto;
+    width: 64%;
+    height: 80%;
+    box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.2);
+    text-align: center;
+}
+
+/* Selector de Mantenimiento */
+#tipoMantenimiento {
+    width: 100%;
+    padding: 10px;
+    margin-top: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 16px;
+    
+}
+
+/* Formularios */
+#formPreventivo, #formCorrectivo {
+    background: #f0f8ff;
+    padding: 50px;
+    padding-bottom: 20px;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    margin-top: 100px;
+    width: 60%;
+    margin: auto;
+    box-shadow: 0px 4px 20px rgba(0, 0, 0, 0.5);
+    display: flex;
+    margin-bottom: 20px;
+}
+
+#preview {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    justify-content: center; /* Centra horizontalmente */
+    align-items: center; /* Centra verticalmente */
+}
+/* Encabezado */
+header {
+    display: flex;
+    align-items: center;
+    border-bottom: 2px solid #ddd;
+    padding-bottom: 10px;
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+/* Icono */
+.icono {
+    width: 25%;
+    margin-right: 25px;
+    max-width: 200px;
+    border-radius: 8px;
+}
+
+/* Descripción */
+.descripcion h1 {
+    font-size: 30px;
+    margin: 0;
+}
+
+.descripcion p {
+    font-size: 20px;
+    color: #555;
+}
+
+/* Secciones */
+section {
+    margin-bottom: 15px;
+    padding-right: 20px;
+}
+
+/* Títulos */
+h2 {
+    font-size: 16px;
+    margin-bottom: 10px;
+    color: #333;
+}
+
+/* Etiquetas */
+label {
+    display: block;
+    margin-bottom: 5px;
+}
+
+/* Inputs y Textareas */
+input, textarea {
+    width: 100%;
+    padding: 8px;
+    margin-top: 5px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    box-sizing: border-box;
+}
+
+textarea {
+    resize: vertical;
+    resize: none;
+    min-height: 100px;
+}
+
+/* Checklist */
+.checklist {
+
+    text-align: left;
+    margin-bottom: 30px;
+}
+
+.checklist h2 {
+    text-align: center;
+}
+
+.checklist-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: left;
+}
+
+.checklist label {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    margin-bottom: 12px;
+}
+
+.checklist input[type="checkbox"] {
+    flex-shrink: 0; /* Impide que el checkbox se reduzca */
+    width: 20px;
+    height: 20px;
+}
+
+
+/* Contenedor Principal de las Firmas */
+.Firmas {
+    display: flex;
+    flex-direction: row; /* Organiza las firmas en una fila */
+    flex-wrap: wrap; /* Permite que pasen a la siguiente línea si no caben */
+    justify-content: center; /* Centra los elementos */
+    align-items: flex-start; /* Alinea al inicio */
+    width: 95%;
+    max-width: 800px; /* Ajusta el ancho para una mejor visualización */
+    gap: 30px; /* Espacio entre las firmas */
+    margin: 0px auto;
+
+    
+}
+
+/* Estilos para cada firma */
+.firma {
+    
+    flex: 1 1 40%; /* Flex ajustado para que ocupe un 45% del contenedor */
+    border: 1px solid #ccc;
+    padding: 15px;
+    border-radius: 8px;
+    background-color: #fff;
+    text-align: center;
+    max-width: 600px; /* Evita que las firmas sean muy anchas */
+    box-sizing: border-box; /* Asegura que el padding no afecte el tamaño */
+}
+
+/* Ajuste para imágenes dentro de las firmas */
+.firma-box img {
+    max-width: 80%;
+    height: auto;
+    border-radius: 8px;
+  
+}
+
+
+/* Responsivo: en pantallas pequeñas, las firmas se apilan */
+@media (max-width: 600px) {
+    .Firmas {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .firma {
+        width: 90%;
+        max-width: 600px;
+    }
+}
+
+.firma h3 {
+    font-size: 1.2em;
+    margin-bottom: 8px;
+}
+
+.firma input {
+    width: 100%;
+    padding: 6px;
+    margin-bottom: 8px;
+    border: 1px solid #aaa;
+    border-radius: 4px;
+    font-size: 0.9em;
+}
+
+
+#firmaCanvas {
+    width: 100%;
+    height: 150px;
+    border: 1px solid #ccc;
+    background: #fff;
+    border-radius: 8px;
+    cursor: crosshair;
+}
+
+#firmaCanvasCorrectivo, #firmaCanvasPreventivo {
+    width: 100%;
+    height: 150px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+}
+
+/* Caja de Firma */
+.firma-box {
+    width: 100%;
+    height: 150px;
+    background: #fff;
+    border-radius: 8px;
+    cursor: crosshair;
+    padding-bottom: 5.6px;
+    border: 1px solid #ccc;
+}
+
+
+
+.botones-firma {
+    display: flex;
+    flex-wrap: wrap;  /* Permite que los botones se acomoden si no caben */
+    justify-content: center;  
+    gap: 8px;  /* Reduce el espacio entre botones */
+    margin-top: 10px;
+}
+
+.btn-firma {
+    flex: 1 1 auto;  /* Hace que los botones se ajusten al espacio disponible */
+    padding: 6px 10px;  /* Reduce el tamaño del botón */
+    background-color: #007bff;  
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 14px;  /* Reduce ligeramente el tamaño del texto */
+    min-width: 80px;  /* Evita que los botones sean demasiado pequeños */
+    max-width: 120px; /* Evita que los botones sean demasiado grandes */
+    text-align: center;
+}
+
+.btn-firma:hover {
+    background-color: #0056b3;
+}
+
+.btn-firma:disabled {
+    background-color: #ccc;
+    cursor: not-allowed;
+}
+
+.btn-eliminar-archivo {
+    display: none;
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    background-color: red;
+    color: white;
+    border: none;
+    border-radius: 50%;
+    width: 24px;
+    height: 24px;
+    cursor: pointer;
+    z-index: 2;
+  }
+  
+/* Responsivo: si la pantalla es muy pequeña, los botones se apilan */
+@media (max-width: 400px) {
+    .botones-firma {
+        flex-direction: column;
+        display: inline-block;
+        display: flex;              /* Activa flexbox */
+        justify-content: center;    /* Centra horizontalmente */
+        align-items: center;        /* Centra verticalmente si das altura */
+        gap: 0.5rem;                  /* Espacio entre botones */
+        flex-wrap: wrap;            /* Permite que bajen si no caben */
+        margin-top: 2rem;           /* separarlo del contenido superior */
+    }
+    
+    .btn-firma {
+        width: 100%;
+    }
+    
+}
+
+/* Imagen dentro de la firma */
+.firma-box img {
+    border-radius: 8px;
+    width: 100%;
+    height: 100%;
+    
+}
+
+/* Botones para enviar registro */
+button {
+    
+    width: 100%;
+    padding: 10px;
+    background: #28a745;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+button:hover {
+    background: #218838;
+}
+
+/* Tipo de mantenimiento */
+.tipo-mantenimiento {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.tipo-mantenimiento label {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 16px;
+}
+
+.tipo-mantenimiento input[type="radio"] {
+    width: 18px;
+    height: 18px;
+    accent-color: #28a745;
+}
+
+/* Solo para pantallas */
+@media screen and (max-width: 768px) {
+    #tipoMantenimientoContainer, #formPreventivo, #formCorrectivo {
+        width: 80%;
+        padding: 20px;
+    }
+
+    header {
+        flex-direction: column;
+        text-align: center;
+    }
+
+    .icono {
+        margin: 0 0 15px 0;
+        width: 50%;
+    }
+}
+
+

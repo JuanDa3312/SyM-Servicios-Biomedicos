@@ -1,0 +1,605 @@
+{
+    "AMBULANCIAS": {
+        "10dm8y0llZo8bxkcCJfQDn8yZXzdEXtUm": {
+            "nombre": "TENSIÓMETRO PORTÁTIL ADULTO JKX 755",
+            "dependencia": "URGENCIAS / AMBULANCIA",
+            "marca_modelo": "ALPK2 / ADULTO",
+            "serie": "NO VISIBLE",
+            "ubicacion": "MÓVIL JKX 755"
+        },
+        "10d_i6D_VI_MIiE2yv_J9TVFDbKlJ99o1": {
+            "nombre": "MONITOR SIGNOS VITALES",
+            "dependencia": "URGENCIAS / AMBULANCIA",
+            "marca_modelo": "AEDAN/M-50",
+            "serie": "333123-m1560830074",
+            "ubicacion": "MÓVIL JKX 755"
+        },
+        "10q6pNiQweGTTvxdtCfrJJ9Yd0A4TPF6W": {
+            "nombre": "SUCCIONADOR",
+            "dependencia": "URGENCIAS / AMBULANCIA",
+            "marca_modelo": "ASPIRET/CA-MI",
+            "serie": "94558",
+            "ubicacion": "MÓVIL JKX 755"
+        }
+    },
+    "CITOLOGIA": {
+        "10tbAqB6NxG9Mjldy9P7P5sz1Z-NvHkQW": {
+            "nombre": "BALANZA CON TALLIMETRO DIGITAL",
+            "dependencia": "SALA DE PARTOS",
+            "marca_modelo": "HEALT O METER / 544KL",
+            "serie": "4020046734",
+            "ubicacion": "CITOLOGIA"
+        },
+        "10uRICyJaJ1qlTWW4qA7pz1kqiqiMLvfh": {
+            "nombre": "ECCOGRAFO",
+            "dependencia": "SALA DE PARTOS",
+            "marca_modelo": "MINDRAY / C70",
+            "serie": "CJ1-86000053",
+            "ubicacion": "CITOLOGIA"
+        }
+    },
+    "CONSULTA EXTERNA": {
+        "1-_vW-AL5hlwX7rv3_VgbZYdgARVlfjtU": {
+            "nombre": "BALANZA CON TALLIMETRO DIGITAL",
+            "dependencia": "CONSULTA EXTERNA",
+            "marca_modelo": "HEALT O METER / 597KL",
+            "serie": "597t009292",
+            "ubicacion": "CONSULTORIO 1"
+        },
+        "10DPo5WCccxlACLL5dORunvPrslmbXSOA": {
+            "nombre": "BALANZA CON TALLIMETRO DIGITAL",
+            "dependencia": "CONSULTA EXTERNA",
+            "marca_modelo": "HEALT O METER / 597K",
+            "serie": "597T009486",
+            "ubicacion": "CONSULTORIO II"
+        },
+        "108yEmASMQ1bZfO5d9dMnNPjXnwAqbTfh": {
+            "nombre": "BALANZA CON TALLIMETRO DIGITAL",
+            "dependencia": "CONSULTA EXTERNA",
+            "marca_modelo": "HEALT O METER / 597K",
+            "serie": "597T009431",
+            "ubicacion": "CONSULTORIO III"
+        },
+        "108ngqVw1HS1fd97y142MxC5xg8oPB2Ic": {
+            "nombre": "BALANZA CON TALLIMETRO DIGITAL",
+            "dependencia": "CONSULTA EXTERNA",
+            "marca_modelo": "HEALT O METER / 597K",
+            "serie": "597T009336",
+            "ubicacion": "P&P"
+        },
+        "108U8wBgDRuAdyQHQwJ0hh4u-j5BdPUhX": {
+            "nombre": "BALANZA CON TALLIMETRO DIGITAL",
+            "dependencia": "CONSULTA EXTERNA",
+            "marca_modelo": "HEALT O METER / 597K",
+            "serie": "597T009431",
+            "ubicacion": "P&P"
+        },
+        "106NlBjnemaZ93UY988OdHHvcVYqA3dWn": {
+            "nombre": "BALANZA CON TALLIMETRO DIGITAL",
+            "dependencia": "CONSULTA EXTERNA",
+            "marca_modelo": "HEALT O METER / 597KL",
+            "serie": "597t009510",
+            "ubicacion": "P&P"
+        },
+        "106-VC5ukvd47l6CwzePDWBcEKM2ndRR8": {
+            "nombre": "BALANZA MECANICA",
+            "dependencia": "CONSULTA EXTERNA",
+            "marca_modelo": "KENWELL / 140Kl",
+            "serie": "NO VISIBLE",
+            "ubicacion": "P&P"
+        },
+        "1001KqgbOmodKceU4_kQ15v7eRV7w0g2I": {
+            "nombre": "PESA BEBE",
+            "dependencia": "CONSULTA EXTERNA",
+            "marca_modelo": "HEALT O METER / 386-01",
+            "serie": "389003322",
+            "ubicacion": "CONSULTORIO ROSA"
+        },
+        "1Wy2zzhGxlkK2M7CcVPcQJqDwOwRADgi4": {
+            "nombre": "EQUIPO DE ORGANOS DE PARED",
+            "dependencia": "CONSULTA EXTERNA",
+            "marca_modelo": "WELCH ALLYN / GS 777 TRANSFORMER",
+            "serie": "17345",
+            "ubicacion": "CONSULTORIO 5 "
+        },
+        "1JJMQL6TzFdueWblBNzobuSTpk3-26joF": {
+            "nombre": "EQUIPO DE ORGANOS DE PARED",
+            "dependencia": "CONSULTA EXTERNA",
+            "marca_modelo": "WELCH ALLYN / GS 777 TRANSFORMER",
+            "serie": "17341",
+            "ubicacion": "CONSULTORIO 1 "
+        },
+        "1ojTVRTEXNR-kx6VcLOCVMiU8cYAngXNY": {
+            "nombre": "EQUIPO DE ORGANOS DE PARED",
+            "dependencia": "CONSULTA EXTERNA",
+            "marca_modelo": "WELCH ALLYN / GS 777 TRANSFORMER",
+            "serie": "000593",
+            "ubicacion": "CONSULTORIO 2 "
+        },
+        "1BF8pl2QhsceeMsTaO0Llhi-UWOUcG3vk": {
+            "nombre": "EQUIPO DE ORGANOS DE PARED",
+            "dependencia": "CONSULTA EXTERNA",
+            "marca_modelo": "WELCH ALLYN / GS 777 TRANSFORMER",
+            "serie": "17346",
+            "ubicacion": "CONSULTORIO 4 "
+        },
+        "1zrpCnxHKLfyPwPh7Zu64dFupmA9rLrQ4": {
+            "nombre": "EQUIPO DE ORGANOS DE PARED",
+            "dependencia": "CONSULTA EXTERNA",
+            "marca_modelo": "WELCH ALLYN / GS 777 TRANSFORMER",
+            "serie": "000559",
+            "ubicacion": "CONSULTORIO ROSA"
+        },
+        "178bC0AUnYOV6m5ky3cSZI3wVC-FzwNSn": {
+            "nombre": "EQUIPO DE ORGANOS DE PARED",
+            "dependencia": "CONSULTA EXTERNA",
+            "marca_modelo": "WELCH ALLYN / GS 777 TRANSFORMER",
+            "serie": "HSCJUR3",
+            "ubicacion": "CONSULTORIO 3 "
+        },
+        "1-wWdS_hFkeX6Mrty2rpVvs-CWSY8Qf1V": {
+            "nombre": "LAMPARA DE EXAMEN",
+            "dependencia": "CONSULTA EXTERNA",
+            "marca_modelo": "WELCH ALLYN / SERIE GS 300",
+            "serie": "HSCJUR3",
+            "ubicacion": "P&P"
+        },
+        "1-rAHookI9thL0CQUTxdWezx98aT6p1P1": {
+            "nombre": "TENSIOMETRO",
+            "dependencia": "CONSULTA EXTERNA",
+            "marca_modelo": "RIESTER / BIG BEN SCUARE PARED",
+            "serie": "160242317",
+            "ubicacion": "P&P"
+        },
+        "1-keeB0g0oUOwMSUuJFTEd8UtiwDTQEZR": {
+            "nombre": "TENSIOMETRO",
+            "dependencia": "CONSULTA EXTERNA",
+            "marca_modelo": "RIESTER / BIG BEN SCUARE PARED",
+            "serie": "160242299",
+            "ubicacion": "P&P CONSULTORIO 2"
+        },
+        "1-jiUX-bqqef7iaz8x7rHZiXsmM6Xr4am": {
+            "nombre": "TENSIOMETRO",
+            "dependencia": "CONSULTA EXTERNA",
+            "marca_modelo": "RIESTER / BIG BEN SCUARE PARED",
+            "serie": "170340213",
+            "ubicacion": "P&P CONSULTORIO 3"
+        },
+        "1-dNamE1vRS3yr-j-gvnYkXi59mxjdTvR": {
+            "nombre": "TENSIOMETRO",
+            "dependencia": "CONSULTA EXTERNA",
+            "marca_modelo": "GMD / PORTATIL",
+            "serie": "NO VISIBLE",
+            "ubicacion": "P&P"
+        }
+    },
+    "ESTERILIZACIÓN": {
+        "111Zkow2_jH386DFFOQt_fxDluHEc4P7f": {
+            "nombre": "AUTOCLAVE",
+            "dependencia": "ESTERILIZACION",
+            "marca_modelo": "AUTOMAT / 1800-S",
+            "serie": "1800-0109",
+            "ubicacion": "PROCEDIMIENTOS"
+        },
+        "118lhipeebvu7yCrY_pIFoZD3dJc626W2": {
+            "nombre": "AUTOCLAVE",
+            "dependencia": "ESTERILIZACION",
+            "marca_modelo": "AUTOMAT / 1800-S",
+            "serie": "1800-0107",
+            "ubicacion": "PROCEDIMIENTOS"
+        }
+    },
+    "HOSPITALIZACIÓN": {
+        "11NdgVAa9CMw_k_7_s_U23Cq34qJv0SBw": {
+            "nombre": "BOMBA DE INFUSIÓN",
+            "dependencia": "HOSPITALIZACION",
+            "marca_modelo": "SK / SK 600II",
+            "serie": "70400195",
+            "ubicacion": "ENFERMERIA"
+        },
+        "11yYmfDw_jX-b7dqP2nG7opnflFp4LIvd": {
+            "nombre": "BOMBA DE INFUSIÓN",
+            "dependencia": "HOSPITALIZACION",
+            "marca_modelo": "SK / SK 600II",
+            "serie": "70400193",
+            "ubicacion": "ENFERMERIA HOPS I"
+        },
+        "11wfVzPgzTksisJ74543ZxTb6kh1CyHE7": {
+            "nombre": "BOMBA DE INFUSIÓN",
+            "dependencia": "HOSPITALIZACION",
+            "marca_modelo": "SK / SK 600II",
+            "serie": "70400189",
+            "ubicacion": "ENFERMERIA HOSP II"
+        },
+        "11kvSyQfIl6DCCsuori7bIWKkK6UjQWTq": {
+            "nombre": "BOMBA DE INFUSIÓN",
+            "dependencia": "HOSPITALIZACION",
+            "marca_modelo": "SK / SK 600II",
+            "serie": "70400192",
+            "ubicacion": "ENFERMERIA HOSP III"
+        },
+        "11_IYtaISJ3x9mUZhI7MKiVZyrLgghM_z": {
+            "nombre": "BOMBA DE INFUSIÓN",
+            "dependencia": "HOSPITALIZACION",
+            "marca_modelo": "MEDCAPTAIN / SYS 600",
+            "serie": "601015090821",
+            "ubicacion": "ENFERMERIA"
+        },
+        "11QXLYRLYi-yYZ7rTtDy_tgXyGadZyxwe": {
+            "nombre": "BOMBA DE INFUSIÓN",
+            "dependencia": "HOSPITALIZACION",
+            "marca_modelo": "NIPRO / SUREFUSION",
+            "serie": "08B0210AS",
+            "ubicacion": "ENFERMERIA"
+        },
+        "11OpZs5tHEL3vb1aiJQ2g2BVqlGOkET2T": {
+            "nombre": "TENSIOMETRO",
+            "dependencia": "HOSPITALIZACION",
+            "marca_modelo": "GMD / ADULTO",
+            "serie": "NO VISIBLE",
+            "ubicacion": "ENFERMERIA"
+        }
+    },
+    "LABORATORIO": {
+        "1-KdjZ0M3cIkk9PE8F-twDpL6qFFY0qft": {
+            "nombre": "AGITADOR DE MAZZINI",
+            "dependencia": "LABORATORIO",
+            "marca_modelo": "INDULAB / TA-09",
+            "serie": "14944",
+            "ubicacion": "CENTRIFUGACION"
+        },
+        "1DbAhspgmFLbX8qjEbs0KCYxftwVI5aLX": {
+            "nombre": "ANALIZADOR DE HEMATOLOGIA",
+            "dependencia": "LABORATORIO",
+            "marca_modelo": "MINDRAY / BC - 30S",
+            "serie": "TH-12009125",
+            "ubicacion": "LABORATORIO"
+        },
+        "1-TOsXA7kVd1Y8g6pdwj2IlXQrTjzD8n6": {
+            "nombre": "ANALIZADOR DE QUIMICA",
+            "dependencia": "LABORATORIO",
+            "marca_modelo": "BIOSYSTEMS / A-15",
+            "serie": "831054636",
+            "ubicacion": "LABORATORIO"
+        },
+        "1-BnDuXfqtMD576o-3S6l1LOthxdRko39": {
+            "nombre": "BAÑO SEROLOGICO",
+            "dependencia": "LABORATORIO",
+            "marca_modelo": "MEMMETT/W270",
+            "serie": "860342",
+            "ubicacion": "QUIMICA SANGUINEA"
+        },
+        "1-P28HLa51Il24VZkZaR8z8FVkCkOqUTh": {
+            "nombre": "CENTRIFUGA",
+            "dependencia": "LABORATORIO",
+            "marca_modelo": "INDULAB / C-04",
+            "serie": "13196",
+            "ubicacion": "TOMA DE MUESTRAS"
+        },
+        "1-IMPLXI8rUSwoCpiOtyYGBxWrnafWBY8": {
+            "nombre": "MICROCENTRIFUGA",
+            "dependencia": "LABORATORIO",
+            "marca_modelo": "INDULAB / CT1-D",
+            "serie": "13197",
+            "ubicacion": "CENTRIFUGACION"
+        },
+        "1-PFIjJeHK6DK8nMc-BVpq9zAWnWymx7m": {
+            "nombre": "MICROSCOPIO",
+            "dependencia": "LABORATORIO",
+            "marca_modelo": "OLYMPUS / X21FS1",
+            "serie": "OE86249",
+            "ubicacion": "LABORATORIO"
+        },
+        "1-0HAwJFzcsl1A61EIj8TJ9_Fz9feU8uy": {
+            "nombre": "PIPETA",
+            "dependencia": "LABORATORIO",
+            "marca_modelo": "DLAB / 100-1000μl",
+            "serie": "YM214AM0020380",
+            "ubicacion": "HEMATOLOGIA"
+        },
+        "1-0IbgW7nSRYJ4mBKHc3kQ1yuZBGGDo73": {
+            "nombre": "PIPETA",
+            "dependencia": "LABORATORIO",
+            "marca_modelo": "BOECO / 5-50μl",
+            "serie": "0B1112123",
+            "ubicacion": "HEMATOLOGIA"
+        },
+        "1-4W96IRa-F5w6k6Y-lhg0X4wyGeNL53L": {
+            "nombre": "TERMOHIGOMETRO DIGITAL",
+            "dependencia": "LABORATORIO",
+            "marca_modelo": "HALTHEN / HTC - 2",
+            "serie": "24220",
+            "ubicacion": "REACTIVOS"
+        }
+    },
+    "ODONTOLOGIA": {
+        "10IlOXUDp3uIE1C28CsJl6xdgYgKOh2GK": {
+            "nombre": "BALANZA CON TALLIMETRO DIGITAL",
+            "dependencia": "ODONTOLOGIA",
+            "marca_modelo": "HEALT O METER / 597KL",
+            "serie": "5971009337",
+            "ubicacion": "RECEPCION PACIENTE"
+        },
+        "10cB0kShaaeBGcRdXoZs2KmG_IgyRjeJ0": {
+            "nombre": "COMPRESOR",
+            "dependencia": "ODONTOLOGIA",
+            "marca_modelo": "SCHULTZ / CSD5",
+            "serie": "3569912",
+            "ubicacion": "PATIO"
+        },
+        "10Z4jGgDD28LQC5DbGx5cW59_yzKaMmgL": {
+            "nombre": "LAMPARA DE FOTOCURADO",
+            "dependencia": "ODONTOLOGIA",
+            "marca_modelo": "CURING LIGHT / B CURE",
+            "serie": "L1980494BC",
+            "ubicacion": "CONSULTORIOS"
+        },
+        "10XPOhoHj99ntiW4EwgB-7UTEVbjwngHh": {
+            "nombre": "PERIAPICAL",
+            "dependencia": "ODONTOLOGIA",
+            "marca_modelo": "FIAD / ELITY 70",
+            "serie": "70M1-110-110V",
+            "ubicacion": "CONSULTORIOS"
+        },
+        "10VZVL0RVpa84E8u0h3RITkZixZogi_NB": {
+            "nombre": "TERMOHIGOMETRO DIGITAL",
+            "dependencia": "ODONTOLOGIA",
+            "marca_modelo": "HALTHEN / TTH-002",
+            "serie": "24209",
+            "ubicacion": "RX"
+        },
+        "10TAC8WqaG8stp4PugoB6YK8R_mjo6_wO": {
+            "nombre": "UNIDAD ODONTOLOGICA",
+            "dependencia": "ODONTOLOGIA",
+            "marca_modelo": "TEXVO / ESTÁNDAR",
+            "serie": "17146",
+            "ubicacion": "CONSULTORIO 1"
+        },
+        "10OBXZYu5FWZezqRMgPn8bSRtseqtA5Pu": {
+            "nombre": "UNIDAD ODONTOLOGICA",
+            "dependencia": "ODONTOLOGIA",
+            "marca_modelo": "TEXVO / ESTÁNDAR",
+            "serie": "17149",
+            "ubicacion": "CONSULTORIO 2"
+        }
+    },
+    "PARTOS": {
+        "11zsPpcH67UfHq2sIh_W90nybiwzmVkZQ": {
+            "nombre": "PESA BEBE",
+            "dependencia": "PARTOS",
+            "marca_modelo": "DETECTO / 20KLS",
+            "serie": "NO VISIBLE",
+            "ubicacion": "SALA DE PARTOS"
+        },
+        "12K5tY40Qmm3xIP-phlhpy1d0ETZCO2iu": {
+            "nombre": "BOMBA DE INFUSIÓN",
+            "dependencia": "PARTOS",
+            "marca_modelo": "MEDCAPTAIN / SYS 600",
+            "serie": "NO VISIBLE",
+            "ubicacion": "PROCEDIMIENTOS"
+        },
+        "12T4ArU0oBel92UlgcTx_RAymci5TQ5xk": {
+            "nombre": "DOPLER FETAL",
+            "dependencia": "PARTOS",
+            "marca_modelo": "EDAN / SONOTRAX",
+            "serie": "560042-M19C13860021",
+            "ubicacion": "PROCEDIMIENTOS"
+        },
+        "12U69mei2iJ98p87gE-eYpqZCoBgmVBOW": {
+            "nombre": "LAMPARA DE PIELITICA",
+            "dependencia": "PARTOS",
+            "marca_modelo": "SURGI / 229",
+            "serie": "NO VISIBLE",
+            "ubicacion": "SALA DE PARTOS"
+        },
+        "12WQbbA8xRM59cYnynuX-ZtriDpYV0dww": {
+            "nombre": "MONITOR SIGNOS VITALES",
+            "dependencia": "PARTOS",
+            "marca_modelo": "EDAN / IM 8",
+            "serie": "360001-M120421940046",
+            "ubicacion": "PROCEDIMIENTOS"
+        },
+        "12XFTI9wVAyZsIbkKSSbj-kQpyj0D_AGi": {
+            "nombre": "ECCOGRAFO",
+            "dependencia": "PARTOS",
+            "marca_modelo": "MINDRAY / DP 6900",
+            "serie": "Nk-38002063",
+            "ubicacion": "OBSERVACION"
+        },
+        "12ZVN4ZArwPrf4SioEmki6ZHyjnSNU-N7": {
+            "nombre": "SUCCIONADOR",
+            "dependencia": "PARTOS",
+            "marca_modelo": "ASPIRET / CA-MI",
+            "serie": "6287191",
+            "ubicacion": "PROCEDIMIENTOS"
+        },
+        "12ZvUNWjFth3rFoFWOK7wST7QlNbhFRau": {
+            "nombre": "SUCCIONADOR",
+            "dependencia": "PARTOS",
+            "marca_modelo": "SMAF / SXT 5A",
+            "serie": "6M0409483",
+            "ubicacion": "PROCEDIMIENTOS"
+        },
+        "12GV7QHcgP4753Fw_VipLFFtPbCAYr3vo": {
+            "nombre": "TERMOHIGOMETRO DIGITAL",
+            "dependencia": "PARTOS",
+            "marca_modelo": "GREN TECH / HTC - 2",
+            "serie": "6M0409483",
+            "ubicacion": "SALA DE PARTOS"
+        },
+        "12_XlgChu8cgSFNAtunC3zramY3XSfqzA": {
+            "nombre": "BALANZA CON TALLIMETRO DIGITAL",
+            "dependencia": "PARTOS",
+            "marca_modelo": "GREN TECH / HTC - 2",
+            "serie": "NO VISIBLE",
+            "ubicacion": "SALA DE PARTOS"
+        }
+    },
+    "RX": {
+        "12c3q-Lqxe1DhrvET_xRhk_47CyJEunAq": {
+            "nombre": "RAYOS X",
+            "dependencia": "RX",
+            "marca_modelo": "TEC RAD / C-10",
+            "serie": "108",
+            "ubicacion": "RAYOS X"
+        }
+    },
+    "URGENCIAS": {
+        "12f2fYsM6EIHPQW8iYpQr_4oSGb4Sm7VJ": {
+            "nombre": "BALANZA CON TALLIMETRO DIGITAL",
+            "dependencia": "URGENCIAS",
+            "marca_modelo": "HEALT O METER / 597KL",
+            "serie": "E02815-0163",
+            "ubicacion": "CONSULTORIO I"
+        },
+        "12tsIDOmmsU_reO1dN230Z8Si9x_GZiL_": {
+            "nombre": "BALANZA CON TALLIMETRO DIGITAL",
+            "dependencia": "URGENCIAS",
+            "marca_modelo": "HEALT O METER / 597KL",
+            "serie": "597t009290",
+            "ubicacion": "CONSULTORIO II"
+        },
+        "13q9fLVe9fU5ai8KGq5C4zzjp1WBMB7yY": {
+            "nombre": "BALANZA CON TALLIMETRO DIGITAL",
+            "dependencia": "URGENCIAS",
+            "marca_modelo": "HEALT O METER / 597KL",
+            "serie": "E09911-00921",
+            "ubicacion": "CONSULTORIO III"
+        },
+        "13vPLPlQe5s9LG18MUKNKd83qhzG9icqw": {
+            "nombre": "BALANZA MECANICA",
+            "dependencia": "URGENCIAS",
+            "marca_modelo": "KENWELL / 160Kl",
+            "serie": "NO VISIBLE",
+            "ubicacion": "CONSULTORIO I"
+        },
+        "13udwR82aGZp3t9Ae7S8vC8F6YY7-H5jy": {
+            "nombre": "BALANZA MECANICA",
+            "dependencia": "URGENCIAS",
+            "marca_modelo": "KENWELL / 160Kl",
+            "serie": "NO VISIBLE",
+            "ubicacion": "CONSULTORIO II"
+        },
+        "145yn4AMOM_7F3e5vjIKGjRvnGmGvy1pv": {
+            "nombre": "BOMBA DE INFUSIÓN",
+            "dependencia": "URGENCIAS",
+            "marca_modelo": "SK / SK 600II",
+            "serie": "70400188",
+            "ubicacion": "OBSERVACION"
+        },
+        "13y0PQzCdOO7EX64erdMIaoaXWlbSzLOb": {
+            "nombre": "BOMBA DE INFUSIÓN",
+            "dependencia": "URGENCIAS",
+            "marca_modelo": "SK / SK 600II",
+            "serie": "70400196",
+            "ubicacion": "OBSERVACION II"
+        },
+        "12haY-oN6w_Raa_gwVu73EZSNZkNdda09": {
+            "nombre": "DESFRIBILADOR",
+            "dependencia": "URGENCIAS",
+            "marca_modelo": "MINDRAY / BENEHEAT D3",
+            "serie": "EL-66027321",
+            "ubicacion": "REANIMACION"
+        },
+        "12jPIe7_m4awKbZ6pQbSpdmH6k0QowdKK": {
+            "nombre": "ELECTROCARDIOGRAFO",
+            "dependencia": "URGENCIAS",
+            "marca_modelo": "EDAN / SE-3",
+            "serie": "M22609540049",
+            "ubicacion": "OBSERVACION"
+        },
+        "12pBcsEMXv3m4fYpvvSlRUVX-AoQma0in": {
+            "nombre": "MONITOR SIGNOS VITALES",
+            "dependencia": "URGENCIAS",
+            "marca_modelo": "MINDRAY / M 12",
+            "serie": "Ev35004941",
+            "ubicacion": "OBSERVACION"
+        },
+        "12x0zYzApsM5K8GyYPRIemiSbLPE1jEWv": {
+            "nombre": "BALANZA PESA BEBE",
+            "dependencia": "URGENCIAS",
+            "marca_modelo": "HEALT METER / 386K65-01",
+            "serie": "3860003300",
+            "ubicacion": "OBSERVACION"
+        },
+        "130n80laa9gjKcMiwoZKm4PcM5X_xu3KB": {
+            "nombre": "PULSO OXIMETRO",
+            "dependencia": "URGENCIAS",
+            "marca_modelo": "DRIVE / 18705",
+            "serie": "6M91094-0605",
+            "ubicacion": "OBSERVACION"
+        },
+        "1387UN8dC8P9pKFx917TXVOXBx5KdNvn8  ": {
+            "nombre": "SUCCIONADOR",
+            "dependencia": "URGENCIAS",
+            "marca_modelo": "SUCCIONADOR / 7EA",
+            "serie": "5617899",
+            "ubicacion": "REANIMACION"
+        },
+        "132UMJH8xX19wT7Ymo-2Gh1Bs2yNiLvqs": {
+            "nombre": "SUCCIONADOR",
+            "dependencia": "URGENCIAS",
+            "marca_modelo": "SMAF / YX 930D",
+            "serie": "5617899",
+            "ubicacion": "REANIMACION"
+        },
+        "13gwugX8GixqF29-nrUkQuMtfMjUKdCir": {
+            "nombre": "TENSIOMETRO",
+            "dependencia": "URGENCIAS",
+            "marca_modelo": "RIESTER / BIG BEN SCUARE",
+            "serie": "170240539",
+            "ubicacion": "OBSERVACION"
+        },
+        "13BH-35uWUce6Qbp3v4IsIZmT4i_XDa5C": {
+            "nombre": "TENSIOMETRO",
+            "dependencia": "URGENCIAS",
+            "marca_modelo": "RIESTER / BIG BEN SCUARE PARED",
+            "serie": "170240532",
+            "ubicacion": "CONSULTORIO I"
+        },
+        "13GZsDZAgCLK12yVFBEL1fyMht9_3om1Q": {
+            "nombre": "TENSIOMETRO",
+            "dependencia": "URGENCIAS",
+            "marca_modelo": "RIESTER / BIG BEN SCUARE PARED",
+            "serie": "170240533",
+            "ubicacion": "CONSULTORIO II"
+        },
+        "13Zgrx4h7bcxCiUW9D1F1l3xNdZ98OllJ": {
+            "nombre": "TENSIOMETRO",
+            "dependencia": "URGENCIAS",
+            "marca_modelo": "RIESTER / BIG BEN SCUARE ",
+            "serie": "NO VISIBLE",
+            "ubicacion": "OBSERVACION"
+        },
+        "13nwXuSdgcBkGZPSzDBpHHyCorGzPdxM2": {
+            "nombre": "TERMOHIGOMETRO DIGITAL",
+            "dependencia": "URGENCIAS",
+            "marca_modelo": "GREEN TECH / HTC-2 ",
+            "serie": "NO VISIBLE",
+            "ubicacion": "OBSERVACION"
+        }
+    },
+    "VACUNACIÓN": {
+        "149NqZUNzVI1S-KiYZn-4d2Sd-gfwPywZ": {
+            "nombre": "CONGELADOR",
+            "dependencia": "QUIRURGICO",
+            "marca_modelo": "CHALLENGER / CH-361",
+            "serie": "130214-01231",
+            "ubicacion": "lABORATORIO"
+        },
+        "1465JBRUNT308n-UgNwjYSZb3iXQHtw1k": {
+            "nombre": "NEVERA DE VACUNAS",
+            "dependencia": "VACUNACION",
+            "marca_modelo": "HAIER/HBC-260",
+            "serie": "BE0G95EAS00QEM8C0005",
+            "ubicacion": "LABORATORIO"
+        },
+        "14CVB3PlThlZAXtzuRos5Y9xGsjcr0shC": {
+            "nombre": "NEVERA DE VACUNAS",
+            "dependencia": "VACUNACION",
+            "marca_modelo": "VESTFROST/MK 304",
+            "serie": "2008030-3372",
+            "ubicacion": "LABORATORIO"
+        }
+    }
+}

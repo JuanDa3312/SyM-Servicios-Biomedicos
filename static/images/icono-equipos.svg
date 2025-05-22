@@ -1,0 +1,34 @@
+<svg width="100" height="70" viewBox="0 0 100 70" xmlns="http://www.w3.org/2000/svg" aria-labelledby="title" role="img">
+  <title id="title">Icono de Monitor de Signos Vitales</title>
+  <style>
+    /* Estilo para el marco del monitor */
+    .monitor-marco {
+      /* Color del borde blanco */
+      stroke: #fff;
+      /* Grosor del borde */
+      stroke-width: 4;
+      fill: none; /* Sin relleno */
+      /* Esquinas redondeadas */
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+    /* Estilo para la onda del signo vital */
+    .monitor-onda {
+      /* Color de la onda blanco */
+      stroke: #fff;
+      /* Línea de onda un poco más fina que el marco */
+      stroke-width: 3;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+      fill: none;
+    }
+  </style>
+
+  <g>
+    <rect class="monitor-marco" x="2" y="2" width="96" height="66" rx="8" />
+
+    <path class="monitor-onda" d="M15 35 H 30 L 40 25 L 55 50 L 65 35 H 85" />
+
+  </g>
+
+</svg>

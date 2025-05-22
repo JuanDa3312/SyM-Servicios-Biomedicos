@@ -1,0 +1,16 @@
+<svg width="80" height="80" viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Cuerpo principal del equipo -->
+  <rect x="20" y="10" width="40" height="50" rx="4" fill="#F5F5F5" stroke="#424242" stroke-width="2"/>
+  
+  <!-- Pantalla superior -->
+  <rect x="25" y="15" width="30" height="15" rx="2" fill="#CFD8DC" stroke="#263238" stroke-width="1.5"/>
+  
+  <!-- Botones -->
+  <circle cx="30" cy="35" r="2" fill="#90A4AE"/>
+  <circle cx="40" cy="35" r="2" fill="#90A4AE"/>
+  <circle cx="50" cy="35" r="2" fill="#90A4AE"/>
+  
+  <!-- Cajones o bandejas -->
+  <rect x="25" y="40" width="30" height="4" rx="1" fill="#B0BEC5"/>
+  <rect x="25" y="46" width="30" height="4" rx="1" fill="#B0BEC5"/>
+</svg>

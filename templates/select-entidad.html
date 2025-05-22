@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MV</title>
+    <link rel="icon" href="{{ url_for('static', filename='images/icono-mv.JPG') }}" type="image/x-icon">
+    
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles-select-entidad.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <script src="{{ url_for('static', filename='js/script-select-entidad.js') }}" defer></script>
+</head>
+<body>
+    <div class="container">
+        <!-- <h1><i class="fas fa-hospital"></i> Seleccione la Entidad</h1>-->
+        <h1><img src="{{ url_for('static', filename='images/icono-mv.JPG') }}" alt="Icono Hospital" class="icono-mv"> Selecione La Entidad</h1>
+        <div class="botones">
+
+            <a href="{{ url_for('servicios_drive', entidad='sagrado_corazon') }}" class="btn entidad">
+                <i class="fas fa-stethoscope"></i> ESE Sagrado Corazón de Jesus Valencia
+            </a>
+
+            <a href="{{ url_for('servicios_drive', entidad='vascular') }}" class="btn entidad">
+                <i class="fas fa-heartbeat"></i> Unidad Médico Vascular
+            </a>
+
+            <a href="{{ url_for('servicios_drive', entidad='palmitos') }}" class="btn entidad">
+                <i class="fa-solid fa-clinic-medical"></i> Ese Los Palmitos
+            </a>
+
+        </div>
+    </div>
+    <!-- Botón flotante -->
+    <button class="btn-add-inside" onclick="toggleMenu()">+</button>
+
+    <!-- Menú desplegable -->
+    <div id="menuOpciones" class="menu-opciones">
+        <a href="{{ url_for('formato_mantenimiento') }}" class="menu-opcion" target="_blank" rel="noopener noreferrer">Formato mantenimiento</a>
+
+        
+
+        <a href="/logout" class="menu-opcion">Cerrar Sesión</a>
+    </div>
+</body>
+</html>

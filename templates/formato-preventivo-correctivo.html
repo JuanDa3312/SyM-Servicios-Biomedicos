@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MV-Formato</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles-formatos.css') }}">
+    <link rel="icon" href="{{ url_for('static', filename='images/icono-mv.JPG') }}" type="image/x-icon">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+    <script src="{{ url_for('static', filename='js/script-formato.js') }}" defer></script>
+
+</head>
+
+<body >
+
+    <form id="tipoMantenimientoContainer" class="no-print">
+        <label for="tipoMantenimiento" ><strong>Seleccione el tipo de mantenimiento:</strong></label>
+        <select id="tipoMantenimiento" onchange="mostrarFormulario()">
+            <option value="" disabled selected>Seleccione una opción</option>
+            <option value="correctivo">Correctivo</option>
+            <option value="preventivo">Preventivo</option>padding: 50px;
+        </select>
+    </form>
+
+    <!-- Formulario Correctivo -->
+    <form id="formCorrectivo" style="display: none; margin-top: 20px;">
+        <header>
+            <img src="{{ url_for('static', filename='images/iconoMV.jpg') }}" alt="Icono" class="icono">
+            <div class="descripcion">
+                <h1>Formulario de Mantenimiento</h1>
+                <p>Registro de mantenimiento correctivo</p>
+            </div>
+        </header>
+        
+        <section class="datos-cliente">
+            <h2>Datos del Cliente</h2>
+            <label>Cliente: <input type="text" ></label>
+            <label>Dependencia: <input type="text" ></label>
+            <label>Dirección: <input type="text" ></label>
+            <label>Ciudad: <input type="text" ></label>
+        </section>
+            
+        <section class="datos-equipo">
+            <h2>Datos del Equipo</h2>
+            <label>Nombre: <input type="text" ></label>
+            <label>Marca/Modelo: <input type="text" ></label>
+            <label>Serie: <input type="text" ></label>
+            <label>Ubicación: <input type="text" ></label>
+            <label>Fecha:</label>
+        <input type="date"><br><br>
+        </section>
+
+        
+        <label>Falla reportada:</label>
+        <textarea rows="4" cols="50"></textarea><br>
+        <label>Repuestos utilizados:</label>
+        <textarea rows="4" cols="50"></textarea><br>
+        
+        <section class="checklist">
+            <h2>Check List</h2>
+            <div class="checklist-container">
+                <label><input type="checkbox"> Equipo funcionando </label>
+                <label><input type="checkbox"> Equipo fuera de servicio</label>
+            </div>
+        </section>
+
+        <label>Registro fotografico:</label>
+        <input type="file" id="fotoInput"  class="no-print" accept="image/*" multiple><br><br>
+        <div id="preview" style="display: flex; flex-wrap: wrap; gap: 10px;"></div><br> <!-- Aquí se mostrarán las imágenes -->
+        
+        <section class="Firmas">
+            <div class="firma">
+                <h3>Firma de quien recibe</h3>
+                <input type="text" placeholder="Nombre">
+                <canvas id="firmaCanvasCorrectivo"></canvas>
+                <br>
+                <div class="botones-firma no-print">
+                    <button type="button" class="btn-firma" onclick="startSignature('correctivo')" id="startButtonCorrectivo">Anexar Firma</button>
+                    <button type="button" class="btn-firma" onclick="clearSignature('correctivo')" id="clearButtonCorrectivo" disabled="">Borrar</button>
+                    <button type="button" class="btn-firma" onclick="saveSignature('correctivo')" id="saveButtonCorrectivo" disabled="">Guardar</button>
+                    <button type="button" class="btn-firma" onclick="enableEditing('correctivo')" disabled="" id="editButtonCorrectivo">Editar</button>
+                </div>
+                <p id="messageCorrectivo" class="no-print">Firma borrada, presiona "Anexar Firma" para iniciar nuevamente</p>
+            </div>
+        
+
+            <div class="firma">
+                <h3>Firma del Responsable</h3>
+                <input type="text" value="{{ nombre_responsable }}" readonly>
+                <div class="firma-box">
+                    <img src="{{ url_for('static', filename=firma) }}" alt="Firma del Responsable" >
+                </div>
+            </div>        
+        </section>
+        <br>
+
+        <button class="no-print" onclick=window.print()>Imprimir Correctivo</button>
+    </form>
+
+    <!-- Formulario Preventivo -->
+    <form id="formPreventivo" style="display: none; margin-top: 20px;">
+        <header>
+            <img src="{{ url_for('static', filename='images/iconoMV.jpg') }}" alt="Icono" class="icono">
+            <div class="descripcion">
+                <h1>Formulario de Mantenimiento</h1>
+                <p>Registro de mantenimiento preventivo </p>
+            </div>
+        </header>
+        <section class="datos-cliente">
+            <h2>Datos del Cliente</h2>
+            <label>Cliente: <input type="text" ></label>
+            <label>Dependencia: <input type="text"></label>
+            <label>Dirección: <input type="text" ></label>
+            <label>Fecha: <input type="date"></label>
+            <label>Ciudad: <input type="text" ></label>
+            
+        </section>
+        
+        <section class="datos-equipo">
+            <h2>Datos del Equipo</h2>
+            <label>Nombre: <input type="text" ></label>
+            <label>Marca/Modelo: <input type="text" ></label>
+            <label>Serie: <input type="text" ></label>
+            <label>Ubicación: <input type="text" ></label>
+        </section>
+        <section class="checklist">
+            <h2>Trabajos relizados</h2>
+            <div class="checklist-container">
+                <label><input type="checkbox"> Limpieza general (interna y externa)</label>
+                <label><input type="checkbox"> Inspeccion de estructura fisica y estado de accesorios.</label>
+                <label><input type="checkbox"> Revisión de circuitos eléctricos, componentes de control y contactos eléctricos. </label>
+                <label><input type="checkbox"> Revisión de tarjetas, dispositivos eléctricos y panel de control.</label>
+                <label><input type="checkbox"> Revisión de baterías, carga y contactos eléctricos.</label>
+                <label><input type="checkbox"> Revisión de software y configuración, activicion de alarmas.</label>
+                <label><input type="checkbox">Verificación de parámetros. </label>
+                <label><input type="checkbox"> Pruebas de funcionamiento.</label>
+                <label><input type="checkbox"> Diagnóstico general.</label>
+                <label><input type="checkbox"> Revisión (es) de trabajo y chequeo de fugas. (Si aplica)</label>
+                <label><input type="checkbox"> Revisión de circuito hidráulico, componentes, presión de trabajo y chequeo de fugas.(Si aplica)</label>
+            </div>
+        </section>
+
+        <section class="observaciones">
+            <h2>Observaciones</h2>
+            <textarea rows="8"></textarea>
+        </section>
+
+        <section class="Firmas">
+            <div class="firma">
+                <h3>Firma de quien recibe</h3>
+            <input type="text" placeholder="Nombre">
+            <canvas id="firmaCanvasPreventivo"></canvas>
+            <br>
+            <div class="botones-firma no-print">
+                <button type="button" class="btn-firma" onclick="startSignature('preventivo')" id="startButtonPreventivo">Anexar Firma</button>
+                <button type="button" class="btn-firma" onclick="clearSignature('preventivo')" id="clearButtonPreventivo" disabled="">Borrar</button>
+                <button type="button" class="btn-firma" onclick="saveSignature('preventivo')" id="saveButtonPreventivo" disabled="">Guardar</button>
+                <button type="button" class="btn-firma" onclick="enableEditing('preventivo')" disabled="" id="editButtonPreventivo">Editar</button>
+            </div>
+                <p id="messagePreventivo" class="no-print">Firma borrada, presiona "Anexar Firma" para iniciar nuevamente</p>
+            </div>
+        
+
+            <div class="firma">
+                <h3>Firma del Responsable</h3>
+                <input type="text" value="{{ nombre_responsable }}" readonly>
+
+                <div class="firma-box">
+                    <img src="{{ url_for('static', filename=firma) }}" alt="Firma del Responsable" >
+                </div>
+            </div>
+            <button class="no-print" onclick=window.print()>Imprimir Preventivo</button>
+        </section>
+    </form>
+</body>
+</html>

@@ -1,0 +1,474 @@
+/* Estilos generales */
+body {
+    font-family: 'Poppins', sans-serif;
+    margin: 0;
+    padding: 0; /* antes: 20px */
+    background: url('/static/images/LOGO-MV.JPG') repeat;
+    background-size: 150px;
+    position: relative;
+}
+
+
+body::before {
+    content: "";
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    backdrop-filter: blur(1px);
+    background-color: rgba(255, 255, 255, 0.8);
+    z-index: 0;
+}
+/* Wrapper para contener los dos contenedores principales y centrarlos */
+.wrapper {
+    position: relative;
+    z-index: 1; /* Por encima del fondo */
+    width: 95%; /* Ocupa casi todo el ancho */
+    max-width: 1000px; /* Ancho máximo para todo el contenido. Ajusta este valor para hacer la página más ancha. */
+    margin: 20px auto; /* Centra el wrapper como bloque en la pantalla */
+    display: flex; /* Usa flexbox para organizar los contenedores hijos */
+    flex-direction: column; /* Apila los contenedores hijos verticalmente */
+    gap: 20px; /* Espacio entre el contenedor de filtros y el contenedor de lista */
+    align-items: center; /* Centra los contenedores hijos horizontalmente si son más estrechos que el wrapper */
+}
+
+
+/* Estilos base para ambos contenedores (heredan de .container original) */
+/* Estos se aplicarán a .filter-container y .list-container */
+.container {
+    background: #fff;
+    padding: 20px; 
+    border-radius: 10px; 
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1); 
+    width: 100%; /* Ocupa todo el ancho del .wrapper */
+    box-sizing: border-box; 
+    text-align: center; /* Centra texto e inline/inline-blocks dentro (H1, .equipment-count, .filter-form, h2, #equipmentList) */
+}
+
+/* Estilos específicos para el contenedor de filtros */
+.filter-container { 
+     margin-top: 20px; /* Espacio hacia arriba. Ajusta este valor. */
+     /* Otras propiedades si las tenía solo filter-container */
+}
+
+/* Estilos específicos para el contenedor de lista */
+/* .list-container { ... } /* No necesita estilos adicionales más allá de .container */
+
+
+/* Estilos para el título principal de la página con icono */
+.header-title {
+     display: flex; 
+     align-items: center;
+     justify-content: center; 
+     margin-bottom: 20px;
+}
+
+h1 {
+    color: #202124;
+    font-size: 20px; 
+    font-weight: bold;
+    margin: 0;
+    display: inline-block; 
+}
+
+.icono-mv{
+    width: 30px; 
+    height: auto;
+    vertical-align: middle;
+    margin-right: 8px;
+}
+
+/* Estilos para el área de conteo de equipos */
+/* La línea completa (Icono Equipos: #/#) se centra por text-align en .container */
+.equipment-count {
+     display: flex; /* Alinea Icono y texto/numeros en una línea */
+     align-items: center; /* Centra Icono y texto/numeros verticalmente */
+     justify-content: center; /* Centra la línea completa si su contenido total es menor al padre */
+    margin-bottom: 20px;
+    padding: 10px 0; 
+    border-bottom: 1px solid #eee; 
+}
+
+/* Mantén los estilos para el icono dentro del conteo */
+.count-icon {
+    width: 20px; 
+    height: auto;
+    margin-right: 8px; 
+    vertical-align: middle; 
+}
+
+/* Estilos para los spans de números en el conteo */
+.equipment-count span {
+    font-weight: bold;
+    color: #007bff; 
+    /* margin: 0 2px; /* Opcional: espacio alrededor de los números */
+}
+
+
+/* Estilos para el formulario de filtro (<form id="filterForm" class="filter-form">) */
+.filter-form {
+    display: flex; /* Alinea inputs y botón */
+    flex-direction: column; /* Apila inputs y el botón verticalmente */
+    gap: 15px; /* Espacio entre filas de inputs (.form-inputs) y el botón (#searchButton) */
+    align-items: center; /* Centra las filas de inputs y el botón */
+    width: 100%; /* Ocupa todo el ancho disponible en el container */
+}
+
+/* Estilos para el grupo de inputs (.form-inputs) */
+.form-inputs {
+    display: flex; /* Alinea los grupos de filtro (.filter-group) en una fila */
+    flex-wrap: wrap; /* Permite que los grupos salten de línea */
+    gap: 10px; /* Espacio entre cada grupo de filtro (label + input) */
+    justify-content: center; /* Centra los grupos de filtro dentro de .form-inputs */
+    width: 100%; /* Ocupa todo el ancho para organizar los grupos */
+}
+
+/* Estilos para cada grupo de filtro (label + input) */
+.filter-group {
+    display: flex; /* Alinea label e input */
+    flex-direction: column; /* Apila label e input verticalmente */
+    align-items: flex-start; /* Alinea label e input a la izquierda dentro de su grupo */
+    flex-grow: 1; 
+    flex-basis: 180px; /* Ancho base sugerido para cada grupo */
+    max-width: 250px; /* Opcional: Limita el ancho máximo de cada grupo */
+}
+
+.filter-group label {
+    font-weight: bold;
+    margin-bottom: 5px; 
+    font-size: 0.9rem;
+    color: #555;
+    text-align: left; 
+    width: 100%; 
+}
+
+/* Estilos para los inputs de filtro - sin placeholder */
+.filter-form input[type="text"] { 
+    padding: 8px; 
+    font-size: 0.9rem; 
+    border-radius: 4px; 
+    border: 1px solid #ccc;
+    width: 100%; 
+    box-sizing: border-box;
+    margin: 0; 
+}
+
+/* Estilos para el botón de búsqueda */
+#searchButton {
+    padding: 10px 20px;
+    font-size: 1rem;
+    background-color: #28a745; /* Verde */
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    margin-top: 10px; 
+}
+
+#searchButton:hover {
+    background-color: #218838; 
+}
+
+/* Estilos para el título de la lista */
+.list-container h2 {
+    text-align: center;
+    margin-top: 0;
+    margin-bottom: 20px;
+    color: #333;
+}
+
+/* Estilos para el contenedor donde va la lista de equipos (ul o div) */
+/* Sus items hijos (.equipment-item) se apilarán verticalmente por defecto */
+#equipmentList {
+     padding: 0; 
+     margin: 0 auto; /* Centra el bloque de la lista si su width/max-width es menor que el padre */
+     max-width: 800px; /* Opcional: Límite el ancho de la lista misma */
+     width: 100%; 
+     text-align: left; /* Alinea el texto de vuelta a la izquierda para los items de la lista */
+}
+
+/* Estilos para cada item individual de la lista de equipo */
+.equipment-item {
+    display: flex; /* Usa flexbox para alinear detalles y el contenedor de botones en horizontal */
+    justify-content: space-between; /* Separa detalles a la izquierda y botones a la derecha */
+    align-items: center; /* Centra verticalmente detalles y botones */
+    padding: 15px;
+    border: 1px solid #eee; 
+    border-radius: 5px; 
+    margin-bottom: 10px; 
+    background-color: #f9f9f9; 
+    transition: background-color 0.2s ease;
+}
+
+.equipment-item:hover {
+    background-color: #e9e9e9; 
+}
+
+.equipment-item:last-child {
+    margin-bottom: 0;
+}
+
+/* Estilos para el contenedor de los botones dentro del item */
+.equipment-actions {
+    display: flex; /* Usa flexbox para alinear los botones si hay más de uno */
+    flex-direction: column; /* <--- ESTO HACE QUE LOS BOTONES SE APILEN VERTICALMENTE */
+    gap: 5px; /* Espacio entre los botones si están apilados */
+    flex-shrink: 0; /* Evita que el contenedor de botones se encoja */
+    align-items: flex-end; /* Alinea los botones a la derecha dentro de su contenedor .equipment-actions */
+    /* === ESTO HACE QUE EL CONTENEDOR DE BOTONES TENGA EL ANCHO DEL BOTON MAS LARGO === */
+    width: max-content; 
+    /* === FIN ADICION === */
+}
+
+/* Estilos para los detalles del equipo dentro del item */
+.equipment-details {
+    flex-grow: 1; 
+    margin-right: 15px; 
+    text-align: left; 
+    color: #333;
+}
+
+.equipment-details p {
+    margin: 5px 0; 
+    font-size: 0.9rem;
+    line-height: 1.3;
+}
+
+.equipment-details strong {
+    color: #555; 
+}
+
+/* Estilos para los botones de acceso dentro del item */
+/* Se aplica a ambos botones (.access-button) */
+.access-button {
+    padding: 8px 15px;
+    font-size: 0.9rem;
+    background-color: #007bff; 
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    /* === ESTO HACE QUE EL BOTON OCUPE EL 100% DEL ANCHO DE SU PADRE (.equipment-actions) === */
+    width: 100%; 
+    /* === FIN ADICION === */
+    display: block; /* Asegura que se comporten como bloques en la columna flex del padre */
+}
+
+.access-button:hover {
+    background-color: #0056b3; 
+}
+
+/* Estilos para el mensaje de lista vacía */
+#noResultsMessage {
+    text-align: center;
+    color: #888;
+    font-size: 1rem;
+    margin-top: 20px;
+}
+
+
+
+.btn-add-inside {
+    position: fixed;
+    bottom: 30px;
+    right: 30px;
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    background-color: #28a745;
+    color: white;
+    font-size: 32px;
+    border: none;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    box-shadow: 0 8px 15px rgba(0, 0, 0, 0.2);
+    transition: all 0.3s ease;
+    z-index: 1000;
+}
+
+.btn-add-inside:hover {
+    background-color: #218838;
+    transform: scale(1.1);
+}
+
+.menu-opciones {
+    position: fixed;
+    bottom: 90px;
+    right: 30px;
+    background-color: white;
+    border-radius: 10px;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.2);
+    display: none;
+    flex-direction: column;
+    padding: 10px 0;
+    z-index: 1000;
+}
+
+.menu-opciones.menu-visible {
+    display: flex;
+}
+
+.menu-opcion {
+    padding: 10px 20px;
+    color: #333;
+    text-decoration: none;
+    font-weight: 500;
+    transition: background-color 0.2s;
+}
+.menu-opcion:hover {
+    background-color: #f0f0f0;
+    color: #28a745;
+}
+
+/* Ajustes generales para pantallas pequeñas */
+@media (max-width: 768px) {
+    /* Reducir padding en los contenedores */
+    .container {
+        padding: 15px;
+    }
+
+    /* Ajustar tamaños de fuente en títulos si son demasiado grandes */
+    h1 {
+        font-size: 18px;
+    }
+     .equipment-count, .list-container h2 {
+        font-size: 1rem;
+    }
+     .count-icon {
+         width: 18px;
+     }
+
+    /* Ajustar tamaños de fuente y padding en inputs y botones */
+    .filter-group label {
+        font-size: 0.85rem; 
+    }
+    .filter-form input[type="text"] {
+        font-size: 0.9rem; 
+        padding: 6px 10px; 
+    }
+     /* Botones de filtro y botones de ítem de lista */
+     .filter-form button, .access-button { /* Apunta a ambos tipos de botones si comparten estilos */
+         font-size: 0.85rem; /* === Hacer botones un poco más pequeños === */
+         padding: 8px 12px; /* === Ajustar padding === */
+     }
+
+    /* === REFINAR DISPOSICIÓN DEL ÍTEM DE LISTA APILADO === */
+    .equipment-item {
+        flex-direction: column; /* Apila detalles y botones verticalmente */
+        align-items: stretch; /* Estira los elementos hijos (detalles, botones) al ancho completo del ítem */
+        gap: 8px; /* === Ajustar espacio entre detalles y el bloque de botones apilados === */
+        padding: 15px; /* Mantener o ajustar padding del ítem */
+    }
+
+    .equipment-details {
+        margin-right: 0; /* Quita el margen derecho en vista apilada */
+        margin-bottom: 8px; /* === Añade margen abajo para separar de los botones === */
+        text-align: left; /* Mantener alineación izquierda para los detalles */
+        width: 100%; /* Asegura que los detalles ocupen todo el ancho del ítem */
+    }
+    
+    .equipment-actions {
+        /* El width: max-content y width: 100% en .access-button ya les da el mismo ancho */
+        align-items: center; /* === Centra el bloque de botones horizontalmente dentro del item === */
+        width: 100%; /* Asegura que el contenedor de botones ocupe todo el ancho del ítem */
+        /* Opcional: Añadir un separador visual sutil entre detalles y botones */
+        /* border-top: 1px solid #eee; */ 
+        /* padding-top: 8px; */ 
+    }
+    
+    .equipment-details p {
+        font-size: 0.85rem; /* Detalles más pequeños */
+        margin: 4px 0; /* Espacio entre líneas de detalle */
+    }
+    /* ========================================== */
+
+    /* Ajustes para el modal si se usa en esta página */
+    @media (max-width: 600px) { 
+        .modal-content {
+            padding: 10px; 
+        }
+        .modal-header {
+            font-size: 1rem;
+        }
+    }
+}
+
+/* Ajustes para pantallas muy pequeñas */
+@media (max-width: 480px) {
+    .container {
+        padding: 10px;
+    }
+    
+    .wrapper {
+        gap: 15px; /* Ajustar espacio entre contenedores */
+    }
+
+    h1 {
+        font-size: 16px;
+    }
+    .icono-mv {
+        width: 25px;
+    }
+
+    .filter-form {
+        gap: 10px; /* Ajustar espacio en el formulario principal */
+    }
+
+    .form-inputs {
+        gap: 8px; /* Ajustar espacio entre los grupos de filtro */
+    }
+    
+    .filter-group label {
+        font-size: 0.8rem;
+    }
+     .filter-form input[type="text"] {
+        font-size: 0.85rem;
+        padding: 5px 8px;
+     }
+    
+    /* Botones de filtro y botones de ítem de lista */
+     .filter-form button, .access-button { /* Apunta a ambos tipos de botones */
+         font-size: 0.8rem; /* === Hacer botones aún más pequeños === */
+         padding: 6px 10px; /* === Ajustar padding === */
+     }
+    
+    /* === REFINAR DISPOSICIÓN DEL ÍTEM DE LISTA APILADO (pantallas muy pequeñas) === */
+    .equipment-item {
+        padding: 10px; /* Menos padding en los ítems */
+        gap: 6px; /* Ajustar espacio entre detalles y botones */
+    }
+
+    .equipment-details p {
+        font-size: 0.8rem; /* Detalles aún más pequeños */
+        margin: 3px 0; 
+    }
+
+    .equipment-actions {
+        gap: 4px; /* Ajustar espacio entre los botones apilados */
+        align-items: center; /* === Centra el bloque de botones horizontalmente === */
+    }
+    
+    /* Los botones .access-button ya son width: 100% del padre .equipment-actions */
+    /* ========================================== */
+
+    .equipment-count {
+        padding: 8px 0;
+        font-size: 0.9rem;
+    }
+    .count-icon {
+        width: 16px;
+    }
+    
+    #noResultsMessage {
+        font-size: 0.9rem;
+    }
+}
+
+/* --- Fin Adiciones y Ajustes --- */
+
+/* ... Resto de tus estilos CSS (si los tienes) ... */

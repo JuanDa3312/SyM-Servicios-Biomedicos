@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title id="pageTitle">{%
+        if nombre_carpeta %}{{ nombre_carpeta | upper }}{%
+        elif request.endpoint == 'servicios' %}Servicios Generales{%
+        else %}Inicio{%
+        endif %}</title>
+    {# Asegúrate de que esta ruta sea correcta a tu archivo CSS unificado #}
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles-equipos.css') }}" />
+    <link rel="icon" href="{{ url_for('static', filename='images/icono-mv.JPG') }}" type="image/x-icon" />
+    {# Asegúrate de que esta ruta sea correcta a tu archivo JS unificado #}
+    <script src="{{ url_for('static', filename='js/script-equipos.js') }}" defer></script>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="wrapper">
+        <div class="container">
+            <div class="header-container">
+                <img src="{{ url_for('static', filename='images/icono-mv.JPG') }}" alt="Icono Hospital" class="icono-mv" />
+                <h1>
+                    {% if nombre_carpeta %}
+                        {{ nombre_carpeta | upper }}
+                    {% elif request.endpoint == 'servicios' %}
+                        SERVICIOS GENERALES
+                    {% else %}
+                        INICIO
+                    {% endif %}
+                </h1>
+            </div>
+
+            {% if carpetas %}
+                 
+                <div class="folder-grid">
+                    {% for carpeta_item in carpetas %}
+                    {# ======================================================= #}
+                    {# INICIO: ESTRUCTURA ESTÁNDAR DE LA TARJETA DE CARPETA    #}
+                    {# --- El contenedor principal es un DIV ---             #}
+                    {# ======================================================= #}
+                    <div class="folder-card {% if not carpeta_item.has_subfolders %}equipment-card{% endif %}"
+                         data-folder-id="{{ carpeta_item.id }}"> {# data-id en el DIV contenedor #}
+
+                        {# --- Enlace principal para navegar (opcional, dentro del DIV) --- #}
+                        {# Este enlace es para cuando haces clic en la tarjeta para ABRIR la carpeta #}
+                        <a href="{{ url_for('ver_equipos', folder_id=carpeta_item.id) }}" class="folder-link">
+                            <img src="{{ url_for('static', filename='images/icono-equipos.svg') }}" class="folder-icon" alt="Ícono de carpeta/equipo" />
+                            <div class="folder-name">{{ carpeta_item.name }}</div>
+                        </a>
+
+                        {# --- Botón de los 3 puntos (Hermano del enlace, dentro del DIV) --- #}
+                        <button class="folder-options-toggle" title="Opciones" aria-label="Opciones de carpeta">
+                            <span></span><span></span><span></span> {# O usa el carácter unicode '...' #}
+                        </button>
+
+                        {# --- CONTENEDOR DEL MENÚ CONTEXTUAL (Hermano del enlace, dentro del DIV) --- #}
+                        {# ESTE DIV DEBE ESTAR DENTRO DEL DIV.folder-card #}
+                        <div class="folder-options-menu">
+                            {# Aquí van las opciones del menú. Cada opción es un enlace o botón. #}
+                            {# La opción de Abrir Carpeta puede estar en el menú O ser el enlace principal de la tarjeta #}
+                            {# Ejemplo: <a href="{{ url_for('ver_equipos', folder_id=carpeta_item.id) }}" class="menu-item open-folder-option">Abrir Carpeta</a> #}
+
+                            {# === LA OPCIÓN PARA ELIMINAR EQUIPO === #}
+                            {# Este enlace debe estar dentro del DIV.folder-options-menu y tener data-folder-id #}
+                            <a href="#" class="menu-item delete-team-option" data-folder-id="{{ carpeta_item.id }}">Eliminar Equipo</a>
+                            {# ======================================= #}
+
+                           
+                        </div>
+
+                    </div> {# Cierre del DIV .folder-card #}
+                    {# ======================================= #}
+                    {# FIN: ESTRUCTURA ESTÁNDAR DE LA TARJETA DE CARPETA #}
+                    {# ======================================= #}
+                    {% endfor %}
+                </div>
+            {% endif %}
+
+            {% if archivos %}
+                 <hr style="width: 100%; margin: 20px 0;"> {# Separador #}
+                
+                <div class="file-grid">
+                    {% for archivo in archivos %}
+                    {# ===================================================== #}
+                    {# INICIO: ESTRUCTURA ESTÁNDAR DE LA TARJETA DE ARCHIVO  #}
+                    {# --- El contenedor principal es un DIV ---             #}
+                    {# ===================================================== #}
+                    <div class="file-card"
+                        data-file-id="{{ archivo.id }}"
+                        title="Abrir archivo: {{ archivo.name }}"> {# data-id en el DIV contenedor #}
+
+                        {# --- Enlace principal para abrir/ver archivo (opcional, dentro del DIV) --- #}
+                        {# NOTA: Tu código original usaba onclick en el DIV. Mantenemos el pattern, pero usar un <a> es más semántico #}
+                        <a href="https://drive.google.com/file/d/{{ archivo.id }}/view?usp=sharing" target="_blank" class="file-link">
+                            {# Ícono/Miniatura del archivo #}
+                            {% if archivo.thumbnailLink %}
+                                <img src="{{ archivo.thumbnailLink }}" alt="Miniatura de {{ archivo.name }}" class="file-icon" />
+                            {% else %}
+                                {% if 'pdf' in archivo.mimeType %}
+                                    <img src="{{ url_for('static', filename='images/icono-pdf.svg') }}" alt="Archivo PDF" class="archivo-icon" />
+                                {% elif 'spreadsheet' in archivo.mimeType or 'excel' in archivo.mimeType %}
+                                    <img src="{{ url_for('static', filename='images/icono-excel.svg') }}" alt="Archivo Excel" class="archivo-icon" />
+                                {% elif 'word' in archivo.mimeType %}
+                                    <img src="{{ url_for('static', filename='images/icono-word.svg') }}" alt="Archivo Word" class="archivo-icon" />
+                                {% else %}
+                                    <img src="{{ url_for('static', filename='images/archivo.svg') }}" alt="Archivo" class="archivo-icon" />
+                                {% endif %}
+                            {% endif %}
+                            {# Nombre del archivo #}
+                            <div class="file-name">{{ archivo.name }}</div>
+                        </a>
+
+
+                        {# --- Botón de opciones en archivos (3 puntos) (Hermano del enlace, dentro del DIV) --- #}
+                        <button class="file-options-toggle" title="Opciones del archivo">...</button>
+
+                        {# --- CONTENEDOR DEL MENÚ CONTEXTUAL DEL ARCHIVO (Hermano del enlace, dentro del DIV) --- #}
+                        {# ESTE DIV DEBE ESTAR DENTRO DEL DIV.file-card #}
+                        <div class="file-options-menu">
+                            {# Puedes añadir otras opciones aquí (ej: Descargar, etc.) #}
+                            <a href="#" class="menu-item delete-file-option" data-file-id="{{ archivo.id }}">Eliminar Archivo</a>
+                        </div>
+                    </div> {# Cierre del div .file-card #}
+                    {# ===================================================== #}
+                    {# FIN: ESTRUCTURA ESTÁNDAR DE LA TARJETA DE ARCHIVO      #}
+                    {# ===================================================== #}
+                    {% endfor %}
+                </div>
+            {% endif %}
+
+            {# Mensaje si no hay carpetas ni archivos #}
+            {% if not carpetas and not archivos and request.endpoint == 'ver_equipos' %}
+                <p class="empty-folder-message">Esta carpeta está vacía.</p>
+            {% endif %}
+        </div> {# Cierre del container #}
+
+        {# ======================================= #}
+        {# BOTÓN FLOTANTE Y SU MENÚ PRINCIPAL      #}
+        {# ======================================= #}
+        <button class="btn-add-inside" title="Abrir menú de opciones">+</button>
+
+        <div id="menuOpciones" class="menu-opciones">
+            {# Lógica Jinja2 para mostrar opciones según la página actual #}
+            {% set es_carpeta_de_equipo_individual = request.endpoint == 'ver_equipos' and not carpetas %}
+            {% if es_carpeta_de_equipo_individual %}
+                {# Opciones para una carpeta de equipo individual (contiene archivos) #}
+                {% if folder_id is defined and folder_id %} {# Asegurarse de que folder_id está definido #}
+                    
+                    <a href="{{ url_for('mantenimiento', folder_id=folder_id) }}" class="menu-opcion" target="_blank" rel="noopener noreferrer">Realizar Mantenimiento</a>
+                    <a href="#" class="menu-opcion" id="triggerFileUpload" data-folder-id="{{ folder_id }}">Subir Archivo a {% if nombre_carpeta %}"{{ nombre_carpeta }}"{% else %}esta carpeta{% endif %}</a>
+                {% endif %}
+            {% endif %}
+
+            {# Opciones para la vista principal (servicios) o una carpeta de servicio (contiene equipos) #}
+            {% if request.endpoint == 'servicios' or (request.endpoint == 'ver_equipos' and not es_carpeta_de_equipo_individual) %}
+                 {# El botón para abrir la modal de registrar nuevo equipo/servicio #}
+                 {# Pasa el nombre y ID de la carpeta actual si estás en una carpeta de servicio #}
+                <a href="#" class="menu-opcion" id="btnRegistrarNuevoEquipoGlobalMenu"
+                    {% if request.endpoint=='ver_equipos' and nombre_carpeta %}
+                    data-current-service-name="{{ nombre_carpeta }}" data-parent-folder-id="{{ folder_id }}"
+                    {% elif request.endpoint=='servicios' %}
+                    {# Puedes pasar data-attributes específicos para la vista de servicios principales si es necesario #}
+                    {# data-current-service-name="SERVICIOS PRINCIPALES" #}
+                    {# data-parent-folder-id="ID_CARPETA_SERVICIOS_PRINCIPALES_SI_EXISTE" #}
+                    {% endif %}>Registrar nuevo equipo {% if request.endpoint == 'ver_equipos' and nombre_carpeta %}<span>en "{{ nombre_carpeta }}"</span>{% endif %}</a>
+            {% endif %}
+
+            {# Opciones generales #}
+            <a href="{{ url_for('filtro') }}" class="menu-opcion" target="_blank" rel="noopener noreferrer">Buscar Equipos</a>
+            <a href="{{ url_for('formato_mantenimiento') }}" class="menu-opcion" target="_blank" rel="noopener noreferrer">Formato mantenimiento</a>
+            <a href="/logout" class="menu-opcion">Cerrar Sesión</a>
+        </div>
+
+        {# Input de archivo oculto para la subida #}
+        {# Este elemento no se muestra, lo activa el JS del botón flotante #}
+        <input type="file" id="fileUploader" style="display: none;" accept=".pdf,.doc,.docx,.xls,.xlsx,.jpg,.jpeg,.png,.txt,.odt,.ods,.odp">
+
+        {# ======================================= #}
+        {# MODAL DE REGISTRO DE EQUIPO            #}
+        {# (Tu estructura de modal)              #}
+        {# ======================================= #}
+        {# La modal está fuera del contenedor principal para asegurar que cubra toda la pantalla #}
+        <div id="registrarEquipoModal" class="modal-overlay">
+            <div class="modal-content">
+                <span class="modal-close-button" title="Cerrar">&times;</span>
+                <h3>Registrar Nuevo Equipo</h3>
+                <p>Servicio: <strong id="modalServiceNameDisplay">N/A</strong></p>
+                <form id="formRegistrarEquipo">
+                    {# Campos ocultos para el servicio y la carpeta padre #}
+                    <input type="hidden" id="modalServiceKeyForJson" name="service_key_for_json" />
+                    <input type="hidden" id="modalParentDriveFolderId" name="parent_drive_folder_id" />
+
+                    {# Campos visibles del formulario #}
+                    <div class="form-group">
+                        <label for="modalEquipoNombre">Nombre del Equipo:</label>
+                        <input type="text" id="modalEquipoNombre" name="nombre" required />
+                    </div>
+                    <div class="form-group">
+                        <label for="modalEquipoMarcaModelo">Marca/Modelo:</label>
+                        <input type="text" id="modalEquipoMarcaModelo" name="marca_modelo" required />
+                    </div>
+                    <div class="form-group">
+                        <label for="modalEquipoSerie">Serie:</label>
+                        <input type="text" id="modalEquipoSerie" name="serie" required  />
+                    </div>
+                    <div class="form-group">
+                        <label for="modalEquipoUbicacion">Ubicación:</label>
+                        <input type="text" id="modalEquipoUbicacion" name="ubicacion" />
+                    </div>
+
+                    {# Botones de acción del formulario #}
+                    <div class="form-actions">
+                        <button type="submit" class="btn-primary">Crear y Guardar Equipo</button>
+                        <button type="button" class="btn-secondary modal-cancel-button">Cancelar</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        {# ======================================= #}
+        {# CONTENEDOR DEL TOAST MESSAGE            #}
+        {# (Tu estructura del toast)               #}
+        {# ======================================= #}
+        {# El toast también está fuera del contenedor principal #}
+        <div id="toast-message" class="toast"></div>
+
+    </div> {# Cierre del wrapper #}
+</body>
+</html>

@@ -1,0 +1,164 @@
+/* General styles */
+body {
+    font-family: 'Poppins', sans-serif;
+    margin: 0;
+    padding: 0;
+    height: 100vh;
+    background: url('/static/images/LOGO-MV.JPG') repeat;
+    background-size: 150px; /* Tamaño personalizado: más pequeño */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+body::before {
+    content: "";
+    position: absolute;
+    top: 0; left: 0;
+    width: 100%;
+    height: 100%;
+    backdrop-filter: blur(1px); /* El difuminado principal */
+    background-color: rgba(255, 255, 255, 0.8); /* Color encima con transparencia */
+    z-index: 0;
+}
+h1 {
+    color: #202124;
+    font-size: 24px;
+    font-weight: bold;
+    margin-top: 30px;
+    margin-bottom: 30px;
+    text-align: center;
+}
+
+.icono-mv{
+    width: 40px;        /* ajustar el tamaño */
+    height: auto;
+    vertical-align: middle;
+    margin-right: 10px; /* Espacio entre imagen y texto */
+}
+
+/* Contenedor */
+.container {
+    position: relative;
+    background: #fff;
+    padding: 40px;
+    border-radius: 20px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+    width: 90%;
+    max-width: 1200px;
+}
+
+/* Grid de carpetas */
+.folder-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 24px; /* MÁS ESPACIO entre carpetas */
+}
+/* Estilo para carpetas en específico */
+.folder-card[data-folder-id="1syTnARFTLOE-ho9QdbJHeRDisL_qS1Dk"],
+.folder-card[data-folder-id="1SWs0PIJbmV7H1brkOAFU4DX_632F9ZsC"],
+.folder-card[data-folder-id="1kgXkmaYUe4CBrR4WC30eJDwNKeqShqiB"] {
+    background: #01662D; /* Color verde más oscuro */
+}
+/* Estilo de cada tarjeta de carpeta */
+.folder-card {
+    background: #28a745;
+    padding: 16px;
+    border-radius: 8px;
+    box-shadow: 0 1px 4px rgba(60, 64, 67, 0.2);
+    display: flex;
+    align-items: center;
+    transition: transform 0.1s ease-in-out;
+    cursor: pointer;
+    margin-bottom: 12px; /* SEPARACIÓN VERTICAL */
+}
+
+.folder-card:hover {
+    transform: scale(1.07);
+}
+
+.folder-icon {
+    width: 30px; /* Íconos más grandes para las carpetas */
+    height: 30px;
+    margin-right: 10px;
+}
+
+.folder-name {
+    color: #fff;
+    font-weight: 500;
+    font-size: 16px; /* Texto un poco más grande para las carpetas */
+
+}
+
+.btn-add-inside {
+    position: fixed;
+    bottom: 30px;
+    right: 30px;
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    background-color: #28a745;
+    color: white;
+    font-size: 32px;
+    border: none;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    box-shadow: 0 8px 15px rgba(0, 0, 0, 0.2);
+    transition: all 0.3s ease;
+    z-index: 1000;
+}
+
+.btn-add-inside:hover {
+    background-color: #218838;
+    transform: scale(1.1);
+}
+
+.menu-opciones {
+    position: fixed;
+    bottom: 90px;
+    right: 30px;
+    background-color: white;
+    border-radius: 10px;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.2);
+    display: none;
+    flex-direction: column;
+    padding: 10px 0;
+    z-index: 1000;
+}
+
+.menu-opciones.menu-visible {
+    display: flex;
+}
+
+.menu-opcion {
+    padding: 10px 20px;
+    color: #333;
+    text-decoration: none;
+    font-weight: 500;
+    transition: background-color 0.2s;
+}
+.menu-opcion:hover {
+    background-color: #f0f0f0;
+    color: #28a745;
+}
+/* Media query for small screens */
+@media (max-width: 768px) {
+    .container {
+        width: 90%;  /* Ahora ocupa el 90% del ancho en pantallas más pequeñas */
+        height: auto;  /* Altura automática para adaptarse al contenido */
+        padding: 20px;  /* Reducimos el padding para ahorrar espacio */
+    }
+    h1 {
+        font-size: 1.5rem; /* Ajustamos el tamaño de la fuente para pantallas pequeñas */
+    }
+
+    .folder-card {
+        padding: 15px;
+        width: 100%;
+    }
+
+    .folder-name {
+        font-size: 1rem;  /* Ajustamos el tamaño del texto */
+    }
+}

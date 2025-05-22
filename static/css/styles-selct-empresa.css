@@ -1,0 +1,168 @@
+/* static/css/styles-selct-empresa.css */
+
+body {
+    font-family: 'Poppins', sans-serif;
+    margin: 0;
+    padding: 0;
+    background: linear-gradient(135deg, #e0f7fa, #fff);
+    min-height: 100vh; /* Asegura que el body ocupe al menos la altura completa de la ventana */
+
+    /* --- Configuración Flexbox para centrar el contenido principal (.container) --- */
+    display: flex;
+    flex-direction: column; /* Los elementos flex hijos (el .container) se apilan verticalmente */
+    justify-content: center; /* Centra verticalmente en flex-direction: column */
+    align-items: center; /* Centra horizontalmente en flex-direction: column */
+    /* --- Fin Configuración Flexbox --- */
+}
+
+/* Asegura que el padding no cause desbordamiento en los elementos */
+*, *::before, *::after {
+    box-sizing: border-box;
+}
+
+.container {
+    background: #ffffff;
+    padding: 35px; /* Aumentado ~30% desde 25px */
+    border-radius: 15px;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2); /* Box shadow ligeramente más grande */
+    text-align: center; /* Centra contenido en línea/inline-block dentro del contenedor */
+    width: 520px; /* **Aumentado ~30% desde 400px** */
+    /* Si usaras altura fija y quieres aumentarla también: */
+    /* height: 520px; /* Aumentado ~30% desde 400px si se usa */
+    overflow: hidden; /* Por si acaso hay desbordamiento con altura fija */
+}
+
+/* Título */
+h1 {
+    font-size: 36px; /* Aumentado ~30% desde 28px */
+    margin-top: 0;
+    margin-bottom: 30px; /* Aumentado ~30% desde 20px */
+    color: #333;
+}
+
+/* Estilos de los botones */
+button {
+    padding: 18px 30px; /* Aumentado ~30% desde 12px 20px */
+    font-size: 20px; /* Aumentado ~30% desde 16px */
+    margin: 15px auto; /* Aumentado ~30% desde 10px */
+    border: none;
+    border-radius: 12px; /* Mantener border-radius similar */
+    cursor: pointer;
+    transition: all 0.3s ease;
+    width: 80%;
+    max-width: 450px; /* Aumentado ~30% desde 350px */
+
+    /* Flexbox para centrar contenido dentro del botón */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 15px; /* Aumentado ~30% desde 10px */
+
+    font-weight: bold;
+    /* text-align: center; -- Redundante */
+    min-height: 60px; /* Aumentado ~30% desde 45px */
+}
+
+/* Iconos dentro de los botones */
+button .fas {
+    font-size: 26px; /* Aumentado ~30% desde 20px */
+}
+
+/* Botones específicos */
+.mv {
+    background-color: #28a745;
+    color: white;
+}
+
+.mv:hover {
+    background-color: #218838;
+    transform: scale(1.05); /* Mantener animación sutil */
+}
+
+.symbiosas {
+    background-color: #007bff;
+    color: white;
+}
+
+.symbiosas:hover {
+    background-color: #0056b3;
+    transform: scale(1.05); /* Mantener animación sutil */
+}
+
+#logoutBtn {
+    background-color: #dc3545;
+    color: white;
+    margin-top: 35px; /* Aumentado ~30% desde 25px */
+}
+
+#logoutBtn:hover {
+    background-color: #c82333;
+    transform: scale(1.05); /* Mantener animación sutil */
+}
+
+/* Estilo para el saludo */
+#saludo {
+    font-size: 22px; /* Aumentado ~30% desde 1.1em / ~18px */
+    margin-bottom: 30px; /* Aumentado ~30% desde 20px */
+    color: #555;
+}
+
+/* RESPONSIVE DESIGN */
+/* También ajustamos proporcionalmente los tamaños en la media query principal */
+@media screen and (max-width: 768px) {
+    .container {
+        width: 95%; /* Mantener porcentaje */
+        padding: 25px; /* Aumentado ~30% desde 20px */
+        /* Altura sigue siendo auto o fija si la descomentas */
+    }
+
+    h1 {
+        font-size: 30px; /* Aumentado ~30% desde 24px */
+        margin-bottom: 20px; /* Mantener el aumento */
+    }
+
+    button {
+        font-size: 18px; /* Aumentado ~30% desde 15px */
+        padding: 13px 20px; /* Aumentado ~30% desde 10px 15px */
+        width: 100%;
+        margin: 10px auto; /* Aumentado ~30% desde 8px */
+        min-height: 50px; /* Aumentado ~30% desde 40px */
+        gap: 10px; /* Aumentado ~30% desde 8px */
+    }
+
+    button .fas {
+        font-size: 22px; /* Aumentado ~30% desde 18px */
+    }
+
+    #logoutBtn {
+         margin-top: 20px; /* Aumentado ~30% desde 15px */
+    }
+
+     #saludo {
+        font-size: 20px; /* Aumentado ~30% desde 1em / ~16px */
+        margin-bottom: 20px; /* Aumentado ~30% desde 15px */
+    }
+}
+
+/* Ajustes para pantallas muy pequeñas */
+@media screen and (max-width: 480px) {
+     h1 {
+        font-size: 24px; /* Aumentado ~30% desde 20px */
+    }
+     button {
+        font-size: 16px; /* Aumentado ~30% desde 13px */
+        padding: 10px 15px; /* Aumentado ~30% desde 8px 10px */
+        gap: 8px; /* Aumentado ~30% desde 6px */
+        min-height: 45px; /* Ajustado */
+    }
+     button .fas {
+        font-size: 20px; /* Aumentado ~30% desde 16px */
+    }
+     #saludo {
+        font-size: 18px; /* Aumentado ~30% desde 0.9em / ~14.4px */
+        margin-bottom: 15px; /* Aumentado ~30% desde 10px */
+    }
+      .container {
+         padding: 20px; /* Aumentado ~30% desde 15px */
+     }
+}
