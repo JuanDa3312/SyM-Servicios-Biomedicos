@@ -1479,15 +1479,5 @@ def delete_equipo_api():
 # -----------------------------------------------------------------------------
 
 if __name__ == '__main__':
-    # Permitir HTTP para OAuthlib durante el desarrollo (SOLO PARA DESARROLLO).
-    # En producción, se debe usar HTTPS y esta variable no debe establecerse.
-    os.environ['OAUTHLIB_INSECURE_TRANSPORT'] = '1'
-    print("**************************************************************************************")
-    print("AVISO: OAUTHLIB_INSECURE_TRANSPORT está activado. ¡ESTO ES SOLO PARA DESARROLLO!")
-    print("       Asegúrate de que la aplicación se ejecute sobre HTTPS en producción.")
-    print("**************************************************************************************")
-
-    # `debug=True` habilita el recargador automático y el depurador. No usar en producción.
-    # `host='0.0.0.0'` permite acceso desde otros dispositivos en la red local.
-    # `port=5000` es el puerto por defecto de Flask.
-    app.run(host='localhost', port=5000, debug=True)
+    
+    app.run(host='0.0.0.0', debug=True)
