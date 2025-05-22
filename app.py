@@ -15,7 +15,7 @@ from googleapiclient.http import MediaIoBaseUpload
 from googleapiclient.errors import HttpError
 import google.auth.transport.requests
 from cryptography.fernet import Fernet
-
+from werkzeug.middleware.proxy_fix import ProxyFix
 # -----------------------------------------------------------------------------
 # Configuración de la Aplicación Flask
 # -----------------------------------------------------------------------------
@@ -1481,3 +1481,6 @@ def delete_equipo_api():
 if __name__ == '__main__':
     
     app.run(host='0.0.0.0', debug=True)
+    app.wsgi_app = ProxyFix(
+    app.wsgi_app, x_for=1, x_host=1, x_proto=1, x_prefix=1
+)
