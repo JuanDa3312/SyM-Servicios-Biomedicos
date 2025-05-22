@@ -1,388 +1,106 @@
-/* Estilos generales del Body y fondo */
+/* Estilo base del body */
 body {
     font-family: 'Poppins', sans-serif;
     margin: 0;
     padding: 0;
+    height: 100vh;
     background: url('/static/images/LOGO-MV.JPG') repeat;
     background-size: 150px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
     position: relative;
 }
 
-/* Overlay con blur sobre el fondo */
 body::before {
     content: "";
-    position: fixed;
-    top: 0;
-    left: 0;
+    position: absolute;
+    top: 0; left: 0;
     width: 100%;
     height: 100%;
     backdrop-filter: blur(1px);
-    background-color: rgba(255, 255, 255, 0.8);
+    background-color: rgba(255, 255, 255, 0.85);
     z-index: 0;
 }
 
-/* Estilo del título principal */
-h1 {
-    color: #202124;
-    font-size: 24px;
-    font-weight: bold;
+/* Contenedor principal */
+.container {
+    position: relative;
+    background: #fff;
+    padding: 50px 40px;
+    border-radius: 20px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
     text-align: center;
-    margin: 0; /* Ajuste de margen */
+    width: 90%;
+    max-width: 600px;
+    z-index: 1;
+    transition: all 0.3s ease;
 }
 
-
-
-/* Contenedor del encabezado con icono y título */
+/* Encabezado con ícono */
 .header-container {
     display: flex;
     align-items: center;
     justify-content: center;
-    margin-bottom: 20px;
-    width: 100%; /* Asegura que ocupe el ancho del contenedor padre para centrar */
-}
-
-/* Estilo del icono en el encabezado */
-.icono-mv {
-    margin-right: 15px;
-    height: 35px; /* Ajusta según necesites */
-    width: auto;
-}
-
-
-/* Envoltorio principal centrado y con padding */
-.wrapper {
-    display: flex;
-    justify-content: center; /* Centra .container HORIZONTALMENTE - MANTENER */
-    align-items: center; /* <--- CAMBIADO: Alinea .container a la PARTE SUPERIOR - ANTES era center */
-    min-height: 100vh;
-    width: 100%;
-    position: relative;
-    z-index: 1;
-    padding: 20px 1rem; /* Ajusta el padding según la última versión que te di */
-    box-sizing: border-box;
-}
-/* Contenedor principal del contenido (centrado, con sombra, etc.) */
-.container {
-  
-    background: #fff;
-    padding: 3rem;
-    border-radius: 1.5rem;
-    box-shadow: 0 0.8rem 2rem rgba(0, 0, 0, 0.1);
-    width: 95%; /* Ajusta el ancho, 70% puede ser muy pequeño en pantallas grandes */
-    max-width: 1600px; /* Maximo ancho */
-    z-index: 1;
-    display: flex;
-    flex-direction: column;
-    align-items: center; /* Centra los hijos (h1, folder-grid, file-grid) */
-    box-sizing: border-box; /* Incluye padding en el ancho */
-}
-
-/* Grid de carpetas (flexbox) */
-.folder-grid {
-    display: flex;
+    gap: 15px;
+    margin-bottom: 30px;
     flex-wrap: wrap;
-    justify-content: center; /* Centra las tarjetas si no llenan la fila */
-    gap: 2rem; /* Espaciado entre tarjetas */
-    margin-top: 1rem; /* Ajuste de margen superior */
-    width: 100%; /* Ocupa todo el ancho del .container */
 }
 
-/* Tarjeta de carpeta (Ahora es un DIV) */
-.folder-card {
-    background: #28a745; /* Color verde */
-    color: #fff;
-    border-radius: 1rem;
-    box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.1);
-    /* display: flex; flex-direction: column; align-items: center; justify-content: center; */
-     /* No usar display flex/center en el contenedor si tiene varios hijos posicionados (link, button, menu) */
-    transition: transform 0.2s ease-in-out;
-    cursor: pointer; /* El cursor en la tarjeta */
-    width: 180px; /* Ancho fijo */
-    height: 180px; /* Alto fijo */
-    padding: 1rem;
-    text-align: center;
-  
-    word-break: break-word;
-    margin-bottom: 1rem;
-    position: relative; /* Necesario para posicionar el botón y el menú ABSOLUTAMENTE */
-    box-sizing: border-box; /* Incluye padding en las dimensiones */
-    overflow: hidden; /* Oculta contenido que se desborde */
-}
-
-/* Estilo para el enlace de navegación dentro de la tarjeta de carpeta */
-.folder-card .folder-link {
-     display: flex; /* Usa flexbox para alinear icono y nombre */
-     flex-direction: column;
-     align-items: center;
-     justify-content: center; /* Centra contenido principal */
-     text-decoration: none; /* Sin subrayado */
-     color: inherit; /* Hereda el color blanco del padre */
-     width: 100%; /* Ocupa todo el ancho del padre */
-     height: 100%; /* Ocupa todo el alto del padre */
-     position: absolute; /* Posiciona sobre la tarjeta */
-     top: 0; left: 0;
-     z-index: 5; /* Asegura que sea clickeable (menos que el toggle/menu) */
-     padding: 1rem; /* Añade padding igual al padre para que el contenido no toque bordes */
-     box-sizing: border-box; /* Incluye padding en las dimensiones */
-}
-
-
-
-.folder-card .folder-options-toggle {
-    position: absolute;
-    top: 2px;
-    right: 0;
-    background: transparent;
-    border: none;
-    color: white;
-    font-size: 24px; /* Tamaño de los puntos */
-    cursor: pointer;
-    user-select: none;
-    display: flex;
-    flex-direction: column; /* Distribuye los puntos verticalmente */
-    align-items: center;
-    justify-content: center;
-    width: 40px;  /* Área de clic más grande */
-    height: 40px;
-    z-index: 15;
-    transition: background-color 0.2s ease;
-    border-radius: 50%; /* Área circular clickeable (opcional) */
-}
-
-/* Estilo para los puntos */
-.folder-card .folder-options-toggle span {
-    background-color: white;
-    border-radius: 50%;
-    width: 5px;
-    height: 5px;
-    margin: 2px 0;
-}
-
-/* Efecto al pasar el mouse */
-.folder-card .folder-options-toggle:hover {
-    background-color: rgba(255, 255, 255, 0.1);
-}
-
-
-
-/* Estilos para los spans si los usas para los 3 puntos */
-.folder-card .folder-options-toggle span {
-    display: block;
-    background-color: white;
-    border-radius: 50%;
-    height: 4px;
-    width: 4px;
-}
-
-
-/* Estilos para el contenedor del menú desplegable de opciones de CARPETA */
-.folder-options-menu {
-    position: absolute; /* Posicionado respecto a .folder-card */
-    top: 30px; /* Ajusta para que aparezca por debajo del toggle */
-    right: 5px; /* Alineado a la derecha */
-    background-color: white; /* Fondo blanco */
-    border: 1px solid #ccc; /* Borde gris */
-    box-shadow: 2px 2px 5px rgba(0,0,0,0.2); /* Sombra */
-    z-index: 20; /* Asegura que esté por encima de todo */
-    display: none; /* Oculto por defecto. JS cambiará a 'flex'. */
-    flex-direction: column; /* Ítems apilados verticalmente */
-    min-width: 120px; /* Ancho mínimo */
-    padding: 5px 0; /* Padding interno arriba/abajo */
-    list-style: none; /* Quita viñetas si usas lista */
-    margin: 0;
-    border-radius: 5px;
-    overflow: hidden; /* Asegura bordes redondeados para los items */
-}
-
-
-/* Estilos para los enlaces/opciones dentro del menú de carpeta */
-.folder-options-menu a {
-    padding: 8px 15px;
-    text-decoration: none; /* Sin subrayado */
-    color: #333; /* Color del texto */
-    display: block; /* Ocupa todo el ancho */
-    white-space: nowrap; /* Evita salto de línea */
-    font-size: 0.9em;
-    transition: background-color 0.2s;
-}
-
-.folder-options-menu a:hover {
-    background-color: #f0f0f0; /* Fondo gris claro al pasar el ratón */
-}
-
-
-/* Efecto hover en la tarjeta (en el contenedor DIV) */
-.folder-card:hover {
-    transform: scale(1.08);
-    box-shadow: 0 0.8rem 1.5rem rgba(0, 0, 0, 0.15);
-}
-
-/* Estilos del icono dentro de la tarjeta (aplicados al IMG dentro del enlace) */
-.folder-card .folder-icon {
-    width: 40px;
-    height: 40px;
-    margin-bottom: 0.5rem;
-    flex-shrink: 0; /* Evita que se encoja si el nombre es largo */
-}
-
-/* Estilos del nombre dentro de la tarjeta (aplicados al DIV dentro del enlace) */
-.folder-card .folder-name {
-    font-weight: 600;
-    font-size: 1rem;
-    text-overflow: ellipsis; /* Añade puntos suspensivos si el texto es demasiado largo */
-    overflow: hidden; /* Oculta el texto que se desborda */
-    width: 100%; /* Ocupa todo el ancho disponible */
-    text-align: center; /* Centra el texto */
-    margin-top: 0; /* Ajuste de margen */
-    word-break: break-word; /* Permite romper palabras largas */
-    white-space: normal; /* Permite que el texto se envuelva si es muy largo */
-}
-
-
-/* Grid de archivos (grid) */
-.file-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
-    gap: 2rem;
-    margin-top: 1rem; /* Ajuste de margen */
-    width: 100%;
-    padding: 0; /* Ajuste de padding */
-}
-
-/* Tarjeta de archivo (Ahora es un DIV) */
-.file-card {
-    background: #ffffff;
-    border-radius: 12px;
-    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
-    /* display: flex; flex-direction: column; align-items: center; justify-content: center; */
-     /* No usar display flex/center en el contenedor si tiene varios hijos posicionados (link, button, menu) */
-    cursor: pointer;
-    padding: 10px;
-    height: 270px; /* Alto fijo */
-    text-align: center;
-    transition: background 0.2s, transform 0.2s;
-    border: 1px solid #dadce0;
-    position: relative; /* Necesario para posicionar el botón y el menú ABSOLUTAMENTE */
-    box-sizing: border-box; /* Incluye padding en las dimensiones */
-    overflow: hidden; /* Oculta contenido que se desborde */
-}
-
-/* Estilo para el enlace principal dentro de la tarjeta de archivo */
-.file-card .file-link {
-     display: flex; /* Usa flexbox para alinear icono y nombre */
-     flex-direction: column;
-     align-items: center;
-     justify-content: center; /* Centra contenido principal */
-     text-decoration: none; /* Sin subrayado */
-     color: #333; /* Color del texto del archivo */
-     width: 100%; /* Ocupa todo el ancho del padre */
-     height: 100%; /* Ocupa todo el alto del padre */
-     position: absolute; /* Posiciona sobre la tarjeta */
-     top: 0; left: 0;
-     z-index: 5; /* Asegura que sea clickeable (menos que el toggle/menu) */
-     padding: 10px; /* Añade padding igual al padre para que el contenido no toque bordes */
-     box-sizing: border-box; /* Incluye padding en las dimensiones */
-}
-
-
-/* Efecto hover en la tarjeta de archivo (en el contenedor DIV) */
-.file-card:hover {
-    background: #f0f0f0; /* Fondo gris claro al pasar el ratón */
-    transform: scale(1.03);
-}
-
-/* Estilos del icono/miniatura dentro de la tarjeta (aplicados al IMG dentro del enlace) */
-.file-card .file-icon,
-.file-card .archivo-icon { /* Ajustado para el nombre común y específico */
-    width:70%;
+.icono-mv {
+    width: 60px;
     height: auto;
-    object-fit: contain;
-    flex-shrink: 0; /* Evita que se encoja */
 }
 
-
-/* Estilos del nombre del archivo dentro de la tarjeta (aplicados al DIV dentro del enlace) */
-.file-card .file-name {
-    font-size: 14px;
-    font-weight: 700;
-    color: #333;
-    word-break: break-word;
-    text-align: center;
-    text-overflow: ellipsis;
-    overflow: hidden;
-    width: 100%;
-    margin-top: 8px;
-    white-space: normal; /* Permite envolver */
-}
-
-/* Estilos para el botón de los 3 puntos en la tarjeta de archivo */
-.file-card .file-options-toggle {
-    position: absolute; /* Posicionado respecto a .file-card */
-    top: 2px; /* Distancia desde arriba */
-    right: 2px; /* Distancia desde la derecha */
-    background: none;
-    border: none;
-    cursor: pointer;
-    font-size: 1.5em; /* Tamaño de los puntos */
-    line-height: 1;
-    padding: 0 5px;
-    margin: 0;
-    color: #555; /* Color gris suave */
+/* Título */
+h1 {
+    color: #202124;
+    font-size: 30px;
     font-weight: bold;
-    z-index: 15; /* Asegura que esté por encima del enlace y el menú */
-}
-
-.file-card .file-options-toggle:hover {
-    color: #000; /* Más oscuro al pasar el ratón */
-}
-
-
-/* Estilos para el contenedor del menú desplegable de opciones de ARCHIVO */
-.file-options-menu {
-    position: absolute; /* Posicionado respecto a .file-card */
-    top: 30px; /* Ajusta para que aparezca por debajo del toggle */
-    right: 5px; /* Alineado a la derecha */
-    background-color: white;
-    border: 1px solid #ccc;
-    box-shadow: 2px 2px 5px rgba(0,0,0,0.2);
-    z-index: 20; /* Asegura que esté por encima de todo */
-    display: none; /* Oculto por defecto. JS cambiará a 'flex'. */
-    flex-direction: column;
-    min-width: 120px;
-    padding: 5px 0;
-    list-style: none;
     margin: 0;
-    border-radius: 5px;
-    overflow: hidden;
 }
 
-/* Estilos para los enlaces/opciones dentro del menú de archivo */
-.file-options-menu a {
-    padding: 8px 15px;
+/* Botones de entidad */
+.botones {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.btn {
+    background-color: #28a745;
+    color: white;
+    padding: 18px 25px;
+    font-size: 20px;
     text-decoration: none;
-    color: #333;
-    display: block;
-    white-space: nowrap;
-    font-size: 0.9em;
-    transition: background-color 0.2s;
+    border-radius: 12px;
+    transition: background 0.3s ease, transform 0.2s ease;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 12px;
 }
 
-.file-options-menu a:hover {
-    background-color: #f0f0f0;
+.btn:hover {
+    background-color: #218838;
+    transform: translateY(-2px);
 }
 
+.btn i {
+    font-size: 24px;
+}
 
-/* === Botón flotante '+' === */
+/* Botón flotante */
 .btn-add-inside {
     position: fixed;
     bottom: 30px;
     right: 30px;
-    width: 60px;
-    height: 60px;
+    width: 65px;
+    height: 65px;
     border-radius: 50%;
     background-color: #28a745;
     color: white;
-    font-size: 32px;
+    font-size: 36px;
     border: none;
     display: flex;
     justify-content: center;
@@ -398,27 +116,26 @@ h1 {
     transform: scale(1.1);
 }
 
-/* Contenedor del menú del botón flotante */
+/* Menú flotante */
 .menu-opciones {
     position: fixed;
-    bottom: 90px; /* Aparece encima del botón flotante */
+    bottom: 100px;
     right: 30px;
     background-color: white;
-    border-radius: 10px;
+    border-radius: 12px;
     box-shadow: 0 4px 16px rgba(0,0,0,0.2);
-    display: none; /* Oculto por defecto */
+    display: none;
     flex-direction: column;
     padding: 10px 0;
-    z-index: 1000; /* Asegura que esté por encima del contenido */
+    z-index: 1000;
 }
 
 .menu-opciones.menu-visible {
-    display: flex; /* Se muestra cuando la clase es añadida por JS */
+    display: flex;
 }
 
-/* Estilo de cada opción en el menú del botón flotante */
 .menu-opcion {
-    padding: 10px 20px;
+    padding: 12px 20px;
     color: #333;
     text-decoration: none;
     font-weight: 500;
@@ -430,208 +147,44 @@ h1 {
     color: #28a745;
 }
 
-/* Estilos para el mensaje de carpeta vacía */
-.empty-folder-message {
-    text-align: center;
-    color: #555;
-    font-size: 1.1em;
-    margin-top: 40px;
-}
-
-/* --- Modal Overlay (Fondo oscuro que cubre la pantalla) --- */
-.modal-overlay {
-    display: none; /* Oculto por defecto */
-    position: fixed;
-    z-index: 1000; /* Asegura que esté por encima de todo */
-    left: 0;
-    top: 0;
-    width: 100%;
-    height: 100%;
-    overflow: auto; /* Permite scroll si el contenido es largo */
-    background-color: rgba(0, 0, 0, 0.5); /* Fondo semi-transparente */
-    justify-content: center; /* Centra horizontalmente (si display es flex/grid) */
-    align-items: center; /* Centra verticalmente (si display es flex/grid) */
-}
-
-/* --- Contenedor del contenido del Modal --- */
-.modal-content {
-    background-color: #fefefe;
-    margin: 10% auto; /* Margen arriba/abajo y centrado horizontal (si display no es flex/grid) */
-    padding: 20px;
-    border: 1px solid #888;
-    width: 90%; /* Ancho en pantallas pequeñas */
-    max-width: 600px; /* Ancho máximo en pantallas grandes */
-    border-radius: 8px;
-    position: relative;
-    box-shadow: 0 4px 8px rgba(0,0,0,0.2), 0 6px 20px rgba(0,0,0,0.19);
-    box-sizing: border-box; /* Incluye padding y borde en las dimensiones */
-    display: flex; /* Usar flexbox para layout interno */
-    flex-direction: column;
-    max-height: 90vh; /* Altura máxima relativa a la ventana */
-    overflow-y: auto; /* Permite scroll interno si el contenido del modal es muy largo */
-}
-
-/* --- Botón de Cerrar del Modal --- */
-.modal-close-button {
-    color: #aaa;
-    float: right; /* Flota a la derecha dentro de su contenedor flex (modal-content) */
-    font-size: 28px;
-    font-weight: bold;
-    cursor: pointer;
-    position: absolute; /* Posiciona respecto al modal-content */
-    top: 10px;
-    right: 15px;
-    line-height: 1; /* Ajusta la altura de línea */
-    background: none; /* Sin fondo ni borde */
-    border: none;
-    padding: 5px; /* Aumenta el área clickeable */
-    z-index: 10; /* Asegura que esté por encima del título/formulario */
-}
-
-.modal-close-button:hover,
-.modal-close-button:focus {
-    color: #333;
-    text-decoration: none;
-}
-
-/* --- Título del Modal --- */
-.modal-content h3 {
-    margin-top: 0;
-    margin-bottom: 15px; /* Espacio debajo del título */
-    color: #333;
-    text-align: center; /* Centra el título */
-    width: 100%; /* Asegura que ocupe el ancho para centrar */
-}
-
-/* Estilo para el párrafo de Servicio en la modal */
-.modal-content p {
-    margin-top: 0;
-    margin-bottom: 15px;
-    text-align: center;
-    font-weight: normal;
-    color: #555;
-}
-
-/* --- Formulario dentro del Modal --- */
-.modal-content form {
-    width: 100%; /* Ocupa todo el ancho disponible */
-}
-
-.modal-content .form-group {
-    margin-bottom: 15px;
-}
-
-.modal-content .form-group label {
-    display: block; /* Cada label en su propia línea */
-    margin-bottom: 5px;
-    font-weight: bold;
-    color: #555;
-}
-
-.modal-content .form-group input[type="text"],
-.modal-content .form-group input:not([type="checkbox"]):not([type="radio"]):not([type="submit"]):not([type="button"]), /* Selección más específica para inputs */
-.modal-content .form-group select,
-.modal-content .form-group textarea {
-    width: 100%; /* Ocupa todo el ancho del contenedor flex */
-    padding: 10px; /* Ajuste de padding */
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    box-sizing: border-box; /* Incluye padding y borde en el ancho/alto */
-    font-size: 1em; /* Tamaño de fuente legible */
-}
-
-/* --- Acciones del Formulario (Botones) --- */
-.modal-content .form-actions {
-    display: flex;
-    justify-content: flex-end; /* Alinea los botones a la derecha */
-    gap: 10px; /* Espacio entre los botones */
-    margin-top: 20px; /* Espacio arriba de los botones */
-    width: 100%; /* Ocupa todo el ancho para justificar */
-}
-
-.modal-content .form-actions button {
-    padding: 10px 20px; /* Ajuste de padding */
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-    font-size: 1em;
-    transition: background-color 0.2s ease;
-}
-.modal-content .form-actions .btn-primary {
-    background-color: #007bff; /* Color azul primario */
-    color: white;
-}
-.modal-content .form-actions .btn-primary:hover {
-    background-color: #0056b3; /* Azul más oscuro al pasar el ratón */
-}
-.modal-content .form-actions .btn-secondary {
-    background-color: #6c757d; /* Color gris secundario */
-    color: white;
-}
-.modal-content .form-actions .btn-secondary:hover {
-    background-color: #545b62; /* Gris más oscuro al pasar el ratón */
-}
-
-
-/* --- Toast Message Container --- */
-.toast {
-    visibility: hidden;
-    min-width: 250px;
-    background-color: #333;
-    color: #fff;
-    text-align: center;
-    border-radius: 4px;
-    padding: 16px;
-    position: fixed;
-    z-index: 1050; /* Asegura que esté por encima de la modal si ambas están visibles */
-    left: 50%;
-    bottom: 30px;
-    font-size: 1em; /* Tamaño de fuente legible */
-    opacity: 0;
-    transform: translateX(-50%); /* Centra horizontalmente */
-    transition: opacity 0.5s ease, bottom 0.5s ease, visibility 0.5s;
-}
-
-.toast.show {
-    visibility: visible;
-    opacity: 1;
-    bottom: 50px; /* Sube un poco al mostrarse */
-}
-
-.toast.error {
-    background-color: #d9534f; /* Rojo para errores */
-}
-
-.toast.success {
-    background-color: #5cb85c; /* Verde para éxito */
-}
-
-.toast.info { /* Estilo para mensajes informativos (por defecto) */
-    background-color: #5bc0de; /* Color azul claro */
-}
-
-
-@media (max-width: 720px) {
-    .folder-grid, .file-grid {
-        gap: 1.2rem;
-        padding: 1rem;
+/* --------------------------------- */
+/* RESPONSIVE PARA MÓVILES          */
+/* --------------------------------- */
+@media (max-width: 768px) {
+    .container {
+        width: 80%;
+        padding: 40px 20px;
     }
 
-    .folder-card, .file-card {
-        width: 95%;
-        padding: 1.2rem;
+    .header-container {
+        flex-direction: column;
+        gap: 10px;
     }
 
-    .folder-icon, .file-icon {
-        width: 60px;
-        height: 60px;
+    .icono-mv {
+        width: 50px;
     }
 
-    .folder-name, .file-name {
-        font-size: 1.2rem;
+    h1 {
+        font-size: 24px;
     }
 
-    .folder-options {
-        font-size: 1.8rem;
+    .btn {
+        font-size: 18px;
+        padding: 14px;
+    }
+
+    .btn i {
+        font-size: 20px;
+    }
+
+    .btn-add-inside {
+        width: 55px;
+        height: 55px;
+        font-size: 28px;
+    }
+
+    .menu-opcion {
+        font-size: 16px;
     }
 }

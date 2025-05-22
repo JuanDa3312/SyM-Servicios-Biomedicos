@@ -1,94 +1,251 @@
-/* General styles */
+/* Estilos generales del Body y fondo */
 body {
     font-family: 'Poppins', sans-serif;
     margin: 0;
     padding: 0;
-    height: 100vh;
     background: url('/static/images/LOGO-MV.JPG') repeat;
-    background-size: 150px; /* Tamaño personalizado: más pequeño */
-    display: flex;
-    justify-content: center;
-    align-items: center;
+    background-size: 150px;
+    position: relative;
 }
+
+/* Overlay con blur sobre el fondo */
 body::before {
     content: "";
-    position: absolute;
-    top: 0; left: 0;
+    position: fixed;
+    top: 0;
+    left: 0;
     width: 100%;
     height: 100%;
-    backdrop-filter: blur(1px); /* El difuminado principal */
-    background-color: rgba(255, 255, 255, 0.8); /* Color encima con transparencia */
+    backdrop-filter: blur(1px);
+    background-color: rgba(255, 255, 255, 0.8);
     z-index: 0;
 }
+
+/* Estilo del título principal */
 h1 {
     color: #202124;
     font-size: 24px;
     font-weight: bold;
-    margin-top: 30px;
-    margin-bottom: 30px;
     text-align: center;
+    margin: 0; /* Ajuste de margen */
 }
 
-.icono-mv{
-    width: 40px;        /* ajustar el tamaño */
-    height: auto;
-    vertical-align: middle;
-    margin-right: 10px; /* Espacio entre imagen y texto */
+
+
+/* Contenedor del encabezado con icono y título */
+.header-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 20px;
+    width: 100%; /* Asegura que ocupe el ancho del contenedor padre para centrar */
 }
 
-/* Contenedor */
-.container {
+/* Estilo del icono en el encabezado */
+.icono-mv {
+    margin-right: 15px;
+    height: 35px; /* Ajusta según necesites */
+    width: auto;
+}
+
+
+/* Envoltorio principal centrado y con padding */
+.wrapper {
+    display: flex;
+    justify-content: center; /* Centra .container HORIZONTALMENTE - MANTENER */
+    align-items: center; /* <--- CAMBIADO: Alinea .container a la PARTE SUPERIOR - ANTES era center */
+    min-height: 100vh;
+    width: 100%;
     position: relative;
+    z-index: 1;
+    padding: 20px 1rem; /* Ajusta el padding según la última versión que te di */
+    box-sizing: border-box;
+}
+/* Contenedor principal del contenido (centrado, con sombra, etc.) */
+.container {
+  
     background: #fff;
-    padding: 40px;
-    border-radius: 20px;
-    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
-    width: 90%;
-    max-width: 1200px;
+    padding: 3rem;
+    border-radius: 1.5rem;
+    box-shadow: 0 0.8rem 2rem rgba(0, 0, 0, 0.1);
+    width: 95%; /* Ajusta el ancho, 70% puede ser muy pequeño en pantallas grandes */
+    max-width: 1600px; /* Maximo ancho */
+    z-index: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center; /* Centra los hijos (h1, folder-grid, file-grid) */
+    box-sizing: border-box; /* Incluye padding en el ancho */
 }
 
-/* Grid de carpetas */
+/* Grid de carpetas (flexbox) */
 .folder-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-    gap: 24px; /* MÁS ESPACIO entre carpetas */
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center; /* Centra las tarjetas si no llenan la fila */
+    gap: 2rem; /* Espaciado entre tarjetas */
+    margin-top: 1rem; /* Ajuste de margen superior */
+    width: 100%; /* Ocupa todo el ancho del .container */
 }
-/* Estilo para carpetas en específico */
+
+/* Tarjeta de carpeta (Ahora es un DIV) */
+.folder-card {
+    background: #28a745; /* Color verde */
+    color: #fff;
+    border-radius: 1rem;
+    box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.1);
+    /* display: flex; flex-direction: column; align-items: center; justify-content: center; */
+     /* No usar display flex/center en el contenedor si tiene varios hijos posicionados (link, button, menu) */
+    transition: transform 0.2s ease-in-out;
+    cursor: pointer; /* El cursor en la tarjeta */
+    width: 180px; /* Ancho fijo */
+    height: 180px; /* Alto fijo */
+    padding: 1rem;
+    text-align: center;
+  
+    word-break: break-word;
+    margin-bottom: 1rem;
+    position: relative; /* Necesario para posicionar el botón y el menú ABSOLUTAMENTE */
+    box-sizing: border-box; /* Incluye padding en las dimensiones */
+    overflow: hidden; /* Oculta contenido que se desborde */
+}
+
+/* Estilo para el enlace de navegación dentro de la tarjeta de carpeta */
+.folder-card .folder-link {
+     display: flex; /* Usa flexbox para alinear icono y nombre */
+     flex-direction: column;
+     align-items: center;
+     justify-content: center; /* Centra contenido principal */
+     text-decoration: none; /* Sin subrayado */
+     color: inherit; /* Hereda el color blanco del padre */
+     width: 100%; /* Ocupa todo el ancho del padre */
+     height: 100%; /* Ocupa todo el alto del padre */
+     position: absolute; /* Posiciona sobre la tarjeta */
+     top: 0; left: 0;
+     z-index: 5; /* Asegura que sea clickeable (menos que el toggle/menu) */
+     padding: 1rem; /* Añade padding igual al padre para que el contenido no toque bordes */
+     box-sizing: border-box; /* Incluye padding en las dimensiones */
+}
+
+
+
+.folder-card .folder-options-toggle {
+    position: absolute;
+    top: 2px;
+    right: 0;
+    background: transparent;
+    border: none;
+    color: white;
+    font-size: 24px; /* Tamaño de los puntos */
+    cursor: pointer;
+    user-select: none;
+    display: flex;
+    flex-direction: column; /* Distribuye los puntos verticalmente */
+    align-items: center;
+    justify-content: center;
+    width: 40px;  /* Área de clic más grande */
+    height: 40px;
+    z-index: 15;
+    transition: background-color 0.2s ease;
+    border-radius: 50%; /* Área circular clickeable (opcional) */
+}
+
+/* Estilo para los puntos */
+.folder-card .folder-options-toggle span {
+    background-color: white;
+    border-radius: 50%;
+    width: 5px;
+    height: 5px;
+    margin: 2px 0;
+}
+
+/* Efecto al pasar el mouse */
+.folder-card .folder-options-toggle:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+}
+
+
+
+/* Estilos para los spans si los usas para los 3 puntos */
+.folder-card .folder-options-toggle span {
+    display: block;
+    background-color: white;
+    border-radius: 50%;
+    height: 4px;
+    width: 4px;
+}
+
+
+/* Estilos para el contenedor del menú desplegable de opciones de CARPETA */
+.folder-options-menu {
+    position: absolute; /* Posicionado respecto a .folder-card */
+    top: 30px; /* Ajusta para que aparezca por debajo del toggle */
+    right: 5px; /* Alineado a la derecha */
+    background-color: white; /* Fondo blanco */
+    border: 1px solid #ccc; /* Borde gris */
+    box-shadow: 2px 2px 5px rgba(0,0,0,0.2); /* Sombra */
+    z-index: 20; /* Asegura que esté por encima de todo */
+    display: none; /* Oculto por defecto. JS cambiará a 'flex'. */
+    flex-direction: column; /* Ítems apilados verticalmente */
+    min-width: 120px; /* Ancho mínimo */
+    padding: 5px 0; /* Padding interno arriba/abajo */
+    list-style: none; /* Quita viñetas si usas lista */
+    margin: 0;
+    border-radius: 5px;
+    overflow: hidden; /* Asegura bordes redondeados para los items */
+}
+
+
+/* Estilos para los enlaces/opciones dentro del menú de carpeta */
+.folder-options-menu a {
+    padding: 8px 15px;
+    text-decoration: none; /* Sin subrayado */
+    color: #333; /* Color del texto */
+    display: block; /* Ocupa todo el ancho */
+    white-space: nowrap; /* Evita salto de línea */
+    font-size: 0.9em;
+    transition: background-color 0.2s;
+}
+
+.folder-options-menu a:hover {
+    background-color: #f0f0f0; /* Fondo gris claro al pasar el ratón */
+}
+
+
+/* Efecto hover en la tarjeta (en el contenedor DIV) */
+.folder-card:hover {
+    transform: scale(1.08);
+    box-shadow: 0 0.8rem 1.5rem rgba(0, 0, 0, 0.15);
+}
+
+/* Estilos del icono dentro de la tarjeta (aplicados al IMG dentro del enlace) */
+.folder-card .folder-icon {
+    width: 40px;
+    height: 40px;
+    margin-bottom: 0.5rem;
+    flex-shrink: 0; /* Evita que se encoja si el nombre es largo */
+}
+
+/* Estilos del nombre dentro de la tarjeta (aplicados al DIV dentro del enlace) */
+.folder-card .folder-name {
+    font-weight: 600;
+    font-size: 1rem;
+    text-overflow: ellipsis; /* Añade puntos suspensivos si el texto es demasiado largo */
+    overflow: hidden; /* Oculta el texto que se desborda */
+    width: 100%; /* Ocupa todo el ancho disponible */
+    text-align: center; /* Centra el texto */
+    margin-top: 0; /* Ajuste de margen */
+    word-break: break-word; /* Permite romper palabras largas */
+    white-space: normal; /* Permite que el texto se envuelva si es muy largo */
+}
+/* Fondos específicos para tarjetas de carpeta */
 .folder-card[data-folder-id="1syTnARFTLOE-ho9QdbJHeRDisL_qS1Dk"],
 .folder-card[data-folder-id="1SWs0PIJbmV7H1brkOAFU4DX_632F9ZsC"],
 .folder-card[data-folder-id="1kgXkmaYUe4CBrR4WC30eJDwNKeqShqiB"] {
-    background: #01662D; /* Color verde más oscuro */
-}
-/* Estilo de cada tarjeta de carpeta */
-.folder-card {
-    background: #28a745;
-    padding: 16px;
-    border-radius: 8px;
-    box-shadow: 0 1px 4px rgba(60, 64, 67, 0.2);
-    display: flex;
-    align-items: center;
-    transition: transform 0.1s ease-in-out;
-    cursor: pointer;
-    margin-bottom: 12px; /* SEPARACIÓN VERTICAL */
+    background: #01662D; /* Un verde oscuro específico para estas carpetas */
 }
 
-.folder-card:hover {
-    transform: scale(1.07);
-}
 
-.folder-icon {
-    width: 30px; /* Íconos más grandes para las carpetas */
-    height: 30px;
-    margin-right: 10px;
-}
-
-.folder-name {
-    color: #fff;
-    font-weight: 500;
-    font-size: 16px; /* Texto un poco más grande para las carpetas */
-
-}
-
+/* === Botón flotante '+' === */
 .btn-add-inside {
     position: fixed;
     bottom: 30px;
@@ -114,23 +271,25 @@ h1 {
     transform: scale(1.1);
 }
 
+/* Contenedor del menú del botón flotante */
 .menu-opciones {
     position: fixed;
-    bottom: 90px;
+    bottom: 90px; /* Aparece encima del botón flotante */
     right: 30px;
     background-color: white;
     border-radius: 10px;
     box-shadow: 0 4px 16px rgba(0,0,0,0.2);
-    display: none;
+    display: none; /* Oculto por defecto */
     flex-direction: column;
     padding: 10px 0;
-    z-index: 1000;
+    z-index: 1000; /* Asegura que esté por encima del contenido */
 }
 
 .menu-opciones.menu-visible {
-    display: flex;
+    display: flex; /* Se muestra cuando la clase es añadida por JS */
 }
 
+/* Estilo de cada opción en el menú del botón flotante */
 .menu-opcion {
     padding: 10px 20px;
     color: #333;
@@ -138,27 +297,66 @@ h1 {
     font-weight: 500;
     transition: background-color 0.2s;
 }
+
 .menu-opcion:hover {
     background-color: #f0f0f0;
     color: #28a745;
 }
-/* Media query for small screens */
-@media (max-width: 768px) {
-    .container {
-        width: 90%;  /* Ahora ocupa el 90% del ancho en pantallas más pequeñas */
-        height: auto;  /* Altura automática para adaptarse al contenido */
-        padding: 20px;  /* Reducimos el padding para ahorrar espacio */
-    }
+
+/* Estilos para el mensaje de carpeta vacía */
+.empty-folder-message {
+    text-align: center;
+    color: #555;
+    font-size: 1.1em;
+    margin-top: 40px;
+}
+
+
+
+@media (max-width: 720px) {
+
+    /* Estilo del título principal */
     h1 {
-        font-size: 1.5rem; /* Ajustamos el tamaño de la fuente para pantallas pequeñas */
+        
+        font-size: 1.5rem; /* tamaño relativo para adaptarse mejor a pantallas */
+        
     }
 
-    .folder-card {
-        padding: 15px;
-        width: 100%;
+    /* Contenedor del encabezado con icono y título */
+    .header-container {
+        
+        gap: 10px; /* espacio entre icono y texto */
+       
+        flex-wrap: wrap; /* para que se adapte mejor en pantallas pequeñas */
+        
     }
 
-    .folder-name {
-        font-size: 1rem;  /* Ajustamos el tamaño del texto */
+    
+    .header-container img,
+    .header-container .icon {
+        width: 60px;
+        height: 60px;
+    }
+    .folder-grid, .file-grid {
+        gap: 1.2rem;
+        padding: 1rem;
+    }
+
+    .folder-card, .file-card {
+        width: 95%;
+        padding: 1.2rem;
+    }
+
+    .folder-icon, .file-icon {
+        width: 60px;
+        height: 60px;
+    }
+
+    .folder-name, .file-name {
+        font-size: 1.2rem;
+    }
+
+    .folder-options {
+        font-size: 1.8rem;
     }
 }
