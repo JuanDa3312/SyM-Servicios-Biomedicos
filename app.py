@@ -8,6 +8,7 @@ from flask import (
     Flask, redirect, request, session, url_for, render_template,
     make_response, g, abort, jsonify
 )
+
 from google.oauth2.credentials import Credentials
 from google_auth_oauthlib.flow import Flow
 from googleapiclient.discovery import build
@@ -15,7 +16,8 @@ from googleapiclient.http import MediaIoBaseUpload
 from googleapiclient.errors import HttpError
 import google.auth.transport.requests
 from cryptography.fernet import Fernet
-from werkzeug.middleware.proxy_fix import ProxyFix
+
+
 # -----------------------------------------------------------------------------
 # Configuración de la Aplicación Flask
 # -----------------------------------------------------------------------------
@@ -47,9 +49,6 @@ except Exception as e:
 # -----------------------------------------------------------------------------
 # Constantes y Rutas de Archivos
 # -----------------------------------------------------------------------------
-app.wsgi_app = ProxyFix(
-    app.wsgi_app, x_for=1, x_host=1, x_proto=1, x_prefix=1
-)
 
 CREDENTIALS_COOKIE = 'google_drive_credentials' # Nombre de la cookie para credenciales de Drive
 CLIENT_SECRETS_FILE = "credenciales.json"      # Archivo de secretos del cliente OAuth 2.0 de Google
