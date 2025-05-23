@@ -17,12 +17,18 @@ from googleapiclient.errors import HttpError
 import google.auth.transport.requests
 from cryptography.fernet import Fernet
 
+from flask import request
+from werkzeug.middleware.proxy_fix import ProxyFix
+
 
 # -----------------------------------------------------------------------------
 # Configuración de la Aplicación Flask
 # -----------------------------------------------------------------------------
 
 app = Flask(__name__)
+
+app = Flask(__name__)
+app.wsgi_app = ProxyFix(app.wsgi_app, x_proto=1, x_host=1)
 
 # Clave secreta para la sesión de Flask.
 # ¡IMPORTANTE! En producción, establecer una FLASK_SECRET_KEY segura como variable de entorno.
