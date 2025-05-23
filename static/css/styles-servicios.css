@@ -359,4 +359,26 @@ h1 {
     .folder-options {
         font-size: 1.8rem;
     }
+
+    /* Eliminar el efecto de acercamiento para folder-card en móviles */
+    .folder-card {
+        transition: background 0.2s; /* Solo se mantiene el cambio de fondo */
+        transform: none; /* Asegura que no haya ninguna transformación */
+    }
+
+    .folder-card:hover {
+        transform: none; /* Asegura que no haya ninguna transformación */
+        box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.1); /* Volver al shadow original */
+    }
+
+    /* Eliminar el efecto de acercamiento para file-card en móviles */
+    .file-card {
+        transition: background 0.2s; /* Solo se mantiene el cambio de fondo */
+        transform: none; /* Asegura que no haya ninguna transformación */
+    }
+
+    .file-card:hover {
+        background: #f0f0f0; /* Mantener el cambio de fondo al pasar el mouse */
+        transform: none; /* Asegura que no haya ninguna transformación */
+    }
 }
