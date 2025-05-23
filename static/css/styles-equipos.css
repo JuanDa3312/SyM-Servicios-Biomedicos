@@ -30,8 +30,6 @@ h1 {
     margin: 0; /* Ajuste de margen */
 }
 
-
-
 /* Contenedor del encabezado con icono y título */
 .header-container {
     display: flex;
@@ -48,7 +46,6 @@ h1 {
     width: auto;
 }
 
-
 /* Envoltorio principal centrado y con padding */
 .wrapper {
     display: flex;
@@ -61,9 +58,9 @@ h1 {
     padding: 20px 1rem; /* Ajusta el padding según la última versión que te di */
     box-sizing: border-box;
 }
+
 /* Contenedor principal del contenido (centrado, con sombra, etc.) */
 .container {
-  
     background: #fff;
     padding: 3rem;
     border-radius: 1.5rem;
@@ -94,14 +91,13 @@ h1 {
     border-radius: 1rem;
     box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.1);
     /* display: flex; flex-direction: column; align-items: center; justify-content: center; */
-     /* No usar display flex/center en el contenedor si tiene varios hijos posicionados (link, button, menu) */
+    /* No usar display flex/center en el contenedor si tiene varios hijos posicionados (link, button, menu) */
     transition: transform 0.2s ease-in-out;
     cursor: pointer; /* El cursor en la tarjeta */
     width: 180px; /* Ancho fijo */
     height: 180px; /* Alto fijo */
     padding: 1rem;
     text-align: center;
-  
     word-break: break-word;
     margin-bottom: 1rem;
     position: relative; /* Necesario para posicionar el botón y el menú ABSOLUTAMENTE */
@@ -111,21 +107,20 @@ h1 {
 
 /* Estilo para el enlace de navegación dentro de la tarjeta de carpeta */
 .folder-card .folder-link {
-     display: flex; /* Usa flexbox para alinear icono y nombre */
-     flex-direction: column;
-     align-items: center;
-     justify-content: center; /* Centra contenido principal */
-     text-decoration: none; /* Sin subrayado */
-     color: inherit; /* Hereda el color blanco del padre */
-     width: 100%; /* Ocupa todo el ancho del padre */
-     height: 100%; /* Ocupa todo el alto del padre */
-     position: absolute; /* Posiciona sobre la tarjeta */
-     top: 0; left: 0;
-     z-index: 5; /* Asegura que sea clickeable (menos que el toggle/menu) */
-     padding: 1rem; /* Añade padding igual al padre para que el contenido no toque bordes */
-     box-sizing: border-box; /* Incluye padding en las dimensiones */
+    display: flex; /* Usa flexbox para alinear icono y nombre */
+    flex-direction: column;
+    align-items: center;
+    justify-content: center; /* Centra contenido principal */
+    text-decoration: none; /* Sin subrayado */
+    color: inherit; /* Hereda el color blanco del padre */
+    width: 100%; /* Ocupa todo el ancho del padre */
+    height: 100%; /* Ocupa todo el alto del padre */
+    position: absolute; /* Posiciona sobre la tarjeta */
+    top: 0; left: 0;
+    z-index: 5; /* Asegura que sea clickeable (menos que el toggle/menu) */
+    padding: 1rem; /* Añade padding igual al padre para que el contenido no toque bordes */
+    box-sizing: border-box; /* Incluye padding en las dimensiones */
 }
-
 
 .folder-card .folder-options-toggle {
     position: absolute;
@@ -162,8 +157,6 @@ h1 {
     background-color: rgba(255, 255, 255, 0.1);
 }
 
-
-
 /* Estilos para los spans si los usas para los 3 puntos */
 .folder-card .folder-options-toggle span {
     display: block;
@@ -172,7 +165,6 @@ h1 {
     height: 4px;
     width: 4px;
 }
-
 
 /* Estilos para el contenedor del menú desplegable de opciones de CARPETA */
 .folder-options-menu {
@@ -193,7 +185,6 @@ h1 {
     overflow: hidden; /* Asegura bordes redondeados para los items */
 }
 
-
 /* Estilos para los enlaces/opciones dentro del menú de carpeta */
 .folder-options-menu a {
     padding: 8px 15px;
@@ -208,7 +199,6 @@ h1 {
 .folder-options-menu a:hover {
     background-color: #f0f0f0; /* Fondo gris claro al pasar el ratón */
 }
-
 
 /* Efecto hover en la tarjeta (en el contenedor DIV) */
 .folder-card:hover {
@@ -300,7 +290,6 @@ h1 {
     flex-grow: 1; /* Permite que la imagen crezca para ocupar espacio disponible */
 }
 
-
 /* Estilos del nombre del archivo dentro de la tarjeta */
 .file-card .file-name {
     font-size: 14px;
@@ -321,23 +310,43 @@ h1 {
 /* Estilos para el botón de los 3 puntos en la tarjeta de archivo */
 .file-card .file-options-toggle {
     position: absolute;
-    top: 2px;
-    right: 2px;
+    top: 0px; /* Más pegado al top */
+    right: 0px; /* Más pegado a la derecha */
     background: none;
     border: none;
     cursor: pointer;
-    font-size: 1.5em;
+    font-size: 1.5em; /* Mantener tamaño para el icono */
     line-height: 1;
     padding: 0 5px;
     margin: 0;
     color: #555;
     font-weight: bold;
     z-index: 15;
+    transition: background-color 0.2s ease;
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    flex-direction: column; /* Organiza los puntos verticalmente */
+    justify-content: center;
+    align-items: center;
 }
 
 .file-card .file-options-toggle:hover {
     color: #000;
+    background-color: rgba(0, 0, 0, 0.1);
 }
+
+/* Si los tres puntos son spans, necesitamos definirlos para el archivo */
+.file-card .file-options-toggle span {
+    display: block;
+    background-color: #555; /* Color de los puntos */
+    border-radius: 50%;
+    width: 4px;
+    height: 4px;
+    margin: 2px 0; /* Espacio vertical entre los puntos */
+}
+
 
 /* Estilos para el contenedor del menú desplegable de opciones de ARCHIVO */
 .file-options-menu {
@@ -386,6 +395,14 @@ h1 {
         min-height: 220px; /* Asegura un mínimo de altura */
         width: 100%; /* Ocupa el 100% del espacio de la columna */
         padding: 10px;
+        /* Eliminar el efecto de acercamiento en móviles */
+        transition: background 0.2s; /* Solo se mantiene el cambio de fondo */
+        transform: none; /* Asegura que no haya ninguna transformación */
+    }
+
+    .file-card:hover {
+        background: #f0f0f0; /* Mantener el cambio de fondo al pasar el mouse */
+        transform: none; /* Asegura que no haya ninguna transformación */
     }
 
     .file-card .file-icon {
@@ -394,8 +411,58 @@ h1 {
     }
 
     .file-card .file-name {
-        font-size: 0.9em; /* Reduce un poco el tamaño de la fuente para nombres largos *
+        font-size: 0.9em; /* Reduce un poco el tamaño de la fuente para nombres largos */
         max-height: 3.9em; /* 3 líneas * 1.3em de line-height */
+    }
+
+    /* Eliminar el efecto de acercamiento para folder-card en móviles */
+    .folder-card {
+        transition: background 0.2s; /* Solo se mantiene el cambio de fondo */
+        transform: none; /* Asegura que no haya ninguna transformación */
+    }
+
+    .folder-card:hover {
+        transform: none; /* Asegura que no haya ninguna transformación */
+        box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.1); /* Volver al shadow original */
+    }
+
+    /* Estilo del título principal */
+    h1 {
+        font-size: 1.5rem; /* tamaño relativo para adaptarse mejor a pantallas */
+    }
+
+    /* Contenedor del encabezado con icono y título */
+    .header-container {
+        gap: 10px; /* espacio entre icono y texto */
+        flex-wrap: wrap; /* para que se adapte mejor en pantallas pequeñas */
+    }
+
+    .header-container img,
+    .header-container .icon {
+        width: 60px;
+        height: 60px;
+    }
+    .folder-grid, .file-grid {
+        gap: 1.2rem;
+        padding: 1rem;
+    }
+
+    .folder-card, .file-card {
+        width: 95%;
+        padding: 1.2rem;
+    }
+
+    .folder-icon, .file-icon {
+        width: 60px;
+        height: 60px;
+    }
+
+    .folder-name, .file-name {
+        font-size: 1.2rem;
+    }
+
+    .folder-options {
+        font-size: 1.8rem;
     }
 }
 
@@ -600,7 +667,6 @@ h1 {
     background-color: #545b62; /* Gris más oscuro al pasar el ratón */
 }
 
-
 /* --- Toast Message Container --- */
 .toast {
     visibility: hidden;
@@ -636,53 +702,4 @@ h1 {
 
 .toast.info { /* Estilo para mensajes informativos (por defecto) */
     background-color: #5bc0de; /* Color azul claro */
-}
-
-
-@media (max-width: 720px) {
-
-    /* Estilo del título principal */
-    h1 {
-        
-        font-size: 1.5rem; /* tamaño relativo para adaptarse mejor a pantallas */
-        
-    }
-
-    /* Contenedor del encabezado con icono y título */
-    .header-container {
-        
-        gap: 10px; /* espacio entre icono y texto */
-       
-        flex-wrap: wrap; /* para que se adapte mejor en pantallas pequeñas */
-        
-    }
-
-    
-    .header-container img,
-    .header-container .icon {
-        width: 60px;
-        height: 60px;
-    }
-    .folder-grid, .file-grid {
-        gap: 1.2rem;
-        padding: 1rem;
-    }
-
-    .folder-card, .file-card {
-        width: 95%;
-        padding: 1.2rem;
-    }
-
-    .folder-icon, .file-icon {
-        width: 60px;
-        height: 60px;
-    }
-
-    .folder-name, .file-name {
-        font-size: 1.2rem;
-    }
-
-    .folder-options {
-        font-size: 1.8rem;
-    }
 }
