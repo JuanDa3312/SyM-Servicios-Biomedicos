@@ -35,7 +35,6 @@ app.wsgi_app = ProxyFix(app.wsgi_app, x_proto=1, x_host=1)
 app.secret_key = os.environ.get("FLASK_SECRET_KEY", os.urandom(24))
 
 # Clave para encriptar/desencriptar las credenciales en la cookie.
-# ¡IMPORTANTE! En producción, establecer una FERNET_KEY segura como variable de entorno.
 # NO usar Fernet.generate_key() directamente aquí en producción. Guárdala de forma segura.
 # Se decodifica si se obtiene de la variable de entorno (que sería string) y luego se codifica a bytes.
 try:
