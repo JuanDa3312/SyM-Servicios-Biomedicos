@@ -366,6 +366,13 @@ button:hover {
     accent-color: #28a745;
 }
 
+body.theme-simbiosas .header-container .icono { 
+    width: 27%;
+    height: 87px; 
+    margin-right: 15px;
+    max-width: 300px;
+    border-radius: 8px; 
+}
 /* Solo para pantallas */
 @media screen and (max-width: 768px) {
     #tipoMantenimientoContainer, #formPreventivo, #formCorrectivo {
@@ -383,5 +390,17 @@ button:hover {
         width: 50%;
     }
 }
+
+/* --- Tema Simbiosas --- */
+
+/* Cambiar tamaño y otros estilos del icono para Simbiosas */
+body.theme-simbiosas .icono { /* Este selector apunta al icono dentro de un body con theme-simbiosas */
+    width: 27%;
+    height: 87PX;
+    margin-right: 15px;
+    max-width: 300px;
+    border-radius: 8px;
+}
+
 
 

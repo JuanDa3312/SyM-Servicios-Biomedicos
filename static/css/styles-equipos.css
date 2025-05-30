@@ -39,8 +39,7 @@ h1 {
     width: 100%; /* Asegura que ocupe el ancho del contenedor padre para centrar */
 }
 
-/* Estilo del icono en el encabezado */
-.icono-mv {
+.icono-empresa {
     margin-right: 15px;
     height: 35px; /* Ajusta según necesites */
     width: auto;
@@ -280,9 +279,9 @@ h1 {
 }
 
 /* Estilos del icono/miniatura dentro de la tarjeta */
-.file-card .file-icon {
-    width: 80%; /* Aumentado para que la imagen sea más visible en móviles */
-    max-height: 150px; /* Limita la altura de la imagen para que no ocupe demasiado espacio */
+.file-card .file-icon, .file-card .archivo-icon { /* Unificando clase para iconos de archivo */
+    width: 80%; 
+    max-height: 150px; 
     height: auto;
     object-fit: contain;
     flex-shrink: 0; /* Evita que se encoja */
@@ -380,90 +379,6 @@ h1 {
 
 .file-options-menu a:hover {
     background-color: #f0f0f0;
-}
-
-/* Media Query para pantallas pequeñas */
-@media (max-width: 720px) {
-    .file-grid {
-        grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); /* Ajuste para que quepan mejor */
-        gap: 1rem;
-        padding: 0 10px; /* Mismo padding horizontal */
-    }
-
-    .file-card {
-        height: auto; /* Permitir que la altura se ajuste al contenido */
-        min-height: 220px; /* Asegura un mínimo de altura */
-        width: 100%; /* Ocupa el 100% del espacio de la columna */
-        padding: 10px;
-        /* Eliminar el efecto de acercamiento en móviles */
-        transition: background 0.2s; /* Solo se mantiene el cambio de fondo */
-        transform: none; /* Asegura que no haya ninguna transformación */
-    }
-
-    .file-card:hover {
-        background: #f0f0f0; /* Mantener el cambio de fondo al pasar el mouse */
-        transform: none; /* Asegura que no haya ninguna transformación */
-    }
-
-    .file-card .file-icon {
-        width: 70%; /* Ajuste la imagen para móviles */
-        max-height: 120px; /* Ajusta el tamaño de la imagen */
-    }
-
-    .file-card .file-name {
-        font-size: 0.9em; /* Reduce un poco el tamaño de la fuente para nombres largos */
-        max-height: 3.9em; /* 3 líneas * 1.3em de line-height */
-    }
-
-    /* Eliminar el efecto de acercamiento para folder-card en móviles */
-    .folder-card {
-        transition: background 0.2s; /* Solo se mantiene el cambio de fondo */
-        transform: none; /* Asegura que no haya ninguna transformación */
-    }
-
-    .folder-card:hover {
-        transform: none; /* Asegura que no haya ninguna transformación */
-        box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.1); /* Volver al shadow original */
-    }
-
-    /* Estilo del título principal */
-    h1 {
-        font-size: 1.5rem; /* tamaño relativo para adaptarse mejor a pantallas */
-    }
-
-    /* Contenedor del encabezado con icono y título */
-    .header-container {
-        gap: 10px; /* espacio entre icono y texto */
-        flex-wrap: wrap; /* para que se adapte mejor en pantallas pequeñas */
-    }
-
-    .header-container img,
-    .header-container .icon {
-        width: 60px;
-        height: 60px;
-    }
-    .folder-grid, .file-grid {
-        gap: 1.2rem;
-        padding: 1rem;
-    }
-
-    .folder-card, .file-card {
-        width: 95%;
-        padding: 1.2rem;
-    }
-
-    .folder-icon, .file-icon {
-        width: 60px;
-        height: 60px;
-    }
-
-    .folder-name, .file-name {
-        font-size: 1.2rem;
-    }
-
-    .folder-options {
-        font-size: 1.8rem;
-    }
 }
 
 
@@ -697,9 +612,131 @@ h1 {
 }
 
 .toast.success {
-    background-color: #5cb85c; /* Verde para éxito */
+    background-color: #5cb85c; 
 }
 
-.toast.info { /* Estilo para mensajes informativos (por defecto) */
-    background-color: #5bc0de; /* Color azul claro */
+.toast.info { 
+    background-color: #5bc0de; 
+}
+
+
+/* ================================================= */
+/* ===      THEME: SIMBIOSAS                     === */
+/* ================================================= */
+
+/* 1. Cambiar el fondo del body para Simbiosas */
+body.theme-simbiosas {
+    background: url('/static/images/logo-symbiosas.PNG') repeat;
+    background-size: 300px; 
+}
+
+/* 2. Cambiar color de las tarjetas de carpeta (folder-card) a azul para Simbiosas */
+.theme-simbiosas .folder-card {
+    background: #0067B0; /* Azul primario de Bootstrap, puedes usar tu preferido */
+}
+
+
+/* 3. Cambiar color del botón flotante (+) a azul para Simbiosas */
+.theme-simbiosas .btn-add-inside {
+    background-color: #0067B0;
+}
+
+.theme-simbiosas .btn-add-inside:hover {
+    background-color: #07548b;
+}
+
+/* 5. Color de texto en hover para las opciones del menú flotante para Simbiosas */
+.theme-simbiosas .menu-opcion:hover {
+    color: #0067B0; /* Texto azul al pasar el ratón */
+    /* background-color: #e6f2ff; */ /* Opcional: un fondo celeste muy claro */
+}
+body.theme-simbiosas .icono-empresa {
+  height: 45px; /* <<< AJUSTA ESTE VALOR AL TAMAÑO DESEADO para el icono de Symbiosas */
+  width: auto;  /* El ancho se ajustará automáticamente para mantener la proporción */
+  /* margin-right: 15px; se hereda de la regla .icono-empresa general, así que no necesitas repetirlo a menos que quieras cambiarlo */
+}
+/* Media Query para pantallas pequeñas */
+@media (max-width: 720px) {
+
+    .file-grid {
+        grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); /* Ajuste para que quepan mejor */
+        gap: 1rem;
+        padding: 0 10px; /* Mismo padding horizontal */
+    }
+
+    .file-card {
+        height: auto; /* Permitir que la altura se ajuste al contenido */
+        min-height: 220px; /* Asegura un mínimo de altura */
+        width: 100%; /* Ocupa el 100% del espacio de la columna */
+        padding: 10px;
+        /* Eliminar el efecto de acercamiento en móviles */
+        transition: background 0.2s; /* Solo se mantiene el cambio de fondo */
+        transform: none; /* Asegura que no haya ninguna transformación */
+    }
+
+    .file-card:hover {
+        background: #f0f0f0; /* Mantener el cambio de fondo al pasar el mouse */
+        transform: none; /* Asegura que no haya ninguna transformación */
+    }
+
+    .file-card .file-icon {
+        width: 70%; /* Ajuste la imagen para móviles */
+        max-height: 120px; /* Ajusta el tamaño de la imagen */
+    }
+
+    .file-card .file-name {
+        font-size: 0.9em; /* Reduce un poco el tamaño de la fuente para nombres largos */
+        max-height: 3.9em; /* 3 líneas * 1.3em de line-height */
+    }
+
+    /* Eliminar el efecto de acercamiento para folder-card en móviles */
+    .folder-card {
+        transition: background 0.2s; /* Solo se mantiene el cambio de fondo */
+        transform: none; /* Asegura que no haya ninguna transformación */
+    }
+
+    .folder-card:hover {
+        transform: none; /* Asegura que no haya ninguna transformación */
+        box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.1); /* Volver al shadow original */
+    }
+
+    /* Estilo del título principal */
+    h1 {
+        font-size: 1.5rem; /* tamaño relativo para adaptarse mejor a pantallas */
+    }
+
+    /* Contenedor del encabezado con icono y título */
+    .header-container {
+        gap: 10px; /* espacio entre icono y texto */
+        flex-wrap: wrap; /* para que se adapte mejor en pantallas pequeñas */
+    }
+
+    .header-container img,
+    .header-container .icon {
+        width: 60px;
+        height: 60px;
+    }
+    .folder-grid, .file-grid {
+        gap: 1.2rem;
+        padding: 1rem;
+    }
+
+    .folder-card, .file-card {
+        width: 95%;
+        padding: 1.2rem;
+    }
+
+    .folder-icon, .file-icon {
+        width: 60px;
+        height: 60px;
+    }
+
+    .folder-name, .file-name {
+        font-size: 1.2rem;
+    }
+
+    .folder-options {
+        font-size: 1.8rem;
+    }
+
 }

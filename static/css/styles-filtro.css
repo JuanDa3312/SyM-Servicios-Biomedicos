@@ -52,16 +52,33 @@ body::before {
      /* Otras propiedades si las tenía solo filter-container */
 }
 
-/* Estilos específicos para el contenedor de lista */
-/* .list-container { ... } /* No necesita estilos adicionales más allá de .container */
-
-
-/* Estilos para el título principal de la página con icono */
 .header-title {
-     display: flex; 
-     align-items: center;
-     justify-content: center; 
-     margin-bottom: 20px;
+    display: flex;         /* Permite alinear el contenido interno fácilmente */
+    justify-content: center; /* Centra el <h1> horizontalmente dentro de .header-title */
+    align-items: center;   /* Centra el <h1> verticalmente (si .header-title tuviera una altura mayor) */
+    width: 100%;           /* Ocupa el ancho disponible */
+    margin-bottom: 20px;   /* Espacio debajo del título */
+    padding: 10px 0;       /* Un poco de espacio vertical interno */
+}
+
+/* Estilos para el H1 que contiene tanto el icono como el texto */
+.header-title h1 {
+    display: inline-flex;  /* Hace que el h1 se ajuste a su contenido y permite alinear items internos */
+    align-items: center;   /* Alinea verticalmente el icono y el texto dentro del h1 */
+    gap: 10px;             /* Espacio entre el icono y el texto del título */
+    margin: 0;             /* Quita márgenes por defecto del h1 */
+    font-size: 22px;       /* Tamaño de fuente base para este título */
+    font-weight: bold;
+    color: #333;           /* Color de texto base */
+    text-align: left;      /* El texto dentro del h1 (al lado del icono) se alineará a la izquierda */
+}
+
+/* Estilos para el icono dentro del H1 */
+.header-title .icono-empresa-filtro {
+    height: 30px;       /* Altura del icono, ajusta según necesites */
+    width: auto;        /* Mantiene la proporción */
+    /* margin-right: 10px; */ /* Ya no es necesario si usas 'gap' en el h1 */
+    display: block;     /* Asegura que se renderice bien */
 }
 
 h1 {
@@ -323,6 +340,40 @@ h1 {
 .menu-opcion:hover {
     background-color: #f0f0f0;
     color: #28a745;
+}
+
+body.theme-simbiosas {
+    background: url('/static/images/logo-symbiosas.PNG') repeat;
+    background-size: 300px; 
+}
+
+/* 3. Cambiar color del botón flotante (+) a azul para Simbiosas */
+.theme-simbiosas .btn-add-inside {
+    background-color: #0067B0;
+}
+
+.theme-simbiosas .btn-add-inside:hover {
+    background-color: #07548b;
+}
+
+/* 5. Color de texto en hover para las opciones del menú flotante para Simbiosas */
+.theme-simbiosas .menu-opcion:hover {
+    color: #0067B0; /* Texto azul al pasar el ratón */
+    /* background-color: #e6f2ff; */ /* Opcional: un fondo celeste muy claro */
+}
+/* 3. Cambiar color del botón flotante (+) a azul para Simbiosas */
+.theme-simbiosas .btn-add-inside {
+    background-color: #0067B0;
+}
+
+.theme-simbiosas .btn-add-inside:hover {
+    background-color: #07548b;
+}
+
+/* 5. Color de texto en hover para las opciones del menú flotante para Simbiosas */
+.theme-simbiosas .menu-opcion:hover {
+    color: #0067B0; /* Texto azul al pasar el ratón */
+    /* background-color: #e6f2ff; */ /* Opcional: un fondo celeste muy claro */
 }
 
 /* Ajustes generales para pantallas pequeñas */
