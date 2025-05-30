@@ -12,7 +12,7 @@
     {# --- Favicon Dinámico --- #}
     {% set favicon_path = 'images/icono-mv.JPG' %} {# Default para MV #}
     {% if empresa_actual and empresa_actual.lower() == 'simbiosas' %}
-        {% set favicon_path = 'images/icono-symbiosas.PNG' %} {# Ajusta esta ruta si es diferente para Simbiosas #}
+        {% set favicon_path = 'images/icono-symbiosas.png' %} {# Ajusta esta ruta si es diferente para Simbiosas #}
     {% endif %}
     <link rel="icon" href="{{ url_for('static', filename=favicon_path) }}" type="image/x-icon" />
     {# --- Fin Favicon Dinámico --- #}

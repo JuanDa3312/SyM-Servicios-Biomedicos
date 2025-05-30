@@ -12,7 +12,7 @@
     {# --- Favicon Dinámico --- #}
     {% set favicon_path = 'images/icono-mv.JPG' %} {# Default si no hay empresa_actual #}
     {% if empresa_actual and empresa_actual.lower() == 'simbiosas' %}
-        {% set favicon_path = 'images/icono-symbiosas.PNG' %} 
+        {% set favicon_path = 'images/icono-symbiosas.png' %} 
     {% elif empresa_actual and empresa_actual.lower() == 'mv' %}
         {% set favicon_path = 'images/icono-mv.JPG' %}
     {% endif %}
@@ -27,7 +27,7 @@
             {# --- Logo y Título del Encabezado Dinámicos --- #}
             {% set header_logo_filtro_path = 'images/icono-mv.JPG' %} {# Default #}
             {% if empresa_actual and empresa_actual.lower() == 'simbiosas' %}
-                {% set header_logo_filtro_path = 'images/icono-symbiosas.PNG' %} 
+                {% set header_logo_filtro_path = 'images/icono-symbiosas.png' %} 
             {% elif empresa_actual and empresa_actual.lower() == 'mv' %}
                 {% set header_logo_filtro_path = 'images/icono-mv.JPG' %} {# O iconoMV.jpg si es diferente #}
             {% endif %}

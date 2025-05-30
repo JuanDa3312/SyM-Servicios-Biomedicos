@@ -8,7 +8,7 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='css/styles-servicios-symbiosas.css') }}" />
     {# MODIFICACIÓN 4: Favicon dinámico (si 'empresa_actual' está disponible y quieres que sea dinámico) #}
     {# Tu ruta /Conet_Drive ya pasa 'empresa_actual' a esta plantilla #}
-    {% set favicon_servicios_path = 'images/icono-symbiosas.PNG' %} {# Default para esta plantilla #}
+    {% set favicon_servicios_path = 'images/icono-symbiosas.png' %} {# Default para esta plantilla #}
     {% if empresa_actual and empresa_actual.lower() == 'mv' %} {# En caso de que esta plantilla fuera genérica #}
         {% set favicon_servicios_path = 'images/icono-mv.JPG' %}
     {% endif %}
@@ -23,8 +23,8 @@
         <div class="container">
 
             
-             <header class="header-container">
-                <img src="{{ url_for('static', filename='images/icono-symbiosas.PNG') }}" alt="Icono Hospital" class="icono-simbiosas" />
+            <header class="header-container">
+                <img src="{{ url_for('static', filename='images/icono-symbiosas.png') }}" alt="Icono Hospital" class="icono-simbiosas" />
                 <h1>{{ nombre_de_ese | upper }}</h1>
             </header>
 

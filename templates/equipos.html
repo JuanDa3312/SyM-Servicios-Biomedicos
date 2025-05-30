@@ -13,7 +13,7 @@
 
     {% set favicon_image_path = 'images/icono-mv.JPG' %}
     {% if empresa_actual and empresa_actual.lower() == 'simbiosas' %}
-        {% set favicon_image_path = 'images/icono-symbiosas.PNG' %}
+        {% set favicon_image_path = 'images/icono-symbiosas.png' %}
     {% endif %}
     <link rel="icon" href="{{ url_for('static', filename=favicon_image_path) }}" type="image/x-icon" />
 
@@ -26,7 +26,7 @@
             <div class="header-container">
                 {% set header_logo_path = 'images/icono-mv.JPG' %}
                 {% if empresa_actual and empresa_actual.lower() == 'simbiosas' %}
-                    {% set header_logo_path = 'images/icono-symbiosas.PNG' %}
+                    {% set header_logo_path = 'images/icono-symbiosas.png' %}
                 {% endif %}
                 <img src="{{ url_for('static', filename=header_logo_path) }}" alt="Icono Empresa" class="icono-empresa" /> 
                 <h1>
