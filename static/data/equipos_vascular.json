@@ -1,0 +1,220 @@
+{
+    "CONSULTORIO 1": {
+        "1LeCIAOOmjnQ0gLMO_K0-l0yDP6AtglCq": {
+            "nombre": "BALANZA",
+            "dependencia": "CONSULTA EXTERNA",
+            "marca_modelo": "GMD / BD 1522",
+            "serie": "201608310312",
+            "ubicacion": "CONSULTORIO 1"
+        },"10J41XHUrsNh_qjMXR4rW9LK1gyJCZkHw": {
+            "nombre": "EQUIPO DE ORGANOS",
+            "dependencia": "CONSULTA EXTERNA",
+            "marca_modelo": "WELCH ALLYN / POCKET LED",
+            "serie": "NO VISIBLE",
+            "ubicacion": "CONSULTORIO 1"
+        },"1qRF8bmHpoSup_VVejbL3WU7DV_DXfGilk": {
+            "nombre": "FONENDOSCOPIO",
+            "dependencia": "CONSULTA EXTERNA",
+            "marca_modelo": "LLORD / HS-301",
+            "serie": "180301979",
+            "ubicacion": "CONSULTORIO 1"
+        },
+
+        "1wE_XBjgB-rnKndbMwzm4_qn0MzQcXcmC": {
+            "nombre": "TENSIOMETRO",
+            "dependencia": "CONSULTA EXTERNA",
+            "marca_modelo": "WELCH ALLYN / TYCOS",
+            "serie": "181221E11",
+            "ubicacion": "CONSULTORIO 1"
+        },
+        "1Q_qt9h3V0RYM2c9SBQyLMzZbqtq7q9J": {
+            "nombre": "TERMOHIGROMETRO",
+            "dependencia": "CONSULTA EXTERNA",
+            "marca_modelo": "KTJ",
+            "serie": "NO VISIBLE",
+            "ubicacion": "CONSULTORIO 1"
+        },
+        "1pFpJFxglgnKzJN4hklgEiojU4l9vbQmI": {
+            "nombre": "TERMOMETRO DIGITAL",
+            "dependencia": "CONSULTA EXTERNA",
+            "marca_modelo": "NO VISIBLE",
+            "serie": "NO VISIBLE",
+            "ubicacion": "CONSULTORIO 1"
+        },
+        "1qtaoXz3CpooxTTxx1y8Fm0JeNhyuDWph": {
+            "nombre": "DISPOSITIVO AUTOMATIZADO PARA DETERMINACION DEI NDICE TOBILLOO BRAZO ABPIMD",
+            "dependencia": "CONSULTA EXTERNA",
+            "marca_modelo": "MESI / ABPIMD",
+            "serie": "ME01V14-111704056",
+            "ubicacion": "CONSULTORIO 1"
+        }
+    },
+
+    "CONSULTORIO 2": {
+        "1An6nspGkkvIY8uqpyEoBKHOWc_AL3Iwd": {
+            "nombre": "BALANZA ELECTRONICA",
+            "dependencia": "CONSULTA EXTERNA",
+            "marca_modelo": "GMD / BD 1522",
+            "serie": "201641070501",
+            "ubicacion": "CONSULTORIO 2"},
+
+        "1C-m939jm6AlAbjJmnnAGoWJZW7itlRwR": {
+            "nombre": "TERMOHIGROMETRO",
+            "dependencia": "CONSULTA EXTERNA",
+            "marca_modelo": "HTC / HTC2",
+            "serie": "NO VISIBLE",
+            "ubicacion": "CONSULTORIO 2"},
+            
+        "1hDtuZma3_qdX_MzKU0qWp6opA0W-uDQJ": {
+            "nombre": "TERMOMETRO DIGITAL",
+            "dependencia": "CONSULTA EXTERNA",
+            "marca_modelo": "DIGITAL THERMOMETER",
+            "serie": "NO VISIBLE",
+            "ubicacion": "CONSULTORIO 1"}
+
+    },
+    "CONSULTORIO 3": {
+        "1XWCzORd_mHjmD2ye4b3wFj21ofsRHquV": {
+            "nombre": "ESTIMULADOR PORTATIL",
+            "dependencia": "CONSULTA EXTERNA",
+            "marca_modelo": "CHATTANOOGA / PHYSIO",
+            "serie": "215008286",
+            "ubicacion": "CONSULTORIO 3"},
+
+        "19bUpSS4Ma5KWkRsdkI9hDm7F1umwCqF5": {
+            "nombre": "PRESOTERAPIA",
+            "dependencia": "CONSULTA EXTERNA",
+            "marca_modelo": "MEICOL / PRESSOR PLUSS",
+            "serie": "132TD1021011",
+            "ubicacion": "CONSULTORIO 3"},
+        
+        "1z3Qt1-Qs8_uXRu5qz86HmZPduTm579B2": {
+            "nombre": "ULTRASONIDO PORTATIL",
+            "dependencia": "CONSULTA EXTERNA",
+            "marca_modelo": "US1000 / US1000 3A EDICION",
+            "serie": "DU1025",
+            "ubicacion": "CONSULTORIO 3"},
+
+        "1L7K1e767ZVbV9JjhKmGcNp_hKxhcYa4S": {
+            "nombre": "TERMOMETRO",
+            "dependencia": "CONSULTA EXTERNA",
+            "marca_modelo": "DIGITAL THERMOMETER",
+            "serie": "NO VISIBLE",
+            "ubicacion": "CONSULTORIO 3"}
+    },
+
+    "FARMACIA": {
+        "1ERAuogTs4MpKGoIkj3etqLI1k6cWrBun": {
+            "nombre": "TERMOHIGROMETRO",
+            "dependencia": "FARNACIA",
+            "marca_modelo": "HTC",
+            "serie": "NO VISIBLE",
+            "ubicacion": "FARMACIA"
+
+        },"1Uhrf4iAipxCyE61QEv2e6iomzIr9xfRP": {
+            "nombre": "TERMOHIGROMETRO",
+            "dependencia": "FARNACIA",
+            "marca_modelo": "HTC",
+            "serie": "NO VISIBLE",
+            "ubicacion": "FARMACIA"}
+    },
+
+
+    "PROCEDIMIENTOS": {
+        "1moQgHrQr9AQGENJm5dk0gYG6mKfgpYPg": {
+            "nombre": "AUTOCLAVE",
+            "dependencia": "PROCEDIMIENTOS",
+            "marca_modelo": "AUTOMAT/ 3000",
+            "serie": "88030",
+            "ubicacion": "SALA DE PROCEDIMIENTOS"
+        },
+        
+        "13FZtDVkRaXFeOHuiJ-_cKTzx89IBBKH7": {
+            "nombre": "BALANZA DIGITAL",
+            "dependencia": "PROCEDIMIENTOS",
+            "marca_modelo": "GMD/ BD-1522",
+            "serie": "2016410701501",
+            "ubicacion": "SALA DE PROCEDIMIENTOS"
+        },
+        
+        "1xJQEDuZvNH5jD5A9hDFNEv0WqIZ2Jz39": {
+            "nombre": "EQUIPO DE ORGANOSO",
+            "dependencia": "PROCEDIMIENTOS",
+            "marca_modelo": "WELCH ALLYN/ SKANE APELES FALLS",
+            "serie": "NO VISIBLE9",
+            "ubicacion": "SALA DE PROCEDIMIENTOS"
+        },
+
+        "1CAXMLrEKBPupplCneWQOnCWOujPZPNlN": {
+            "nombre": "FONENDOSCOPIO",
+            "dependencia": "PROCEDIMIENTOS",
+            "marca_modelo": "LITTMAN/ CLASSIC II E",
+            "serie": "15C27087",
+            "ubicacion": "SALA DE PROCEDIMIENTOS"
+        },
+
+        "1r1V2QS5lrit2IoL8RwpQwkbd271sorMa": {
+            "nombre": "GLUCOMETRO",
+            "dependencia": "PROCEDIMIENTOS",
+            "marca_modelo": "VIVACHECK / CO",
+            "serie": "302S0000047",
+            "ubicacion": "SALA DE PROCEDIMIENTOS"
+        },
+
+        "1fCrr3kZs5CSsQDvblP5d5MpoOQzK_45k": {
+            "nombre": "KIT TENSIOMETRO Y FONENDO",
+            "dependencia": "PROCEDIMIENTOS",
+            "marca_modelo": "GMD/ MGMD20/GMD30RP",
+            "serie": "709462756663",
+            "ubicacion": "SALA DE PROCEDIMIENTOS"
+        },
+
+        "1sWfjmhkSGkFFdqaubOYX8-03kR7bnAb-": {
+            "nombre": "MONITOR MUTIPARAMETROS",
+            "dependencia": "PROCEDIMIENTOS",
+            "marca_modelo": "OMEN/STAR8000E",
+            "serie": "E7210512144",
+            "ubicacion": "SALA DE PROCEDIMIENTOS"
+        },
+
+        "1Lsmmjz2Hob3HwpDZojJj8mlbXHVzloN1": {
+            "nombre": "REGULADOR MEDICINAL DE OXIGENO",
+            "dependencia": "PROCEDIMIENTOS",
+            "marca_modelo": "GMR/ CGA870",
+            "serie": "20071451",
+            "ubicacion": "SALA DE PROCEDIMIENTOS"
+        },
+
+        "1eTIxMIdSyVUlIrhqRv3827-wa1rBXW8k": {
+            "nombre": "REGULADOR MEDICINAL DE OXIGENO",
+            "dependencia": "PROCEDIMIENTOS",
+            "marca_modelo": "AIR IMETAN / N/A",
+            "serie": "180526",
+            "ubicacion": "SALA DE PROCEDIMIENTOS"
+        },
+
+        "19YcieXSrcF6z_VqIJIJxKP6J-AYt8Yme": {
+            "nombre": "TENSIOMETRO",
+            "dependencia": "PROCEDIMIENTOS",
+            "marca_modelo": "WELCH ALLYN / TYCOS",
+            "serie": "150421225837",
+            "ubicacion": "SALA DE PROCEDIMIENTOS"
+        },
+
+        "1r_Kbnfa9DC2gZN9U2jgpOAZeB4fVTn3B": {
+            "nombre": "TERMOHIGROMETRO",
+            "dependencia": "PROCEDIMIENTOS",
+            "marca_modelo": "GREEN TECH / HTC-2",
+            "serie": "2040548403",
+            "ubicacion": "SALA DE PROCEDIMIENTOS"
+        },
+
+        "1LGxZBdh-vJDLjfP54mNqc2UlYgRUdvAI": {
+            "nombre": "ULTRASONIDO PARA DIAGNOSTICO",
+            "dependencia": "PROCEDIMIENTOS",
+            "marca_modelo": "GENERLA ELECTRIC/ VERSANA PREMIER",
+            "serie": "6141013X0",
+            "ubicacion": "SALA DE PROCEDIMIENTOS"
+        }
+    }
+}
