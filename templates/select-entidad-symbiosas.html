@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SYMBIOSAS</title>
+    <link rel="icon" href="{{ url_for('static', filename='images/icono-symbiosas.PNG') }}" type="image/x-icon"> 
+    
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles-select-entidad-symbiosas.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <script src="{{ url_for('static', filename='js/script-select-entidad.js') }}" defer></script>
+</head>
+{# MODIFICACIÓN 1: Añadir clase de tema al body #}
+{# Tu ruta Python '/select-entidad-symbiosas' pasa 'empresa_seleccionada="Simbiosas"' #}
+<body class="theme-{{ empresa_seleccionada.lower() if empresa_seleccionada else 'simbiosas' }}"> 
+    <div class="container">
+        <header class="header-container">
+            <img src="{{ url_for('static', filename='images/icono-symbiosas.PNG') }}" alt="Icono Symbiosas" class="icono-symbiosas">
+            <h1>Seleccione la Entidad</h1>
+        </header>
+
+        <div class="botones">
+            {# MODIFICACIÓN 2: Añadir 'empresa' al url_for de servicios_drive #}
+            {# Ya que esta página es específicamente para Simbiosas, podemos pasar 'Simbiosas' directamente #}
+            {# o usar la variable 'empresa_seleccionada' que viene de la ruta Python #}
+            <a href="{{ url_for('servicios_drive', entidad='ayapel', empresa=empresa_seleccionada|default('simbiosas', true) ) }}" class="btn entidad">
+                <i class="fas fa-flask"></i> ESE Hospital San Jorge de Ayapel
+            </a>
+            {# Si tienes más entidades de Simbiosas, añade 'empresa=empresa_seleccionada' a sus enlaces también #}
+        </div>
+    </div>
+
+    <button class="btn-add-inside" onclick="toggleMenu()">+</button>
+
+    <div id="menuOpciones" class="menu-opciones">
+        {# MODIFICACIÓN 3: Añadir 'empresa' a los url_for del menú flotante #}
+        <a href="{{ url_for('formato_mantenimiento', empresa=empresa_seleccionada|default('simbiosas', true)) }}" class="menu-opcion" target="_blank" rel="noopener noreferrer">Formato mantenimiento</a>
+        {# El filtro podría necesitar saber la empresa también si quieres que el tema se aplique allí #}
+        {# <a href="{{ url_for('filtro', empresa=empresa_seleccionada|default('simbiosas', true)) }}" class="menu-opcion" target="_blank" rel="noopener noreferrer">Buscar Equipos</a> #}
+        <a href="/logout" class="menu-opcion">Cerrar Sesión</a>
+    </div>
+
+</body>
+</html>

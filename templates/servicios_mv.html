@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>{{ nombre_de_ese | upper }}</title>
 
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles-servicios.css') }}" />
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles-servicios-mv.css') }}" />
     <link rel="icon" href="{{ url_for('static', filename='images/icono-mv.JPG') }}" type="image/x-icon" />
     <script src="{{ url_for('static', filename='js/script-equipos.js') }}" defer></script>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
@@ -25,7 +25,7 @@
             <div class="folder-grid">
                 {% for folder in folders %}
                 <div class="folder-card" data-folder-id="{{ folder.id }}">
-                    <a href="/carpeta/{{ folder.id }}" class="folder-link">
+                    <a href="{{ url_for('ver_equipos', folder_id=folder.id, empresa=empresa_actual, entidad_json_key=entidad_raiz_json) }}" class="folder-link">
                         {% if folder.id in ['1syTnARFTLOE-ho9QdbJHeRDisL_qS1Dk', '1SWs0PIJbmV7H1brkOAFU4DX_632F9ZsC', '1kgXkmaYUe4CBrR4WC30eJDwNKeqShqiB'] %}
                             <img src="{{ url_for('static', filename='images/folder-open.svg') }}" class="folder-icon" alt="Carpeta abierta">
                         {% else %}
@@ -50,12 +50,9 @@
         <!-- Menú flotante -->
         <div id="menuOpciones" class="menu-opciones">
             <a href="{{ url_for('formato_mantenimiento') }}" class="menu-opcion" target="_blank" rel="noopener noreferrer">Formato mantenimiento</a>
-            <a href="{{ url_for('filtro') }}" class="menu-opcion" target="_blank" rel="noopener noreferrer">Buscar Equipos</a>
+            <a href="{{ url_for('filtro', entidad=entidad_raiz_json, empresa=empresa_actual) }}" class="menu-opcion" target="_blank" rel="noopener noreferrer">Buscar Equipos</a>
             <a href="/logout" class="menu-opcion">Cerrar Sesión</a>
         </div>
     </div>
 </body>
 </html>
-
-
-

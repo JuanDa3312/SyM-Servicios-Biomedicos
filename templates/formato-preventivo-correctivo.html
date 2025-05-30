@@ -3,29 +3,46 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MV-Formato</title>
+    
+    {# --- Título Dinámico (Opcional, si quieres que mencione la empresa) --- #}
+    <title>{% if empresa_actual %}{{ empresa_actual.upper() }}{% else %}MV{% endif %}-Formato</title>
+    
     <link rel="stylesheet" href="{{ url_for('static', filename='css/styles-formatos.css') }}">
-    <link rel="icon" href="{{ url_for('static', filename='images/icono-mv.JPG') }}" type="image/x-icon">
+    
+    {# --- Favicon Dinámico --- #}
+    {% set favicon_path = 'images/icono-mv.JPG' %} {# Default para MV #}
+    {% if empresa_actual and empresa_actual.lower() == 'simbiosas' %}
+        {% set favicon_path = 'images/icono-symbiosas.PNG' %} {# Ajusta esta ruta si es diferente para Simbiosas #}
+    {% endif %}
+    <link rel="icon" href="{{ url_for('static', filename=favicon_path) }}" type="image/x-icon" />
+    {# --- Fin Favicon Dinámico --- #}
+
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
     <script src="{{ url_for('static', filename='js/script-formato.js') }}" defer></script>
-
 </head>
 
-<body >
+{# --- Clase de tema dinámico en el body, con 'mv' como fallback --- #}
+<body class="theme-{{ empresa_actual.lower() if empresa_actual else 'mv' }}">
 
     <form id="tipoMantenimientoContainer" class="no-print">
         <label for="tipoMantenimiento" ><strong>Seleccione el tipo de mantenimiento:</strong></label>
         <select id="tipoMantenimiento" onchange="mostrarFormulario()">
             <option value="" disabled selected>Seleccione una opción</option>
             <option value="correctivo">Correctivo</option>
-            <option value="preventivo">Preventivo</option>padding: 50px;
+            <option value="preventivo">Preventivo</option>
         </select>
     </form>
 
-    <!-- Formulario Correctivo -->
+    {# --- Preparar la ruta del logo dinámico --- #}
+    {% set header_icon_path = 'images/iconoMV.jpg' %} {# Default para MV, OJO: es 'iconoMV.jpg' no 'icono-mv.JPG' como el favicon #}
+    {% if empresa_actual and empresa_actual.lower() == 'simbiosas' %}
+        {% set header_icon_path = 'images/logo-symbiosas.png' %} {# Ajusta esta ruta si es diferente para Simbiosas #}
+    {% endif %}
+    {# --- Fin preparación ruta logo --- #}
+
     <form id="formCorrectivo" style="display: none; margin-top: 20px;">
         <header>
-            <img src="{{ url_for('static', filename='images/iconoMV.jpg') }}" alt="Icono" class="icono">
+            <img src="{{ url_for('static', filename=header_icon_path) }}" alt="Icono Empresa" class="icono">
             <div class="descripcion">
                 <h1>Formulario de Mantenimiento</h1>
                 <p>Registro de mantenimiento correctivo</p>
@@ -47,9 +64,8 @@
             <label>Serie: <input type="text" ></label>
             <label>Ubicación: <input type="text" ></label>
             <label>Fecha:</label>
-        <input type="date"><br><br>
+            <input type="date"><br><br>
         </section>
-
         
         <label>Falla reportada:</label>
         <textarea rows="4" cols="50"></textarea><br>
@@ -66,7 +82,7 @@
 
         <label>Registro fotografico:</label>
         <input type="file" id="fotoInput"  class="no-print" accept="image/*" multiple><br><br>
-        <div id="preview" style="display: flex; flex-wrap: wrap; gap: 10px;"></div><br> <!-- Aquí se mostrarán las imágenes -->
+        <div id="preview" style="display: flex; flex-wrap: wrap; gap: 10px;"></div><br> 
         
         <section class="Firmas">
             <div class="firma">
@@ -76,31 +92,29 @@
                 <br>
                 <div class="botones-firma no-print">
                     <button type="button" class="btn-firma" onclick="startSignature('correctivo')" id="startButtonCorrectivo">Anexar Firma</button>
-                    <button type="button" class="btn-firma" onclick="clearSignature('correctivo')" id="clearButtonCorrectivo" disabled="">Borrar</button>
-                    <button type="button" class="btn-firma" onclick="saveSignature('correctivo')" id="saveButtonCorrectivo" disabled="">Guardar</button>
-                    <button type="button" class="btn-firma" onclick="enableEditing('correctivo')" disabled="" id="editButtonCorrectivo">Editar</button>
+                    <button type="button" class="btn-firma" onclick="clearSignature('correctivo')" id="clearButtonCorrectivo" disabled>Borrar</button>
+                    <button type="button" class="btn-firma" onclick="saveSignature('correctivo')" id="saveButtonCorrectivo" disabled>Guardar</button>
+                    <button type="button" class="btn-firma" onclick="enableEditing('correctivo')" disabled id="editButtonCorrectivo">Editar</button>
                 </div>
                 <p id="messageCorrectivo" class="no-print">Firma borrada, presiona "Anexar Firma" para iniciar nuevamente</p>
             </div>
         
-
             <div class="firma">
                 <h3>Firma del Responsable</h3>
                 <input type="text" value="{{ nombre_responsable }}" readonly>
                 <div class="firma-box">
                     <img src="{{ url_for('static', filename=firma) }}" alt="Firma del Responsable" >
                 </div>
-            </div>        
+            </div>          
         </section>
         <br>
 
-        <button class="no-print" onclick=window.print()>Imprimir Correctivo</button>
+        <button class="no-print btn-imprimir" onclick="window.print()">Imprimir Correctivo</button> {# Añadí una clase por si quieres estilizarlo diferente #}
     </form>
 
-    <!-- Formulario Preventivo -->
     <form id="formPreventivo" style="display: none; margin-top: 20px;">
         <header>
-            <img src="{{ url_for('static', filename='images/iconoMV.jpg') }}" alt="Icono" class="icono">
+            <img src="{{ url_for('static', filename=header_icon_path) }}" alt="Icono Empresa" class="icono">
             <div class="descripcion">
                 <h1>Formulario de Mantenimiento</h1>
                 <p>Registro de mantenimiento preventivo </p>
@@ -113,7 +127,6 @@
             <label>Dirección: <input type="text" ></label>
             <label>Fecha: <input type="date"></label>
             <label>Ciudad: <input type="text" ></label>
-            
         </section>
         
         <section class="datos-equipo">
@@ -148,29 +161,27 @@
         <section class="Firmas">
             <div class="firma">
                 <h3>Firma de quien recibe</h3>
-            <input type="text" placeholder="Nombre">
-            <canvas id="firmaCanvasPreventivo"></canvas>
-            <br>
-            <div class="botones-firma no-print">
-                <button type="button" class="btn-firma" onclick="startSignature('preventivo')" id="startButtonPreventivo">Anexar Firma</button>
-                <button type="button" class="btn-firma" onclick="clearSignature('preventivo')" id="clearButtonPreventivo" disabled="">Borrar</button>
-                <button type="button" class="btn-firma" onclick="saveSignature('preventivo')" id="saveButtonPreventivo" disabled="">Guardar</button>
-                <button type="button" class="btn-firma" onclick="enableEditing('preventivo')" disabled="" id="editButtonPreventivo">Editar</button>
-            </div>
+                <input type="text" placeholder="Nombre">
+                <canvas id="firmaCanvasPreventivo"></canvas>
+                <br>
+                <div class="botones-firma no-print">
+                    <button type="button" class="btn-firma" onclick="startSignature('preventivo')" id="startButtonPreventivo">Anexar Firma</button>
+                    <button type="button" class="btn-firma" onclick="clearSignature('preventivo')" id="clearButtonPreventivo" disabled>Borrar</button>
+                    <button type="button" class="btn-firma" onclick="saveSignature('preventivo')" id="saveButtonPreventivo" disabled>Guardar</button>
+                    <button type="button" class="btn-firma" onclick="enableEditing('preventivo')" disabled id="editButtonPreventivo">Editar</button>
+                </div>
                 <p id="messagePreventivo" class="no-print">Firma borrada, presiona "Anexar Firma" para iniciar nuevamente</p>
             </div>
         
-
             <div class="firma">
                 <h3>Firma del Responsable</h3>
                 <input type="text" value="{{ nombre_responsable }}" readonly>
-
                 <div class="firma-box">
                     <img src="{{ url_for('static', filename=firma) }}" alt="Firma del Responsable" >
                 </div>
             </div>
-            <button class="no-print" onclick=window.print()>Imprimir Preventivo</button>
         </section>
+        <button class="no-print btn-imprimir" onclick="window.print()">Imprimir Preventivo</button> {# Añadí una clase por si quieres estilizarlo diferente #}
     </form>
 </body>
 </html>

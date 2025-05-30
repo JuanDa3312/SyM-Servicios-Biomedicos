@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{{ nombre_de_ese | upper }}</title>
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles-servicios-symbiosas.css') }}" />
+    {# MODIFICACIÓN 4: Favicon dinámico (si 'empresa_actual' está disponible y quieres que sea dinámico) #}
+    {# Tu ruta /Conet_Drive ya pasa 'empresa_actual' a esta plantilla #}
+    {% set favicon_servicios_path = 'images/icono-symbiosas.PNG' %} {# Default para esta plantilla #}
+    {% if empresa_actual and empresa_actual.lower() == 'mv' %} {# En caso de que esta plantilla fuera genérica #}
+        {% set favicon_servicios_path = 'images/icono-mv.JPG' %}
+    {% endif %}
+    <link rel="icon" href="{{ url_for('static', filename=favicon_servicios_path) }}" type="image/x-icon" />
+    
+    <script src="{{ url_for('static', filename='js/script-equipos.js') }}" defer></script>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+{# MODIFICACIÓN 5: Añadir clase de tema al body #}
+<body class="theme-{{ empresa_actual.lower() if empresa_actual else 'mv' }}">
+    <div class="wrapper">
+        <div class="container">
+
+            
+             <header class="header-container">
+                <img src="{{ url_for('static', filename='images/icono-symbiosas.PNG') }}" alt="Icono Hospital" class="icono-simbiosas" />
+                <h1>{{ nombre_de_ese | upper }}</h1>
+            </header>
+
+            {% if folders %}
+            <div class="folder-grid">
+                {% for folder in folders %}
+                <div class="folder-card" data-folder-id="{{ folder.id }}">
+                    {# Esta línea ya estaba correcta, asegurando que 'empresa_actual' se propaga a 'ver_equipos' #}
+                    <a href="{{ url_for('ver_equipos', folder_id=folder.id, empresa=empresa_actual, entidad_json_key=entidad_raiz_json) }}" class="folder-link">
+                        {% if folder.id in ['1syTnARFTLOE-ho9QdbJHeRDisL_qS1Dk'] %} {# Este ID es específico, asegúrate de que la lógica de iconos sea la que quieres #}
+                            <img src="{{ url_for('static', filename='images/folder-open.svg') }}" class="folder-icon" alt="Carpeta abierta">
+                        {% else %}
+                            <img src="{{ url_for('static', filename='images/folder-icon.svg') }}" class="folder-icon" alt="Carpeta cerrada">
+                        {% endif %}
+                        <div class="folder-name">{{ folder.name }}</div>
+                    </a>
+                </div>
+                {% endfor %}
+            </div>
+            {% else %}
+            <p>No hay carpetas en tu Google Drive.</p>
+            {% endif %}
+        </div>
+
+        <button class="btn-add-inside" onclick="toggleMenu()">+</button>
+
+        <div id="menuOpciones" class="menu-opciones">
+            {# MODIFICACIÓN 7: Añadir 'empresa_actual' a los url_for del menú flotante #}
+            <a href="{{ url_for('formato_mantenimiento', empresa=empresa_actual) }}" class="menu-opcion" target="_blank" rel="noopener noreferrer">Formato mantenimiento</a>
+            <a href="{{ url_for('filtro', entidad=entidad_raiz_json, empresa=empresa_actual) }}" class="menu-opcion" target="_blank" rel="noopener noreferrer">Buscar Equipos</a>
+            <a href="/logout" class="menu-opcion">Cerrar Sesión</a>
+        </div>
+    </div>
+</body>
+</html>

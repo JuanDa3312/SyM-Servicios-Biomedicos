@@ -3,15 +3,26 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MV-Mantenimiento</title>
+    
+    {# --- Título Dinámico (Opcional, si quieres que mencione la empresa) --- #}
+    <title>{% if empresa_actual %}{{ empresa_actual.upper() }}{% else %}MV{% endif %}-Formato</title>
+    
     <link rel="stylesheet" href="{{ url_for('static', filename='css/styles-formatos.css') }}">
-    <link rel="icon" href="{{ url_for('static', filename='images/icono-mv.JPG') }}" type="image/x-icon">
+    
+    {# --- Favicon Dinámico --- #}
+    {% set favicon_path = 'images/icono-mv.JPG' %} {# Default para MV #}
+    {% if empresa_actual and empresa_actual.lower() == 'simbiosas' %}
+        {% set favicon_path = 'images/icono-symbiosas.PNG' %} {# Ajusta esta ruta si es diferente para Simbiosas #}
+    {% endif %}
+    <link rel="icon" href="{{ url_for('static', filename=favicon_path) }}" type="image/x-icon" />
+    {# --- Fin Favicon Dinámico --- #}
+
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
     <script src="{{ url_for('static', filename='js/script-formato.js') }}" defer></script>
-
-    
 </head>
-<body data-folder-id="{{ folder_id }}">
+
+{# --- Clase de tema dinámico en el body, con 'mv' como fallback --- #}
+<body class="theme-{{ empresa_actual.lower() if empresa_actual else 'mv' }}">
 
     <form id="tipoMantenimientoContainer" class="no-print">
         <label for="tipoMantenimiento" ><strong>Seleccione el tipo de mantenimiento:</strong></label>
@@ -21,11 +32,16 @@
             <option value="preventivo">Preventivo</option>padding: 50px;
         </select>
     </form>
-
+    {# --- Preparar la ruta del logo dinámico --- #}
+    {% set header_icon_path = 'images/iconoMV.jpg' %} {# Default para MV, OJO: es 'iconoMV.jpg' no 'icono-mv.JPG' como el favicon #}
+    {% if empresa_actual and empresa_actual.lower() == 'simbiosas' %}
+        {% set header_icon_path = 'images/logo-symbiosas.png' %} {# Ajusta esta ruta si es diferente para Simbiosas #}
+    {% endif %}
+    {# --- Fin preparación ruta logo --- #}
     <!-- Formulario Correctivo -->
     <form id="formCorrectivo" style="display: none; margin-top: 20px;">
         <header>
-            <img src="{{ url_for('static', filename='images/iconoMV.jpg') }}" alt="Icono" class="icono">
+            <img src="{{ url_for('static', filename=header_icon_path) }}" alt="Icono Empresa" class="icono">
             <div class="descripcion">
                 <h1>Formulario de Mantenimiento</h1>
                 <p>Registro de mantenimiento correctivo</p>
@@ -34,10 +50,10 @@
         
         <section class="datos-cliente">
             <h2>Datos del Cliente</h2>
-            <label>Cliente: <input type="text" value="ESE SAGRADO CORAZON DE JESUS"readonly></label>
-            <label>Dependencia: <input type="text"value="{{ equipo.dependencia }}"readonly ></label>
-            <label>Dirección: <input type="text" value="Calle 12 No. 8-99 B/Nazareth, Valencia, Colombia"readonly></label>
-            <label>Ciudad: <input type="text" value="VALENCIA"readonly></label>
+            <label>Cliente: <input type="text" value="{{ cliente_data.get('nombre_cliente', 'N/A') }}" readonly></label>
+            <label>Dependencia: <input type="text" value="{{ equipo.dependencia }}" readonly ></label> {# Esta ya era dinámica desde el equipo #}
+            <label>Dirección: <input type="text" value="{{ cliente_data.get('direccion_cliente', 'N/A') }}" readonly></label>
+            <label>Ciudad: <input type="text" value="{{ cliente_data.get('ciudad_cliente', 'N/A') }}" readonly></label>
         </section>
             
         <section class="datos-equipo">
@@ -99,7 +115,7 @@
     <!-- Formulario Preventivo -->
     <form id="formPreventivo"  method="POST" style="display: none; margin-top: 20px;">
         <header>
-            <img src="{{ url_for('static', filename='images/iconoMV.jpg') }}" alt="Icono" class="icono">
+            <img src="{{ url_for('static', filename=header_icon_path) }}" alt="Icono Empresa" class="icono">
             <div class="descripcion">
                 <h1>Formulario de Mantenimiento</h1>
                 <p>Registro de mantenimiento preventivo </p>
@@ -107,10 +123,10 @@
         </header>
         <section class="datos-cliente">
             <h2>Datos del Cliente</h2>
-            <label>Cliente: <input type="text" value="ESE SAGRADO CORAZON DE JESUS"readonly></label>
-            <label>Dependencia: <input type="text"value="{{ equipo.dependencia }}"readonly ></label>
-            <label>Dirección: <input type="text" value="Calle 12 No. 8-99 B/Nazareth, Valencia, Colombia"readonly></label>
-            <label>Ciudad: <input type="text" value="VALENCIA"readonly></label>
+            <label>Cliente: <input type="text" value="{{ cliente_data.get('nombre_cliente', 'N/A') }}" readonly></label>
+            <label>Dependencia: <input type="text" value="{{ equipo.dependencia }}" readonly ></label> {# Esta ya era dinámica desde el equipo #}
+            <label>Dirección: <input type="text" value="{{ cliente_data.get('direccion_cliente', 'N/A') }}" readonly></label>
+            <label>Ciudad: <input type="text" value="{{ cliente_data.get('ciudad_cliente', 'N/A') }}" readonly></label>
         </section>
         
         <section class="datos-equipo">

@@ -13,6 +13,20 @@
 
     <!-- JS personalizado -->
     <script src="{{ url_for('static', filename='js/script-select-empresa.js') }}" defer></script>
+
+     <script>
+        // Define estas variables globales para que estén disponibles en script-select-empresa.js
+        // El backend (Flask) las insertará aquí usando url_for.
+        // CAMBIADO: RUTA_SELECT_ENTIDAD ahora apunta a la página de selección de entidad para MV
+        const RUTA_SELECT_ENTIDAD_MV = "{{ url_for('select_entidad_pagina_mv') }}";
+
+        
+        const RUTA_SELECT_ENTIDAD_SYMBIOSAS = "{{ url_for('select_entidad_pagina_symbiosas') }}";
+
+        // Añadí esta ruta para el logout, aunque ya esté en tu JS, es buena práctica si la usas
+        const RUTA_LOGOUT = "{{ url_for('logout') }}";
+    </script>
+
 </head>
 <body>
     <div class="container">
@@ -24,14 +38,14 @@
             <i class="fas fa-building"></i> MV
         </button>
 
-
-        <button class="symbiosas">
+        <button class="symbiosas" id="simbiosasBtn">
             <i class="fas fa-cogs"></i> SYMBIOSAS
         </button>
 
         <button id="logoutBtn">
             <i class="fas fa-sign-out-alt"></i> Cerrar sesión
         </button>
+
     </div>
 </body>
 </html>
