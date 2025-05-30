@@ -1,4 +1,3 @@
-
 import os
 import json
 from io import BytesIO
@@ -58,7 +57,7 @@ except Exception as e:
 CREDENTIALS_COOKIE = 'google_drive_credentials' # Nombre de la cookie para credenciales de Drive
 CLIENT_SECRETS_FILE = "credenciales.json"      # Archivo de secretos del cliente OAuth 2.0 de Google
 SCOPES = ['https://www.googleapis.com/auth/drive'] # Alcance de permisos para Google Drive
-EQUIPOS_JSON_PATH = 'static/data/equipos.json'     # Ruta al archivo JSON que almacena datos de equipos
+#EQUIPOS_JSON_PATH = 'static/data/equipos.json'     # Ruta al archivo JSON que almacena datos de equipos
 
 # IDs de las carpetas raíz en Google Drive, estructurados por empresa y luego entidad.
 # Ejemplo: ROOT_FOLDER_IDS['MV']['sagrado_corazon']
@@ -71,8 +70,8 @@ ROOT_FOLDER_IDS = {
        
     },
     'Simbiosas': { # Otra empresa o agrupación
-        'EntidadA': 'ID_CARPETA_ENTIDADA', # Reemplazar con IDs reales
-        'EntidadB': 'ID_CARPETA_ENTIDADB', # Reemplazar con IDs reales
+        'ayapel': '1qB1H3PJ8luryntO7lRzD1lS50xXy0Msb', # Reemplazar con IDs reales
+        
     }
 }
 
@@ -83,10 +82,34 @@ ENTIDADES_FOLDER_IDS = {
     'sagrado_corazon': ROOT_FOLDER_IDS['MV']['sagrado_corazon'],
     'palmitos': ROOT_FOLDER_IDS['MV']['palmitos'],
     'vascular': ROOT_FOLDER_IDS['MV']['vascular'],
-    # Añadir más entidades según sea necesario, por ejemplo:
-    # 'EntidadA': ROOT_FOLDER_IDS['Simbiosas']['EntidadA'],
+    'ayapel': ROOT_FOLDER_IDS['Simbiosas']['ayapel'],
 }
+DATOS_CLIENTE_POR_ENTIDAD = {
 
+    'sagrado_corazon': {
+        'nombre_cliente': 'ESE SAGRADO CORAZON DE JESUS',
+        'direccion_cliente': 'Calle 12 No. 8-99 B/Nazareth, Valencia, Colombia',
+        'ciudad_cliente': 'VALENCIA'
+    },
+
+    'vascular': {
+        'nombre_cliente': 'UNIDAD MEDICA VASCULAR', # Ejemplo
+        'direccion_cliente': 'CALLE 26 # 6 – 36', # Ejemplo
+        'ciudad_cliente': 'Montería' # Ejemplo
+    },
+
+    'palmitos': {
+        'nombre_cliente': 'ESE CENTRO DE SALUD DE LOS PALMITOS', # Ejemplo
+        'direccion_cliente': 'CRA 11 # 02 -12 Los Palmitos, Sucre', # Ejemplo
+        'ciudad_cliente': 'LOS PALMITOS, SUCRE' # Ejemplo
+    },
+    
+    'ayapel': {
+        'nombre_cliente': 'ESE HOSPITAL SAN JORGE DE AYAPEL', # Ejemplo
+        'direccion_cliente': 'Calle Principal, Ayapel, Córdoba', # Ejemplo
+        'ciudad_cliente': 'AYAPEL' # Ejemplo
+    }
+}
 # Credenciales de usuarios para el login interno de la aplicación.
 # En un entorno de producción, esto debería manejarse de forma más segura (ej. base de datos con hashes).
 # Credenciales de usuarios para el login interno de la aplicación.
@@ -95,8 +118,6 @@ USUARIOS_SEGUROS = {
     "Juan Antonio": "Juan10021",
     "Marlon": "Marlon10021",
     "Erika": "Erika53075",
-    
-    
 }
 
 # Nombres completos asociados a los usuarios.
@@ -180,7 +201,7 @@ def load_credentials_from_cookie():
     Carga, desencripta y reconstruye el objeto Credentials desde la cookie.
     Returns:
         google.oauth2.credentials.Credentials or None: Objeto de credenciales si existe y es válido,
-                                                       None en caso contrario.
+        None en caso contrario.
     """
     encrypted_credentials = request.cookies.get(CREDENTIALS_COOKIE)
     if not encrypted_credentials:
@@ -381,18 +402,21 @@ def after_request_func(response):
 # Funciones de Carga de Datos Locales (JSON)
 # -----------------------------------------------------------------------------
 
-def load_equipos_json(json_path=EQUIPOS_JSON_PATH):
+def load_equipos_json(entidad_nombre):
     """
-    Carga los datos de equipos desde el archivo JSON especificado.
+    Carga los datos de equipos desde un archivo JSON específico para la entidad.
     Maneja la creación del directorio y archivo si no existen.
-
-    Args:
-        json_path (str, optional): Ruta al archivo JSON.
-                                   Defaults to EQUIPOS_JSON_PATH.
-    Returns:
-        dict: Diccionario con los datos de los equipos. Vacío si hay error o el archivo no existe/es inválido.
     """
-    # Asegurar que el directorio existe.
+    if not entidad_nombre:
+        print("ERROR CRÍTICO (load_equipos_json): Nombre de entidad no proporcionado.")
+        return {} # O lanzar una excepción
+
+    # Construir la ruta del archivo JSON dinámicamente
+    json_filename = f"equipos_{entidad_nombre.lower().replace(' ', '_')}.json" # ej: equipos_sagrado_corazon.json
+    json_path = os.path.join('static', 'data', json_filename) # Asumiendo que 'static/data/' es tu directorio
+
+    print(f"DEBUG (load_equipos_json): Intentando cargar JSON desde: {json_path}")
+
     json_dir = os.path.dirname(json_path)
     if not os.path.exists(json_dir):
         try:
@@ -400,20 +424,18 @@ def load_equipos_json(json_path=EQUIPOS_JSON_PATH):
             print(f"INFO: Directorio creado: {json_dir}")
         except OSError as e:
             print(f"ERROR: No se pudo crear el directorio {json_dir}: {e}")
-            return {} # No se puede proceder si el directorio no se puede crear.
+            return {}
 
-    # Asegurar que el archivo JSON existe, crearlo vacío si no.
     if not os.path.exists(json_path):
-        print(f"ADVERTENCIA: Archivo JSON no encontrado en {json_path}. Creando uno vacío.")
+        print(f"ADVERTENCIA: Archivo JSON no encontrado en {json_path} para la entidad '{entidad_nombre}'. Creando uno vacío.")
         try:
             with open(json_path, 'w', encoding='utf-8') as f:
-                json.dump({}, f) # Escribir un objeto JSON vacío.
-            return {} # Devolver vacío ya que se acaba de crear.
+                json.dump({}, f) 
+            return {}
         except IOError as e:
             print(f"ERROR: No se pudo crear el archivo JSON vacío en {json_path}: {e}")
             return {}
 
-    # Intentar cargar el archivo JSON.
     try:
         with open(json_path, 'r', encoding='utf-8') as f:
             content = f.read().strip()
@@ -422,11 +444,11 @@ def load_equipos_json(json_path=EQUIPOS_JSON_PATH):
                 return {}
             datos = json.loads(content)
             if not isinstance(datos, dict):
-                print(f"ADVERTENCIA: El archivo JSON {json_path} no contiene un objeto JSON raíz (diccionario). Devolviendo diccionario vacío.")
+                print(f"ADVERTENCIA: El archivo JSON {json_path} no contiene un objeto JSON raíz. Devolviendo diccionario vacío.")
                 return {}
             return datos
     except json.JSONDecodeError as e:
-        print(f"ERROR al parsear {json_path}: {e}. El archivo podría estar corrupto. Devolviendo diccionario vacío.")
+        print(f"ERROR al parsear {json_path}: {e}. Devolviendo diccionario vacío.")
         return {}
     except IOError as e:
         print(f"ERROR al leer {json_path}: {e}. Devolviendo diccionario vacío.")
@@ -707,29 +729,72 @@ def select_empresa_pagina():
     print(f"DEBUG (ruta /select-empresa): Acceso a la página de selección de empresa para '{username}'.")
     return render_template('select-empresa.html', username=username)
 
-@app.route('/select-entidad', methods=['GET'])
-def select_entidad_pagina():
+@app.route('/select-entidad-mv', methods=['GET']) # RUTA ESPECÍFICA PARA MV
+def select_entidad_pagina_mv():
     """
-    Muestra la página para seleccionar la entidad (ej. 'sagrado_corazon', 'palmitos').
+    Muestra la página para seleccionar la entidad para la empresa MV.
     Requiere que el usuario interno esté logueado.
-    Aquí podrías pasar las entidades disponibles al template si es necesario.
     """
     if not session.get('logged_in'):
-        print("DEBUG (ruta /select-entidad): Usuario no logueado, redirigiendo a /login.")
+        print("DEBUG (ruta /select-entidad-mv): Usuario no logueado, redirigiendo a /login.")
         return redirect(url_for('inicio_sesion_pagina'))
 
     username = session.get('username', 'Usuario Desconocido')
-    # Pasar las entidades disponibles desde ENTIDADES_FOLDER_IDS al template
-    # para que el usuario pueda seleccionarlas.
-    # entidades_disponibles = list(ENTIDADES_FOLDER_IDS.keys())
-    print(f"DEBUG (ruta /select-entidad): Acceso para '{username}'.")
-    return render_template('select-entidad.html', username=username) # entidades=entidades_disponibles
+    nombre_completo = session.get('nombre_completo', username)
 
+
+    # Pasamos el diccionario completo de entidades de MV
+    entidades_para_mostrar = ROOT_FOLDER_IDS.get('MV', {})
+
+    # Puedes pasar aquí las entidades específicas de MV si las necesitas en el template
+    # entidades_mv = ROOT_FOLDER_IDS.get('MV', {})
+    print(f"DEBUG (ruta /select-entidad-mv): Acceso para '{username}' en MV.")
+    # render_template('select-entidad.html' podría ser una plantilla genérica
+    # o una específica como 'select-entidad-mv.html' si la UI es distinta.
+    # Si es la misma, necesitarás enviar la `empresa_seleccionada` para filtrar.
+    return render_template(
+        'select-entidad-mv.html',
+        username=nombre_completo,
+        empresa_seleccionada='MV'
+        # Puedes pasar las entidades específicas si las quieres renderizar de forma diferente.
+        # entidades_disponibles=list(ROOT_FOLDER_IDS['MV'].keys())
+    )
+
+
+@app.route('/select-entidad-symbiosas', methods=['GET']) # RUTA ESPECÍFICA PARA SYMBIOSAS
+def select_entidad_pagina_symbiosas():
+    """
+    Muestra la página para seleccionar la entidad para la empresa SYMBIOSAS.
+    Requiere que el usuario interno esté logueado.
+    """
+    if not session.get('logged_in'):
+        print("DEBUG (ruta /select-entidad-symbiosas): Usuario no logueado, redirigiendo a /login.")
+        return redirect(url_for('inicio_sesion_pagina'))
+
+    username = session.get('username', 'Usuario Desconocido')
+    nombre_completo = session.get('nombre_completo', username)
+
+
+    # Pasamos el diccionario completo de entidades de Symbiosas
+    entidades_para_mostrar = ROOT_FOLDER_IDS.get('Simbiosas', {})
+
+    # Aquí es donde pasarías los IDs de las carpetas de Symbiosas.
+    # La lógica en el frontend (select-entidad.html y su JS)
+    # necesitará saber que está en el contexto de Symbiosas para usar los IDs correctos.
+    print(f"DEBUG (ruta /select-entidad-symbiosas): Acceso para '{username}' en SYMBIOSAS.")
+    return render_template(
+        'select-entidad-symbiosas.html', # Podría ser la misma plantilla si el JS maneja el ID
+        username=nombre_completo,
+        empresa_seleccionada='Simbiosas'
+        # entidades_disponibles=list(ROOT_FOLDER_IDS['Simbiosas'].keys()) # Si las pasas para renderizar
+    )
+
+#Servicios 
 @app.route('/Conet_Drive', methods=['GET'])
 def servicios_drive():
     """
     Muestra los servicios (carpetas principales) de Drive para una entidad específica.
-    Requiere autenticación de Google Drive.
+    Requiere autenticación de Google Drive y renderiza un HTML diferente por empresa.
     """
     if not session.get('logged_in'):
         print("DEBUG (ruta /Conet_Drive): Usuario interno no logueado. Redirigiendo a /login.")
@@ -739,6 +804,24 @@ def servicios_drive():
     if not entidad_seleccionada or entidad_seleccionada not in ENTIDADES_FOLDER_IDS:
         print(f"ERROR (ruta /Conet_Drive): Entidad '{entidad_seleccionada}' no válida o no especificada.")
         abort(400, description="Entidad no válida o no especificada.")
+
+    # ---  Determinar la empresa y la plantilla a renderizar ---
+    empresa_de_entidad = None
+    for empresa, entidades_data in ROOT_FOLDER_IDS.items():
+        if entidad_seleccionada in entidades_data:
+            empresa_de_entidad = empresa
+            break
+    
+    if empresa_de_entidad == 'MV':
+        plantilla_a_renderizar = 'servicios_mv.html'
+        print(f"DEBUG (ruta /Conet_Drive): Entidad '{entidad_seleccionada}' pertenece a MV. Usando plantilla '{plantilla_a_renderizar}'.")
+    elif empresa_de_entidad == 'Simbiosas':
+        plantilla_a_renderizar = 'servicios_symbiosas.html'
+        print(f"DEBUG (ruta /Conet_Drive): Entidad '{entidad_seleccionada}' pertenece a Simbiosas. Usando plantilla '{plantilla_a_renderizar}'.")
+    else:
+        print(f"ERROR (ruta /Conet_Drive): No se pudo determinar la empresa para la entidad '{entidad_seleccionada}'.")
+        abort(500, description="Error interno: Empresa de la entidad no definida.")
+    # --- FIN DE LA NUEVA LÓGICA ---
 
     folder_id_raiz_entidad = ENTIDADES_FOLDER_IDS[entidad_seleccionada]
     print(f"DEBUG (ruta /Conet_Drive): Intentando acceder a entidad '{entidad_seleccionada}', Folder ID: {folder_id_raiz_entidad}")
@@ -752,13 +835,9 @@ def servicios_drive():
         
         # Guardar la URL completa a la que el usuario intentaba acceder. Es más robusto.
         session['target_url_after_auth'] = url_for('servicios_drive', entidad=entidad_seleccionada, _external=True)
-        # Alternativamente, si tu oauth2callback está diseñado para usar 'target_entidad_after_auth':
-        # session['target_entidad_after_auth'] = entidad_seleccionada 
-        # Pero usar la URL completa es a menudo más flexible.
-
         response = make_response(redirect(url_for('authorize_google_drive')))
-        response.delete_cookie(CREDENTIALS_COOKIE) # Buena práctica limpiar cookies potencialmente inválidas
-        session.pop('state', None) # Limpiar estado OAuth anterior si existiera
+        response.delete_cookie(CREDENTIALS_COOKIE)
+        session.pop('state', None)
         return response
 
     # 3. Si el servicio está disponible, proceder a obtener datos de Drive
@@ -771,7 +850,6 @@ def servicios_drive():
         print(f"ERROR HttpError obteniendo nombre de carpeta {folder_id_raiz_entidad}: {e.resp.status} - {e._get_reason()}")
         if e.resp.status == 404:
             nombre_carpeta_obtenido_de_drive = f"Entidad '{entidad_seleccionada}' (ID: {folder_id_raiz_entidad}) no encontrada en Drive."
-            # Podrías considerar abort(404) aquí si es crítico
         else:
             nombre_carpeta_obtenido_de_drive = f"Error al cargar nombre de '{entidad_seleccionada}'"
     except Exception as e:
@@ -782,162 +860,178 @@ def servicios_drive():
     mime_condition_carpetas = "mimeType = 'application/vnd.google-apps.folder'"
     carpetas_servicios = listar_archivos(service, folder_id_raiz_entidad, mime_condition_carpetas)
 
-    # 5. Renderizar la plantilla.
+  
+
+    # 5. Renderizar la plantilla determinada.
     return render_template(
-        'servicios.html',
+        plantilla_a_renderizar, # << CAMBIO CLAVE AQUÍ >> Usamos la variable de la plantilla
         folders=carpetas_servicios,
         entidad=entidad_seleccionada,
-        nombre_de_ese=nombre_carpeta_obtenido_de_drive
+        nombre_de_ese=nombre_carpeta_obtenido_de_drive,
+        # También puedes pasar la empresa a la plantilla si la necesitas allí
+        empresa_actual=empresa_de_entidad, 
+        entidad_raiz_json=entidad_seleccionada
     )
 
+#Ver equipos (carpetas y archivos) en una carpeta específica de Drive
 @app.route('/carpeta/<folder_id>')
 def ver_equipos(folder_id):
-    """
-    Muestra el contenido de una carpeta específica en Drive (equipos o subcarpetas de equipos).
-    Requiere autenticación de Google Drive.
-    """
+
+
+    # --- INICIO DE TU LÓGICA EXISTENTE ---
     if not session.get('logged_in'):
         return redirect(url_for('inicio_sesion_pagina'))
 
     service = get_drive_service()
     if not service:
-        print(f"DEBUG (ruta /carpeta/{folder_id}): No hay servicio Drive. Redirigiendo a /authorize.")
-        # Aquí también podríamos guardar el folder_id para redirigir de vuelta
-        # session['target_folder_after_auth'] = folder_id
+        # ... (tu lógica de redirección a authorize_google_drive) ...
+        # Es buena idea añadir el parámetro 'empresa' a la URL de redirección si lo tienes aquí
+        # para que se conserve después de la autorización de Google.
+        empresa_param_para_auth = request.args.get('empresa')
+        target_url_after_auth = url_for('ver_equipos', folder_id=folder_id, empresa=empresa_param_para_auth, _external=True)
+        session['target_url_after_auth'] = target_url_after_auth
         response = make_response(redirect(url_for('authorize_google_drive')))
         response.delete_cookie(CREDENTIALS_COOKIE)
         session.pop('state', None)
         return response
 
-    # Obtener información de la carpeta actual (nombre).
+
     try:
         folder_info = service.files().get(fileId=folder_id, fields="id, name").execute()
         nombre_carpeta_actual = folder_info.get('name', 'Carpeta Desconocida')
     except HttpError as e:
-        print(f"Error HttpError obteniendo info de carpeta {folder_id}: {e}")
-        if e.resp.status == 404:
-            abort(404, f"La carpeta con ID {folder_id} no fue encontrada.")
-        else:
-            abort(500, "Error al obtener información de la carpeta desde Google Drive.")
-    except Exception as e: # Otros errores genéricos
-        print(f"Error inesperado obteniendo info de carpeta {folder_id}: {e}")
+        # ... (tu manejo de HttpError) ...
+        abort(500, "Error al obtener información de la carpeta desde Google Drive.")
+    except Exception as e:
+        # ... (tu manejo de Exception) ...
         abort(500, "Error inesperado al obtener información de la carpeta.")
 
-
-    # Listar subcarpetas y archivos dentro de la carpeta actual.
     mime_condition_carpetas = "mimeType = 'application/vnd.google-apps.folder'"
     mime_condition_archivos = "mimeType != 'application/vnd.google-apps.folder'"
 
     subcarpetas = listar_archivos(service, folder_id, mime_condition_carpetas)
     archivos_en_carpeta = listar_archivos(service, folder_id, mime_condition_archivos)
-
     tiene_solo_archivos = not subcarpetas and archivos_en_carpeta
+    # --- FIN DE TU LÓGICA EXISTENTE ---
 
-    # La actualización de la cookie de credenciales se maneja en `after_request`.
+    # ***** LA PARTE IMPORTANTE *****
+    # 1. Obtener 'empresa_actual' de los parámetros de la URL:
+    empresa_actual = request.args.get('empresa')  
+
+    entidad_json_key = request.args.get('entidad_json_key') # Recibir la clave de entidad para JSON
+
+    # 2. La variable 'entidad_actual' que ya usabas para JS (parece ser el nombre de la carpeta o entidad específica)
+    entidad_para_js = nombre_carpeta_actual 
+    print(f"DEBUG EN VER_EQUIPOS: folder_id='{folder_id}', empresa_actual='{empresa_actual}', entidad_json_key LEIDO DE URL='{entidad_json_key}'")
+
+    # 3. Pasar AMBAS variables (empresa_actual y entidad_actual) a la plantilla:
     return render_template(
-        'equipos.html', # Asumo que equipos.html puede mostrar tanto subcarpetas como archivos.
+        'equipos.html', 
         carpetas=subcarpetas,
         archivos=archivos_en_carpeta,
         tiene_solo_archivos=tiene_solo_archivos,
-        nombre_carpeta=nombre_carpeta_actual,
-        folder_id=folder_id
+        nombre_carpeta=nombre_carpeta_actual, # Este es el nombre de la carpeta que estás viendo
+        folder_id=folder_id,
+        entidad_actual=entidad_para_js,       # Lo usas para data-attributes y JS
+        empresa_actual=empresa_actual,         # ¡ESTA ES LA NUEVA VARIABLE PARA EL TEMA!
+        entidad_raiz_para_json=entidad_json_key #Para pasarlo al enlace de mantenimiento
     )
 
 # -----------------------------------------------------------------------------
 # Rutas de Gestión de Equipos (JSON y Drive)
 # -----------------------------------------------------------------------------
-
-@app.route('/Filtro-Equipos', methods=['GET'])
+@app.route('/Filtro-Equipos', methods=['GET']) # Tu ruta se llama 'filtro' en url_for
 def filtro():
-    """
-    Muestra la página de filtro de equipos y los resultados filtrados.
-    Los datos de los equipos se cargan desde el JSON local.
-    Opcionalmente, puede requerir autenticación de Drive si alguna acción posterior lo necesita.
-    """
-    # Opcional: Verificar autenticación de Drive si es estrictamente necesario para esta página.
-    # service = get_drive_service()
-    # if not service:
-    #     print("DEBUG (ruta /Filtro-Equipos): No autenticado con Drive. Redirigiendo a /authorize.")
-    #     # Guardar la intención de ir a filtros si es necesario
-    #     # session['redirect_after_auth_to'] = url_for('filtro_equipos_pagina')
-    #     response = make_response(redirect(url_for('authorize_google_drive')))
-    #     return response
+    # --- NUEVO: Obtener entidad y empresa de la URL ---
+    entidad_actual_clave = request.args.get('entidad')
+    empresa_actual = request.args.get('empresa')
 
-    print("DEBUG (ruta /Filtro-Equipos): Acceso a página de filtro.")
+    if not entidad_actual_clave:
+        # Opción: Si no hay entidad, mostrar un error o redirigir a una página de selección.
+        # Por ahora, vamos a abortar o podrías renderizar una plantilla diferente.
+        abort(400, description="Debe especificar una entidad para filtrar.")
+    
+    if not empresa_actual:
+        # Intentar deducir la empresa de la entidad si es posible, o establecer un default/error
+        # Esta lógica de deducción dependerá de tu estructura de datos (ej. ROOT_FOLDER_IDS)
+        # Por simplicidad, asumiremos que 'empresa' siempre se pasa o hay un default.
+        # Si no se pasa, el theming podría usar 'mv' por defecto en el HTML.
+        # O podrías hacer esto:
+        # empresa_actual = 'mv' # O la lógica para encontrarla a partir de entidad_actual_clave
+        print(f"ADVERTENCIA: Parámetro 'empresa' no recibido para la página de filtro de entidad '{entidad_actual_clave}'. El tema podría no aplicarse correctamente.")
 
-    # 1. Cargar todos los datos de equipos desde el archivo JSON.
-    all_equipos_data_from_json = load_equipos_json() # Usa EQUIPOS_JSON_PATH por defecto.
-    if not all_equipos_data_from_json: # load_equipos_json devuelve {} en error o vacío.
-        print("ADVERTENCIA (/Filtro-Equipos): No se cargaron datos de equipos del JSON o el archivo está vacío/corrupto.")
-        # No es necesario que sea un error fatal, puede mostrar 0 equipos.
 
-    # 2. Aplanar los datos: Recolectar todos los equipos de todos los servicios en una sola lista.
+    # --- NUEVO: Cargar datos del cliente para el título de la página ---
+    datos_cliente = DATOS_CLIENTE_POR_ENTIDAD.get(entidad_actual_clave.lower(), {})
+    nombre_display_entidad = datos_cliente.get('nombre_cliente', entidad_actual_clave.replace('_', ' ').title())
+
+    # --- MODIFICADO: Cargar JSON específico de la entidad ---
+    # Usamos la función load_equipos_json que ahora acepta entidad_nombre
+    equipos_de_la_entidad = load_equipos_json(entidad_actual_clave) 
+    
+    if not equipos_de_la_entidad:
+        print(f"ADVERTENCIA (/Filtro-Equipos): No se cargaron datos para la entidad '{entidad_actual_clave}' o el archivo está vacío/corrupto.")
+
+    # Aplanar los datos de la entidad actual (similar a como lo hacías antes pero solo para una entidad)
     all_items_flat = []
-    for service_label, items_in_service_dict in all_equipos_data_from_json.items():
+    for service_label, items_in_service_dict in equipos_de_la_entidad.items():
         if isinstance(items_in_service_dict, dict):
             for drive_item_id, equipo_details_dict in items_in_service_dict.items():
                 if isinstance(equipo_details_dict, dict):
                     item_for_filter = equipo_details_dict.copy()
-                    item_for_filter['drive_id'] = drive_item_id # ID de la carpeta del equipo en Drive.
-                    item_for_filter['service_label'] = service_label # Etiqueta del servicio (ej. "Mantenimiento HUV", "Biomédicos")
+                    item_for_filter['drive_id'] = drive_item_id
+                    item_for_filter['service_label'] = service_label
                     item_for_filter['display_name'] = equipo_details_dict.get('nombre', f'Equipo ID: {drive_item_id[:6]}...')
                     all_items_flat.append(item_for_filter)
-                else:
-                    print(f"ADVERTENCIA (/Filtro-Equipos): Item inválido (no es dict) encontrado en JSON bajo '{service_label}' con clave '{drive_item_id}'. Ignorando.")
-        else:
-            print(f"ADVERTENCIA (/Filtro-Equipos): Entrada inválida (no es dict) encontrada en JSON para la clave de servicio '{service_label}'. Esperaba un diccionario de equipos.")
-
+    
     total_equipos_count = len(all_items_flat)
 
-    # 3. Obtener los parámetros de filtro desde la URL (request.args).
+    # Lógica de filtrado (se mantiene igual, pero opera sobre all_items_flat de la entidad actual)
     filter_nombre = request.args.get('nombre', '').strip().lower()
     filter_marca_modelo = request.args.get('marca_modelo', '').strip().lower()
-    filter_service_label_json = request.args.get('service_label', '').strip().lower() # Etiqueta del servicio del JSON.
+    filter_service_label_json = request.args.get('service_label', '').strip().lower()
     filter_serie = request.args.get('serie', '').strip().lower()
-    # 'ubicacion' parece haber sido eliminada, mantener así.
 
     current_filters_for_template = {
-        'nombre': request.args.get('nombre', ''), # Mantener el valor original para el template.
+        'nombre': request.args.get('nombre', ''),
         'marca_modelo': request.args.get('marca_modelo', ''),
         'service_label': request.args.get('service_label', ''),
         'serie': request.args.get('serie', '')
     }
 
-    # 4. Aplicar los filtros.
     filtered_items = []
     filters_are_active = any([filter_nombre, filter_marca_modelo, filter_service_label_json, filter_serie])
 
     if filters_are_active:
         for item in all_items_flat:
-            match = True # Asumir que coincide inicialmente.
+            match = True
             if filter_nombre and filter_nombre not in str(item.get('nombre', '')).lower():
                 match = False
             if match and filter_marca_modelo and filter_marca_modelo not in str(item.get('marca_modelo', '')).lower():
                 match = False
-            if match and filter_service_label_json and filter_service_label_json not in str(item.get('service_label', '')).lower(): # Comparar con 'service_label' del item.
+            if match and filter_service_label_json and filter_service_label_json not in str(item.get('service_label', '')).lower():
                 match = False
             if match and filter_serie and filter_serie not in str(item.get('serie', '')).lower():
                 match = False
-
             if match:
                 filtered_items.append(item)
     else:
-        # Si no hay filtros activos, mostrar todos los ítems.
         filtered_items = all_items_flat
 
     filtered_equipos_count = len(filtered_items)
-
-    # 5. Opcional: Ordenar los resultados filtrados (ej. por nombre).
     filtered_items_sorted = sorted(filtered_items, key=lambda item: item.get('display_name', '').lower())
 
-    # 6. Renderizar la plantilla. La cookie se maneja en `after_request`.
     return render_template(
         'filtro.html',
         equipos=filtered_items_sorted,
         total_equipos_count=total_equipos_count,
         filtered_equipos_count=filtered_equipos_count,
-        current_filters=current_filters_for_template
+        current_filters=current_filters_for_template,
+        empresa_actual=empresa_actual,  # Para theming (favicon, logo, body class)
+        entidad_actual_nombre=entidad_actual_clave, # Para el título y para pasarlo al form action
+        nombre_display_entidad=nombre_display_entidad # Nombre legible de la entidad para el header
     )
+
 
 @app.route('/formato_mantenimiento')
 def formato_mantenimiento():
@@ -947,10 +1041,19 @@ def formato_mantenimiento():
     """
     if not session.get('logged_in'):
         return redirect(url_for('inicio_sesion_pagina'))
-
+    
+    # Obtener el parámetro 'empresa' de la URL
+    empresa_actual = request.args.get('empresa') 
     service = get_drive_service()
     if not service:
         print("DEBUG (ruta /formato_mantenimiento): No hay servicio Drive. Redirigiendo a /authorize.")
+        
+        # --- MODIFICACIÓN PARA CONSERVAR 'empresa' TRAS AUTORIZACIÓN ---
+        # Guardar la URL completa a la que el usuario intentaba acceder, incluyendo 'empresa'
+        target_url_with_params = url_for('formato_mantenimiento', empresa=empresa_actual, _external=True)
+        session['target_url_after_auth'] = target_url_with_params
+        # --- FIN MODIFICACIÓN ---
+        
         response = make_response(redirect(url_for('authorize_google_drive')))
         # No es necesario borrar cookie aquí, get_drive_service lo maneja si falla el refresh.
         return response
@@ -978,130 +1081,118 @@ def formato_mantenimiento():
     return render_template(
         'formato-preventivo-correctivo.html', # Nombre del template para el formato.
         firma=firma_relativa_para_template,
-        nombre_responsable=nombre_responsable_session
+        nombre_responsable=nombre_responsable_session,
+        empresa_actual=empresa_actual
     )
 
+
+
+#Mantenimiento de Equipos (Formulario y JSON)
 @app.route('/Mantenimiento/<folder_id>', methods=['GET', 'POST'])
 def mantenimiento(folder_id):
-    """
-    Muestra/Procesa el formulario de mantenimiento para un equipo específico (identificado por folder_id).
-    Carga/Guarda datos del equipo desde/hacia el JSON local.
-    Requiere autenticación de Drive.
-    """
     if not session.get('logged_in'):
         return redirect(url_for('inicio_sesion_pagina'))
 
+    # --- NUEVO: Obtener la entidad propietaria del JSON ---
+    entidad_json_clave = request.args.get('entidad_json') # ej: 'sagrado_corazon', 'ayapel'
+    if not entidad_json_clave:
+        print(f"ERROR (ruta /Mantenimiento/{folder_id}): Falta el parámetro 'entidad_json' en la URL.")
+        abort(400, description="Falta la clave de entidad para el archivo JSON.")
+    # --- FIN NUEVO ---
+
     service = get_drive_service()
     if not service:
-        print(f"DEBUG (ruta /Mantenimiento/{folder_id}): No hay servicio Drive. Redirigiendo a /authorize.")
-        # session['redirect_after_auth_to'] = url_for('mantenimiento_equipo', folder_id=folder_id) # Guardar destino.
+        # ... (tu lógica de redirección a authorize, considera pasar entidad_json_clave también) ...
+        target_url_with_params = url_for('mantenimiento', folder_id=folder_id, entidad_json=entidad_json_clave, _external=True) # MODIFICADO
+        session['target_url_after_auth'] = target_url_with_params
         response = make_response(redirect(url_for('authorize_google_drive')))
         return response
 
-    # Cargar datos JSON de todos los equipos.
-    # load_equipos_json maneja creación de archivo/directorio si no existen.
-    datos_json_todos_equipos = load_equipos_json()
+    # --- MODIFICADO: Cargar JSON específico de la entidad ---
+    # La función ahora espera el nombre de la entidad para construir la ruta del archivo.
+    datos_json_entidad_especifica = load_equipos_json(entidad_json_clave)
+    # --- FIN MODIFICADO ---
 
-    # Buscar el equipo específico y su servicio (etiqueta JSON).
     equipo_encontrado_dict = None
-    servicio_del_equipo_json_key = None
-    for servicio_key, items_en_servicio_dict in datos_json_todos_equipos.items():
+    servicio_del_equipo_json_key = None # La clave de "servicio" dentro del JSON de la entidad
+    
+    # Buscar el equipo dentro del JSON de la entidad específica
+    for servicio_key, items_en_servicio_dict in datos_json_entidad_especifica.items():
         if isinstance(items_en_servicio_dict, dict) and folder_id in items_en_servicio_dict:
             equipo_encontrado_dict = items_en_servicio_dict[folder_id]
             servicio_del_equipo_json_key = servicio_key
             break
 
-    # Manejo si el equipo no se encuentra en el JSON.
     if equipo_encontrado_dict is None:
-        print(f"ADVERTENCIA (/Mantenimiento): Equipo con ID {folder_id} no encontrado en {EQUIPOS_JSON_PATH}.")
-        # Opción 1: Mostrar error 404.
-        # abort(404, f"Registro del equipo ID {folder_id} no encontrado en el sistema local.")
-        # Opción 2: Crear una entrada temporal para permitir el registro (si el POST lo maneja).
-        #           Esto requiere que el formulario permita ingresar todos los datos necesarios.
+        print(f"ADVERTENCIA (/Mantenimiento): Equipo ID {folder_id} no encontrado en JSON de entidad '{entidad_json_clave}'.")
         equipo_encontrado_dict = {
             "nombre": "Equipo Nuevo (No Registrado en JSON)",
             "dependencia": "", "marca_modelo": "", "serie": "", "ubicacion": ""
-            # Añadir otros campos que el template `mantenimiento.html` espere.
         }
-        # Si se crea temporalmente, servicio_del_equipo_json_key será None.
-        # El POST necesitará manejar esto para asignar un servicio o crear uno.
-        print(f"DEBUG (/Mantenimiento): Se usará una plantilla de equipo nuevo para {folder_id} ya que no está en JSON.")
+        print(f"DEBUG (/Mantenimiento): Se usará plantilla de equipo nuevo para {folder_id} en JSON de entidad '{entidad_json_clave}'.")
 
-
-    # --- Procesar Petición POST (Guardar Cambios) ---
     if request.method == 'POST':
         if servicio_del_equipo_json_key is None:
-            # Si el equipo era nuevo (no en JSON) y se está guardando.
-            # Se necesita decidir a qué 'servicio_key' asignarlo.
-            # Podría venir del formulario, o usar uno por defecto/genérico.
-            # Aquí asumimos que el frontend podría enviar 'service_key_for_json' o se asigna a "Sin Servicio".
             servicio_del_equipo_json_key = request.form.get('service_key_for_json', "Sin Servicio Registrado")
-            if servicio_del_equipo_json_key not in datos_json_todos_equipos:
-                datos_json_todos_equipos[servicio_del_equipo_json_key] = {}
-            # Asegurar que la entrada para este folder_id existe bajo el servicio_key.
-            datos_json_todos_equipos[servicio_del_equipo_json_key].setdefault(folder_id, {})
-            print(f"DEBUG (POST /Mantenimiento): Equipo {folder_id} será añadido/actualizado bajo el servicio JSON '{servicio_del_equipo_json_key}'.")
-
+            if servicio_del_equipo_json_key not in datos_json_entidad_especifica:
+                datos_json_entidad_especifica[servicio_del_equipo_json_key] = {}
+            datos_json_entidad_especifica[servicio_del_equipo_json_key].setdefault(folder_id, {})
+        
         try:
-            # Actualizar los datos del equipo en el diccionario `datos_json_todos_equipos`.
-            target_equipo_dict_in_json = datos_json_todos_equipos[servicio_del_equipo_json_key][folder_id]
-
+            target_equipo_dict_in_json = datos_json_entidad_especifica[servicio_del_equipo_json_key][folder_id]
+            # ... (tu lógica para actualizar target_equipo_dict_in_json con request.form.get) ...
             target_equipo_dict_in_json['nombre'] = request.form.get('nombre', target_equipo_dict_in_json.get('nombre'))
             target_equipo_dict_in_json['dependencia'] = request.form.get('dependencia', target_equipo_dict_in_json.get('dependencia'))
             target_equipo_dict_in_json['marca_modelo'] = request.form.get('marca_modelo', target_equipo_dict_in_json.get('marca_modelo'))
             target_equipo_dict_in_json['serie'] = request.form.get('serie', target_equipo_dict_in_json.get('serie'))
             target_equipo_dict_in_json['ubicacion'] = request.form.get('ubicacion', target_equipo_dict_in_json.get('ubicacion'))
-            # ... añadir otros campos del formulario aquí ...
 
-            # Guardar el diccionario completo `datos_json_todos_equipos` de nuevo en el archivo JSON.
-            with open(EQUIPOS_JSON_PATH, 'w', encoding='utf-8') as f:
-                json.dump(datos_json_todos_equipos, f, ensure_ascii=False, indent=4)
-            print(f"DEBUG (POST /Mantenimiento): Datos JSON actualizados y GUARDADOS para {folder_id} en {EQUIPOS_JSON_PATH}")
 
-            # Redirigir a la misma página (GET) después del POST (Patrón Post/Redirect/Get).
-            # Esto evita reenvíos de formulario si el usuario recarga la página.
-            return redirect(url_for('mantenimiento_equipo', folder_id=folder_id))
+            # --- MODIFICADO: Guardar en el JSON específico de la entidad ---
+            json_filename_to_save = f"equipos_{entidad_json_clave.lower().replace(' ', '_')}.json"
+            json_path_to_save = os.path.join('static', 'data', json_filename_to_save)
+            
+            with open(json_path_to_save, 'w', encoding='utf-8') as f:
+                json.dump(datos_json_entidad_especifica, f, ensure_ascii=False, indent=4)
+            print(f"DEBUG (POST /Mantenimiento): Datos JSON actualizados y GUARDADOS para {folder_id} en {json_path_to_save}")
+            # --- FIN MODIFICADO ---
 
-        except IOError as e:
-            print(f"ERROR (POST /Mantenimiento): IOError al guardar datos JSON en {EQUIPOS_JSON_PATH}: {e}")
-            # Renderizar de nuevo la página con un mensaje de error.
-            # El `equipo_encontrado_dict` aquí sería el que se intentó guardar.
-            # La cookie se actualiza en `after_request`.
-            return render_template('mantenimiento.html',
-                                   equipo=target_equipo_dict_in_json, # Mostrar los datos que se intentaron guardar.
-                                   folder_id=folder_id,
-                                   error_message="ERROR AL GUARDAR los cambios en el archivo local.",
-                                   # ... pasar firma y nombre_responsable de nuevo ...
-                                   )
+            # MODIFICADO: Pasar entidad_json_clave en la redirección
+            return redirect(url_for('mantenimiento', folder_id=folder_id, entidad_json=entidad_json_clave)) 
         except Exception as e:
-            print(f"Error inesperado procesando POST en /Mantenimiento para {folder_id}: {e}")
-            # Renderizar de nuevo con error.
-            return render_template('mantenimiento.html',
-                                   equipo=equipo_encontrado_dict, # Datos antes del intento de POST.
-                                   folder_id=folder_id,
-                                   error_message=f"Error inesperado al procesar los datos: {type(e).__name__}.",
-                                   # ... pasar firma y nombre_responsable de nuevo ...
-                                  )
+            # ... (tu manejo de errores, asegúrate de pasar entidad_json_clave si renderizas de nuevo) ...
+            print(f"Error inesperado procesando POST en /Mantenimiento para {folder_id}, entidad {entidad_json_clave}: {e}")
+            # ... Renderizar de nuevo con error_message y entidad_json=entidad_json_clave ...
 
-    # --- Lógica para Petición GET (Mostrar Formulario) ---
+
+    # Para GET (mostrar formulario)
+    # ... (tu lógica para firma, nombre_responsable) ...
     username_session = session.get('username', 'default').lower()
     nombre_responsable_session = session.get('nombre_completo', 'Usuario del Sistema')
     firma_filename = f'firma-{username_session}.jpg'
     firma_path_in_static = os.path.join('images', firma_filename)
     firma_absolute_path = os.path.join(app.static_folder, firma_path_in_static)
     firma_relativa_para_template = firma_path_in_static.replace(os.sep, '/') \
-        if os.path.exists(firma_absolute_path) else 'images/firma-marlon.jpg' # Firma por defecto
+        if os.path.exists(firma_absolute_path) else 'images/firma-marlon.jpg'
 
-    print(f"DEBUG (GET /Mantenimiento): Mostrando formulario para equipo {folder_id}. Usuario: {username_session}, Firma: {firma_relativa_para_template}")
 
-    # La cookie se actualiza en `after_request`.
+    datos_del_cliente_especifico = DATOS_CLIENTE_POR_ENTIDAD.get(entidad_json_clave.lower(), {
+        'nombre_cliente': 'Cliente no especificado',
+        'direccion_cliente': 'Dirección no especificada',
+        'ciudad_cliente': 'Ciudad no especificada'
+    })
+
+    empresa_actual_desde_url = request.args.get('empresa')
     return render_template(
         'mantenimiento.html',
-        equipo=equipo_encontrado_dict, # Datos del equipo cargados del JSON (o plantilla nueva).
+        equipo=equipo_encontrado_dict, 
         folder_id=folder_id,
         firma=firma_relativa_para_template,
-        nombre_responsable=nombre_responsable_session
-    )
+        nombre_responsable=nombre_responsable_session,
+        entidad_json_actual=entidad_json_clave, # Para que la plantilla lo sepa si es necesario
+        cliente_data=datos_del_cliente_especifico,
+        empresa_actual=empresa_actual_desde_url
+    )   
 
 
 # -----------------------------------------------------------------------------
@@ -1247,238 +1338,189 @@ def delete_file_from_drive_api():
     except Exception as e:
         print(f"ERROR inesperado al eliminar archivo {file_id_to_delete} de Drive: {type(e).__name__} - {e}")
         return jsonify({'success': False, 'error': f'Ocurrió un error inesperado en el servidor al eliminar el archivo: {type(e).__name__}'}), 500
-
-
 @app.route('/api/registrar_equipo_completo', methods=['POST'])
 def api_registrar_equipo_completo():
     """
     API endpoint para registrar un equipo completo:
     1. Crea una carpeta para el equipo en Google Drive.
-    2. Guarda los detalles del equipo (incluyendo el ID de la carpeta de Drive) en el JSON local.
-    Requiere autenticación de Drive. La dependencia se asigna automáticamente al nombre del servicio (service_key).
+    2. Guarda los detalles del equipo en el JSON local específico de la entidad.
     """
     drive_service = get_drive_service()
     if not drive_service:
-        print("DEBUG (api/registrar_equipo_completo): No autenticado o servicio Drive no disponible.")
-        return jsonify({'success': False, 'error': 'No autenticado o servicio Drive no disponible. Por favor, re-autentíquese.'}), 401
+        return jsonify({'success': False, 'error': 'No autenticado o servicio Drive no disponible.'}), 401
 
     data = request.get_json()
     if not data:
-        print("DEBUG (api/registrar_equipo_completo): Petición inválida (no JSON).")
         return jsonify({'success': False, 'error': 'Petición inválida (no JSON).'}), 400
 
-    # service_key_for_json: La etiqueta bajo la cual se guardará en el JSON (ej. "Biomédicos HUV").
-    service_key_for_json = data.get('service_key_for_json')
-    # parent_drive_folder_id: ID de la carpeta en Drive que representa al 'servicio' (ej. la carpeta "Biomédicos HUV" en Drive).
-    # Si no se provee, se intentará buscar.
-    parent_drive_folder_id_from_request = data.get('parent_drive_folder_id')
-    equipo_details_from_request = data.get('equipo_details') # {nombre, marca_modelo, serie, ubicacion}
+    # --- OBTENER DATOS DEL PAYLOAD ---
+    entidad_json_clave = data.get('entidad_json_key') # Clave de la entidad para el archivo JSON
+    service_key_for_json = data.get('service_key_for_json') # Nombre del servicio (para la estructura interna del JSON)
+    parent_drive_folder_id_from_request = data.get('parent_drive_folder_id') # ID de la carpeta de servicio en Drive
+    equipo_details_from_request = data.get('equipo_details')
 
+    # --- VALIDACIONES ---
+    if not entidad_json_clave:
+        return jsonify({'success': False, 'error': "Falta la clave de entidad (entidad_json_key) para el registro."}), 400
     if not service_key_for_json or not equipo_details_from_request or not equipo_details_from_request.get('nombre'):
-        error_msg = "Faltan datos: 'service_key_for_json' o 'equipo_details' (incluyendo 'nombre') son requeridos."
-        print(f"DEBUG (api/registrar_equipo_completo): {error_msg} Datos recibidos: {data}")
-        return jsonify({'success': False, 'error': error_msg}), 400
+        return jsonify({'success': False, 'error': "Faltan datos: 'service_key_for_json' o 'equipo_details' (con 'nombre') son requeridos."}), 400
+    if not parent_drive_folder_id_from_request:
+         print(f"ADVERTENCIA (api/registrar_equipo_completo): No se proporcionó 'parent_drive_folder_id'. La carpeta en Drive podría no crearse en el lugar esperado o fallar.")
+         # Considera si esto debe ser un error fatal:
+         # return jsonify({'success': False, 'error': "Falta el ID de la carpeta de servicio en Drive para crear el equipo."}), 400
 
-    if not isinstance(equipo_details_from_request, dict):
-        print(f"ERROR (api/registrar_equipo_completo): 'equipo_details' no es un diccionario. Recibido: {equipo_details_from_request}")
-        return jsonify({'success': False, 'error': "Formato de 'equipo_details' inesperado."}), 400
 
-    # Asignar dependencia automáticamente al nombre del servicio (etiqueta JSON).
     equipo_details_to_save = equipo_details_from_request.copy()
-    equipo_details_to_save['dependencia'] = service_key_for_json
-    print(f"DEBUG (api/registrar_equipo_completo): Dependencia establecida automáticamente a '{service_key_for_json}'.")
+    equipo_details_to_save['dependencia'] = service_key_for_json # La dependencia es el nombre del servicio
 
     equipo_nombre_para_carpeta_drive = equipo_details_to_save.get('nombre', 'Equipo Sin Nombre').strip()
-    final_parent_drive_folder_id_for_equipo = parent_drive_folder_id_from_request
-
-    # Si el frontend no proporcionó `parent_drive_folder_id`, buscarlo en Drive por `service_key_for_json`.
-    # Esto asume que hay una carpeta en Drive cuyo nombre coincide con `service_key_for_json`
-    # y que esta carpeta es hija de alguna carpeta raíz general (ej. la de la entidad).
-    # Esta lógica necesita saber cuál es la "carpeta raíz general" para buscar dentro de ella.
-    # Por ahora, el código original busca dentro de `ROOT_FOLDER_ID` (que no está bien definido para este contexto).
-    # Para que esto funcione, el frontend DEBE enviar `parent_drive_folder_id` que es el ID de la carpeta del servicio.
-    # O, la variable `parent_folder_id = request.form.get('folderId') or request.args.get('folderId')` del código original
-    # debe ser el ID de la carpeta del servicio (ej. "Biomédicos HUV" en Drive).
-    # Asumiremos que `parent_drive_folder_id_from_request` es el ID correcto de la carpeta del servicio en Drive.
-
-    if not final_parent_drive_folder_id_for_equipo:
-        # Esta lógica de búsqueda es compleja y depende de una estructura de carpetas predefinida.
-        # Es más robusto si el frontend envía directamente el ID de la carpeta padre del servicio en Drive.
-        # El código original tenía una búsqueda basada en ROOT_FOLDER_ID, lo cual es ambiguo aquí.
-        # Se necesita el ID de la carpeta de servicio (ej. "Biomédicos HUV") para crear el equipo dentro.
-        print(f"ERROR (api/registrar_equipo_completo): No se proporcionó 'parent_drive_folder_id' (ID de la carpeta del servicio en Drive). No se puede crear el equipo.")
-        return jsonify({'success': False, 'error': "Falta el ID de la carpeta de servicio en Drive para crear el equipo."}), 400
-        # --- Bloque de búsqueda de carpeta de servicio (si se decide implementar y `ROOT_FOLDER_ID` está bien definido) ---
-        # print(f"DEBUG ... Buscando carpeta de servicio '{service_key_for_json}' en Drive...")
-        # try:
-        #     # Query para buscar la carpeta del servicio por nombre DENTRO de una carpeta raíz de la entidad (necesitaríamos ese ID).
-        #     # query = (f"'{ID_CARPETA_RAIZ_ENTIDAD_ACTUAL}' in parents and " # ID_CARPETA_RAIZ_ENTIDAD_ACTUAL debe obtenerse de algún lado.
-        #     #          f"mimeType = 'application/vnd.google-apps.folder' and "
-        #     #          f"name = '{service_key_for_json.replace("'", "\\'")}' and trashed = false")
-        #     # ... ejecutar query ...
-        #     # if found: final_parent_drive_folder_id_for_equipo = found_id
-        #     # else: error
-        # except HttpError as e: ...
-        # except Exception as e: ...
-        # --- Fin bloque de búsqueda ---
-
-    # 1. Crear la carpeta en Google Drive para el nuevo equipo.
+    
+    # 1. Crear la carpeta en Google Drive
     new_drive_folder_id_equipo = None
     try:
         folder_metadata_drive = {
             'name': equipo_nombre_para_carpeta_drive,
             'mimeType': 'application/vnd.google-apps.folder',
-            'parents': [final_parent_drive_folder_id_for_equipo] # Carpeta del servicio.
+            'parents': [parent_drive_folder_id_from_request] if parent_drive_folder_id_from_request else []
         }
-        print(f"DEBUG (api/registrar_equipo_completo): Creando carpeta Drive '{equipo_nombre_para_carpeta_drive}' dentro de '{final_parent_drive_folder_id_for_equipo}'...")
+        print(f"DEBUG (api/registrar_equipo_completo): Creando carpeta Drive '{equipo_nombre_para_carpeta_drive}' dentro de '{parent_drive_folder_id_from_request}' para entidad '{entidad_json_clave}'...")
         created_folder_drive = drive_service.files().create(body=folder_metadata_drive, fields='id, name').execute()
         new_drive_folder_id_equipo = created_folder_drive.get('id')
+        if not new_drive_folder_id_equipo: # Doble chequeo
+            raise Exception("La API de Drive no devolvió un ID para la carpeta creada.")
         print(f"DEBUG: Carpeta Drive para equipo creada: ID={new_drive_folder_id_equipo}, Nombre={created_folder_drive.get('name')}")
     except HttpError as he:
-        # ... (manejo de HttpError similar a upload_pdf_to_drive_api) ...
         print(f"HttpError al crear carpeta Drive para equipo: {he}")
         return jsonify({'success': False, 'error': f"Error de API ({he.resp.status}) al crear carpeta en Drive: {he._get_reason()}"}), getattr(he.resp, 'status', 500)
-
     except Exception as e:
         print(f"Error inesperado al crear carpeta Drive para equipo: {e}")
-        return jsonify({'success': False, 'error': 'Error inesperado al crear la carpeta del equipo en Drive.'}), 500
+        return jsonify({'success': False, 'error': f'Error inesperado ({type(e).__name__}) al crear la carpeta del equipo en Drive.'}), 500
 
-    if not new_drive_folder_id_equipo: # Si la creación falló y no lanzó excepción (poco probable).
-        return jsonify({'success': False, 'error': 'Falló la creación de la carpeta en Drive por una razón desconocida.'}), 500
-
-    # 2. Guardar los detalles del equipo en equipos.json.
-    json_file_path = EQUIPOS_JSON_PATH # Usar la constante global.
+    # 2. Guardar los detalles del equipo en el JSON específico de la entidad.
     try:
-        current_json_data_all_equipos = load_equipos_json(json_file_path) # Carga segura.
-        # Asegurar que la clave del servicio exista.
-        current_json_data_all_equipos.setdefault(service_key_for_json, {})
-        # Guardar los detalles del equipo (que ya incluyen la dependencia).
-        current_json_data_all_equipos[service_key_for_json][new_drive_folder_id_equipo] = equipo_details_to_save
+        # Cargar el JSON de la entidad específica
+        json_data_entidad_actual = load_equipos_json(entidad_json_clave) # Usa la función modificada
+        
+        json_data_entidad_actual.setdefault(service_key_for_json, {})
+        json_data_entidad_actual[service_key_for_json][new_drive_folder_id_equipo] = equipo_details_to_save
 
-        with open(json_file_path, 'w', encoding='utf-8') as f:
-            json.dump(current_json_data_all_equipos, f, ensure_ascii=False, indent=4)
-        print(f"DEBUG: Datos guardados en {json_file_path} para equipo ID {new_drive_folder_id_equipo} bajo servicio '{service_key_for_json}'. Detalles: {equipo_details_to_save}")
+        # Construir la ruta del archivo JSON para guardar
+        json_filename_to_save = f"equipos_{entidad_json_clave.lower().replace(' ', '_')}.json"
+        json_path_to_save = os.path.join('static', 'data', json_filename_to_save) # Asume 'static/data/'
 
-    except IOError as e:
-        print(f"IOError al guardar en {json_file_path}: {e}")
-        # ROLLBACK: Si falla el guardado en JSON, se podría intentar eliminar la carpeta de Drive recién creada.
-        # Esta lógica de rollback puede ser compleja. Por ahora, solo se informa el error.
-        # try:
-        #     drive_service.files().delete(fileId=new_drive_folder_id_equipo).execute()
-        #     print(f"ROLLBACK: Carpeta Drive {new_drive_folder_id_equipo} eliminada debido a fallo en guardado JSON.")
-        # except Exception as rb_err:
-        #     print(f"ERROR en ROLLBACK: No se pudo eliminar carpeta Drive {new_drive_folder_id_equipo}: {rb_err}")
-        return jsonify({'success': False, 'error': f'Carpeta creada en Drive (ID: {new_drive_folder_id_equipo}), pero falló el guardado en JSON local: {e}'}), 500
+        with open(json_path_to_save, 'w', encoding='utf-8') as f:
+            json.dump(json_data_entidad_actual, f, ensure_ascii=False, indent=4)
+        print(f"DEBUG: Datos guardados en {json_path_to_save} para equipo ID {new_drive_folder_id_equipo}")
+
     except Exception as e:
-        print(f"Error inesperado al guardar en {json_file_path}: {e}")
-        return jsonify({'success': False, 'error': f'Carpeta creada en Drive (ID: {new_drive_folder_id_equipo}), pero ocurrió un error inesperado al guardar en JSON local: {type(e).__name__}'}), 500
+        print(f"Error al guardar en JSON para entidad '{entidad_json_clave}': {e}")
+        # ROLLBACK: Si falla el guardado en JSON, intentar eliminar la carpeta de Drive recién creada.
+        try:
+            drive_service.files().delete(fileId=new_drive_folder_id_equipo).execute()
+            print(f"ROLLBACK: Carpeta Drive {new_drive_folder_id_equipo} eliminada debido a fallo en guardado JSON.")
+        except Exception as rb_err:
+            print(f"ERROR en ROLLBACK de Drive: No se pudo eliminar carpeta Drive {new_drive_folder_id_equipo}: {rb_err}")
+        return jsonify({'success': False, 'error': f'Carpeta creada en Drive, pero falló el guardado en JSON local para la entidad {entidad_json_clave}: {type(e).__name__}'}), 500
 
-    # La cookie se actualiza en `after_request`.
     return jsonify({
         'success': True,
-        'message': f'Equipo "{equipo_details_to_save.get("nombre")}" registrado y carpeta creada en Drive.',
+        'message': f'Equipo "{equipo_details_to_save.get("nombre")}" registrado en entidad "{entidad_json_clave}" y carpeta creada en Drive.',
         'new_drive_folder_id': new_drive_folder_id_equipo,
-        'equipo_details_saved': equipo_details_to_save,
-        'service_key_for_json': service_key_for_json
-    }), 201 # 201 Created.
+        'equipo_details_saved': equipo_details_to_save
+    }), 201
+
 
 @app.route('/delete_equipo', methods=['POST'])
 def delete_equipo_api():
     """
     API endpoint para eliminar un equipo:
     1. Mueve la carpeta del equipo a la papelera en Google Drive.
-    2. Elimina la entrada del equipo del archivo JSON local.
-    Requiere autenticación de Drive.
+    2. Elimina la entrada del equipo del archivo JSON local específico de la entidad.
     """
     service = get_drive_service()
     if not service:
-        print("DEBUG (delete_equipo): No autorizado o sesión Drive inválida.")
-        return jsonify({'success': False, 'error': 'No autorizado o sesión de Drive inválida. Por favor, re-autentíquese.'}), 401
+        return jsonify({'success': False, 'error': 'No autenticado o sesión Drive inválida.'}), 401
 
     data = request.get_json() or request.form
-    # El ID de la carpeta del equipo a eliminar en Drive (también es la clave en el JSON).
-    folder_id_equipo_to_delete = data.get('folderId') or data.get('fileId') # Aceptar 'fileId' por consistencia con delete_file.
+    folder_id_equipo_to_delete = data.get('folderId') or data.get('fileId')
+    
+    # --- NUEVO: Recibir la clave de la entidad para el JSON ---
+    entidad_json_clave = data.get('entidad_json_key')
+    # --- FIN NUEVO ---
 
     if not folder_id_equipo_to_delete:
-        return jsonify({'success': False, 'error': 'Falta el ID del equipo (carpeta) a eliminar (campo "folderId" o "fileId").'}), 400
+        return jsonify({'success': False, 'error': 'Falta el ID del equipo (carpeta) a eliminar.'}), 400
+    if not entidad_json_clave: # ¡Validación crucial!
+        return jsonify({'success': False, 'error': "Falta la clave de entidad (entidad_json_key) para la eliminación."}), 400
 
-    print(f"DEBUG (delete_equipo): Intentando eliminar equipo con Folder ID (Drive/JSON): '{folder_id_equipo_to_delete}'")
+    print(f"DEBUG (delete_equipo): Intentando eliminar equipo Folder ID: '{folder_id_equipo_to_delete}' de la entidad '{entidad_json_clave}'")
 
     # 1. Mover carpeta a la papelera en Google Drive.
     try:
-        # Para mover a la papelera, se actualiza el atributo 'trashed'.
         service.files().update(
             fileId=folder_id_equipo_to_delete,
-            body={'trashed': True} # Marcar como en la papelera.
+            body={'trashed': True}
         ).execute()
         print(f"DEBUG: Carpeta del equipo {folder_id_equipo_to_delete} movida a la papelera de Drive.")
     except HttpError as he:
-        # ... (manejo de HttpError similar a delete_file_from_drive_api, adaptando mensajes para "equipo (carpeta)") ...
+        # ... (tu manejo de HttpError se mantiene, es robusto) ...
         status_code = he.resp.status
-        error_message_api = json.loads(he.content.decode()).get('error', {}).get('message', 'Error de API desconocido.')
+        error_message_api = "Error de API desconocido."
+        try:
+            error_content = he.content.decode('utf-8')
+            error_details = json.loads(error_content).get('error', {})
+            error_message_api = error_details.get('message', f"Error de API de Drive no especificado (Status: {status_code}).")
+        except: # Ignorar errores de parseo del contenido del error
+            pass
         user_message = f"Error de Google Drive ({status_code}) al intentar mover la carpeta del equipo a la papelera: {error_message_api}"
-        if status_code == 404:
-            user_message = f"El equipo (carpeta con ID {folder_id_equipo_to_delete}) no fue encontrado en Google Drive."
-        elif status_code == 403:
-             user_message = f"No tienes permiso para eliminar este equipo (carpeta con ID {folder_id_equipo_to_delete}) de Google Drive."
-
+        if status_code == 404: user_message = f"El equipo (carpeta ID {folder_id_equipo_to_delete}) no fue encontrado en Google Drive."
+        elif status_code == 403: user_message = f"No tienes permiso para eliminar este equipo (carpeta ID {folder_id_equipo_to_delete}) de Google Drive."
         print(f"ERROR HttpError ({status_code}) eliminando equipo (carpeta) {folder_id_equipo_to_delete} de Drive: {he}")
         return jsonify({'success': False, 'error': user_message}), status_code
-    except google.auth.exceptions.RefreshError as re:
-        print(f"ERROR CRÍTICO (delete_equipo): Falló el REFRESH del token: {re}")
-        return jsonify({'success': False, 'error': 'Su sesión de Drive ha expirado o es inválida. Por favor, re-autentíquese.'}), 401
-    except Exception as e:
-        print(f"ERROR inesperado eliminando equipo (carpeta) {folder_id_equipo_to_delete} de Drive: {e}")
+    except Exception as e: # Otros errores, incluyendo google.auth.exceptions.RefreshError
+        print(f"ERROR inesperado/auth eliminando equipo (carpeta) {folder_id_equipo_to_delete} de Drive: {e}")
+        if isinstance(e, google.auth.exceptions.RefreshError):
+            return jsonify({'success': False, 'error': 'Su sesión de Drive ha expirado o es inválida. Por favor, re-autentíquese.'}), 401
         return jsonify({'success': False, 'error': f'Ocurrió un error inesperado al eliminar el equipo de Drive: {type(e).__name__}'}), 500
 
-    # 2. Eliminar la entrada del equipo del archivo JSON local.
-    json_file_path = EQUIPOS_JSON_PATH
+    # 2. Eliminar la entrada del equipo del archivo JSON local específico de la entidad.
     try:
-        current_json_data_all_equipos = load_equipos_json(json_file_path)
-        if not isinstance(current_json_data_all_equipos, dict): # Debería ser dict por load_equipos_json.
-            current_json_data_all_equipos = {}
-
+        # Cargar el JSON de la entidad específica
+        json_data_entidad_actual = load_equipos_json(entidad_json_clave)
+        
         equipo_found_in_json_and_deleted = False
-        # Iterar para encontrar y eliminar la entrada del equipo.
-        for service_key, equipos_in_service_dict in current_json_data_all_equipos.items():
+        for service_key, equipos_in_service_dict in list(json_data_entidad_actual.items()): # Usar list() para poder modificar el dict mientras se itera
             if isinstance(equipos_in_service_dict, dict) and folder_id_equipo_to_delete in equipos_in_service_dict:
-                del current_json_data_all_equipos[service_key][folder_id_equipo_to_delete]
+                del json_data_entidad_actual[service_key][folder_id_equipo_to_delete]
                 equipo_found_in_json_and_deleted = True
                 # Opcional: si el service_key queda vacío después de eliminar, también eliminarlo.
-                # if not current_json_data_all_equipos[service_key]:
-                #     del current_json_data_all_equipos[service_key]
-                break # Asumimos que el folder_id es único globalmente como clave de equipo.
+                if not json_data_entidad_actual[service_key]:
+                    del json_data_entidad_actual[service_key]
+                break 
 
         if equipo_found_in_json_and_deleted:
-            # Guardar cambios en el archivo JSON.
+            # Construir la ruta del archivo JSON para guardar
+            json_filename_to_save = f"equipos_{entidad_json_clave.lower().replace(' ', '_')}.json"
+            json_path_to_save = os.path.join('static', 'data', json_filename_to_save)
+            
             # Usar escritura atómica (escribir a temporal y luego reemplazar).
-            temp_json_path = json_file_path + '.temp'
+            temp_json_path = json_path_to_save + '.temp'
             with open(temp_json_path, 'w', encoding='utf-8') as f:
-                json.dump(current_json_data_all_equipos, f, ensure_ascii=False, indent=4)
-            os.replace(temp_json_path, json_file_path) # Movida atómica.
-            print(f"DEBUG: Entrada del equipo {folder_id_equipo_to_delete} eliminada del JSON local.")
+                json.dump(json_data_entidad_actual, f, ensure_ascii=False, indent=4)
+            os.replace(temp_json_path, json_path_to_save)
+            print(f"DEBUG: Entrada del equipo {folder_id_equipo_to_delete} eliminada del JSON en {json_path_to_save}.")
         else:
-            # La carpeta se eliminó de Drive, pero no se encontró en el JSON.
-            # Esto podría ser una inconsistencia, pero no necesariamente un error fatal para esta operación.
-            print(f"ADVERTENCIA: Equipo (carpeta) {folder_id_equipo_to_delete} eliminado de Drive, pero no se encontró su entrada en el JSON local.")
+            print(f"ADVERTENCIA: Equipo (carpeta) {folder_id_equipo_to_delete} eliminado de Drive, pero no se encontró su entrada en el JSON de la entidad '{entidad_json_clave}'.")
 
-    except (IOError, json.JSONDecodeError) as e: # Errores al manipular el JSON.
-        print(f"ERROR al actualizar JSON después de eliminar equipo {folder_id_equipo_to_delete} de Drive: {e}")
-        # La carpeta en Drive SÍ fue eliminada (o movida a papelera).
-        # Devolver éxito parcial o un error que indique esto.
+    except Exception as e:
+        print(f"ERROR al actualizar JSON para entidad '{entidad_json_clave}' después de eliminar equipo {folder_id_equipo_to_delete} de Drive: {e}")
         return jsonify({
-            'success': False, # O True con una advertencia.
-            'error': f'Equipo eliminado de Drive, pero falló la actualización del registro local: {e}'
-        }), 500 # Error del servidor.
-    except Exception as e: # Otros errores inesperados.
-        print(f"ERROR inesperado actualizando JSON para equipo {folder_id_equipo_to_delete}: {e}")
-        return jsonify({
-            'success': False,
-            'error': f'Equipo eliminado de Drive, pero ocurrió un error inesperado actualizando el registro local: {type(e).__name__}'
+            'success': False, 
+            'error': f'Equipo eliminado de Drive, pero falló la actualización del registro local para la entidad {entidad_json_clave}: {type(e).__name__}'
         }), 500
 
-    # La cookie se actualiza en `after_request`.
-    return jsonify({'success': True, 'message': 'Equipo enviado a la papelera en Drive y eliminado del registro local.'}), 200
+    return jsonify({'success': True, 'message': f'Equipo de entidad "{entidad_json_clave}" enviado a la papelera en Drive y eliminado del registro local.'}), 200
+
 
 
 # -----------------------------------------------------------------------------
