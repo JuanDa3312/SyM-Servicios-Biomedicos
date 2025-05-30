@@ -11,7 +11,7 @@
     <script src="{{ url_for('static', filename='js/script-select-entidad.js') }}" defer></script>
 </head>
 {# MODIFICACIÓN 1: Añadir clase de tema al body #}
-{# Tu ruta Python '/select-entidad-symbiosas' pasa 'empresa_seleccionada="Simbiosas"' #}
+{# Tu ruta Python '/select-entidad-symbiosas' pasa 'empresa_seleccionada="simbiosas"' #}
 <body class="theme-{{ empresa_seleccionada.lower() if empresa_seleccionada else 'simbiosas' }}"> 
     <div class="container">
         <header class="header-container">
