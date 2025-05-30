@@ -4,14 +4,14 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>SYMBIOSAS</title>
-    <link rel="icon" href="{{ url_for('static', filename='images/icono-symbiosas.png) }}" type="image/x-icon"> 
+    <link rel="icon" href="{{ url_for('static', filename='images/icono-symbiosas.PNG') }}" type="image/x-icon"> 
     
     <link rel="stylesheet" href="{{ url_for('static', filename='css/styles-select-entidad-symbiosas.css') }}">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <script src="{{ url_for('static', filename='js/script-select-entidad.js') }}" defer></script>
 </head>
 {# MODIFICACIÓN 1: Añadir clase de tema al body #}
-{# Tu ruta Python '/select-entidad-symbiosas' pasa 'empresa_seleccionada="simbiosas"' #}
+{# Tu ruta Python '/select-entidad-symbiosas' pasa 'empresa_seleccionada="Simbiosas"' #}
 <body class="theme-{{ empresa_seleccionada.lower() if empresa_seleccionada else 'simbiosas' }}"> 
     <div class="container">
         <header class="header-container">
