@@ -1,0 +1,239 @@
+{
+    "LABORATORIO": {
+        "1zbxF4vcE75zond3jmi9ferDgeJyy19Vy": {
+            "nombre": "ANALIZADOR DE HEMATOLOGIA",
+            "dependencia": "LABORATORIO",
+            "marca_modelo": "DYMING / DH26",
+            "serie": "NO VISIBLE",
+            "ubicacion": ""
+        },
+        "1OauhC4rF2VGY5nOzAZ0vOK5HZjoTdTZD": {
+            "nombre": "EQUIPO ANALIZADOR DE QUIMICA",
+            "dependencia": "LABORATORIO",
+            "marca_modelo": "BIOSYSTEMS / BTS 350",
+            "serie": "NO VISIBLE",
+            "ubicacion": ""
+        },
+        "1JFv11nfo0_w8R4abzCxRuHbp6bDwIfds": {
+            "nombre": "BAÑO SEROLOGICO",
+            "dependencia": "LABORATORIO",
+            "marca_modelo": "SCIENTIFIC / BHS-1",
+            "serie": "SN IM 100",
+            "ubicacion": ""
+        },
+        "18h9w7g6jO0_pIjDOnUIOVVlzedrQh8FL": {
+            "nombre": "ANALIZADOR QUIMICO",
+            "dependencia": "LABORATORIO",
+            "marca_modelo": "MINDRAY / BA-88A",
+            "serie": "NO VISIBLE",
+            "ubicacion": ""
+        },
+        "1OvSrQgNprPOGghfYF6nI61JT0EBojF0Q": {
+            "nombre": "CENTRIFUGA 6 TUBOS",
+            "dependencia": "LABORATORIO",
+            "marca_modelo": "CLAY ADAMS / COMPACT",
+            "serie": "NO VISIBLE",
+            "ubicacion": ""
+        },
+        "1pIifusV27S0BM7OEyDQvxsVPoFGxGQlt": {
+            "nombre": "CENTRIFUGADORA 24",
+            "dependencia": "LABORATORIO",
+            "marca_modelo": "ZENITH LAB / TDL-4A",
+            "serie": "NO VISIBLE",
+            "ubicacion": ""
+        },
+        "1rbtYkF_5X8dP_wiu9TWwgrySBU0IvRrS": {
+            "nombre": "INCUBADORA",
+            "dependencia": "LABORATORIO",
+            "marca_modelo": "MEMMERT / UN - 55",
+            "serie": "DOT - O59",
+            "ubicacion": ""
+        },
+        "1L3chZhSAhymMk0Ak-SfvIlNFEPz18bDW": {
+            "nombre": "MICROSCOPIO BINOCULAR",
+            "dependencia": "LABORATORIO",
+            "marca_modelo": "OLYMPUS / CX 21",
+            "serie": "NO VISIBLE",
+            "ubicacion": ""
+        },
+        "1I-m7x60P7XeTHb_OO7q1DUexvEZaQ8ed": {
+            "nombre": "PIPETA",
+            "dependencia": "LABORATORIO",
+            "marca_modelo": "ZENITHLAB / APT1",
+            "serie": "NO VISIBLE",
+            "ubicacion": ""
+        },
+        "1rLzs-4X5NlbbS-qpNxIuJITqBmNxZtF6": {
+            "nombre": "PIPETA",
+            "dependencia": "LABORATORIO",
+            "marca_modelo": "ZENITHLAB / APT1",
+            "serie": "NO VISIBLE",
+            "ubicacion": ""
+        },
+        "1eL8Cz3cVVlAdMv4YHKFfPPeIyK6bYOMC": {
+            "nombre": "MICROSCOPIO",
+            "dependencia": "LABORATORIO",
+            "marca_modelo": "OLYMPUS",
+            "serie": "NO VISIBLE",
+            "ubicacion": ""
+        }
+    },
+
+    "ODONTOLOGIA": {
+        "1Yeof48WEXTazbbSm_7j2dGvFaOom1_Uz": {
+            "nombre": "COMPRESOR",
+            "dependencia": "ODONTOLOGIA",
+            "marca_modelo": "THOMAS / 1HP",
+            "serie": "ODONTOLOGIA",
+            "ubicacion": "CONSULTORIO"
+        },
+        "1I548k05nFk0la8Ueh1Dj1ivSGmQK-XUb": {
+            "nombre": "UNIDAD ODONTOLOGICA",
+            "dependencia": "ODONTOLOGIA",
+            "marca_modelo": "NO VISIBLE",
+            "serie": "NO VISIBLE",
+            "ubicacion": "CONSULTORIO"
+        },
+        "1FO4a1eDdi8wsKIJcRqtj9XYieFwoOaB5": {
+            "nombre": "BALANZA MECANICA",
+            "dependencia": "ODONTOLOGIA",
+            "marca_modelo": "GENERICA / PISO",
+            "serie": "NO VISIBLE",
+            "ubicacion": "CONSULTORIO"
+        },
+        "1v4GZrDufzsMcS1oop5m6WeEI05xPeEIK": {
+            "nombre": "AUTOCLAVE",
+            "dependencia": "ODONTOLOGIA",
+            "marca_modelo": "MINIKLAV-GV / 12 LITROS",
+            "serie": "NO VISIBLE",
+            "ubicacion": "CONSULTORIO"
+        }
+    
+
+},
+
+    "RX": {
+        "1OvSiGATasQKF4U6wESVoDDyz67tfdkRD": {
+            "nombre": "DIGITALIZADORA DE IMÁGENES",
+            "dependencia": "RX",
+            "marca_modelo": "AGFA / CR - 30X",
+            "serie": "NO VISIBLE",
+            "ubicacion": "IMÁGENES DIAGNOSTICAS"
+        },
+        "11-fWP-wxgTkq1y8jtqOWwocen_MDo6iX": {
+            "nombre": "EQUIPO DE RAYOS X",
+            "dependencia": "RX",
+            "marca_modelo": "IMPORTAL MEDICAL SUPPLIES / GXR",
+            "serie": "NO VISIBLE",
+            "ubicacion": "IMÁGENES DIAGNOSTICAS"
+        },
+        "1NLEr8sfa6IakJCf7kBw65FHhD6Ndvb1n": {
+            "nombre": "PERIAPICAL",
+            "dependencia": "RX",
+            "marca_modelo": "FIAD / ELITY 70",
+            "serie": "NO VISIBLE",
+            "ubicacion": "IMÁGENES DIAGNOSTICAS"
+        }
+
+    },
+
+    "URGENCIAS": {
+        "1wkbvvpldK1NXsyJisZ8uJLCaZANDBJlb": {
+            "nombre": "DESFIBRILADOR",
+            "dependencia": "URGENCIAS",
+            "marca_modelo": "COMEN / S8",
+            "serie": "7YUUE2221998",
+            "ubicacion": "REANIMACIÓN"
+        },
+        "1BVxGDccTw0j3yxP0Oa6p23IGvThTxZm7": {
+            "nombre": "ELECTROCARDIOGRAFO",
+            "dependencia": "URGENCIAS",
+            "marca_modelo": "CONTEC 3 / EKG",
+            "serie": "NO VISIBLE",
+            "ubicacion": "REANIMACIÓN"
+        }, 
+        "1RfFoVPHlbM7Qt18lM7VzzcjmwFCOBX8K": {
+            "nombre": "SUCCIONADOR",
+            "dependencia": "URGENCIAS",
+            "marca_modelo": "PULMO -MED / 7E -C",
+            "serie": "NO VISIBLE",
+            "ubicacion": "REANIMACIÓN"
+        },
+        "1a2TmU2xxD5SMWtEdsviu0vcIoqX_VTUK": {
+            "nombre": "MONITOR SIGNOS VITALES",
+            "dependencia": "URGENCIAS",
+            "marca_modelo": "COMEN / STAR8000E",
+            "serie": "E7211015012",
+            "ubicacion": "OBSERVACIÓN"
+        },
+        "1K-YVSG9CB0SASlWHGPIW-2mweRnrySeX": {
+            "nombre": "MONITOR SIGNOS VITALES",
+            "dependencia": "URGENCIAS",
+            "marca_modelo": "COMEN / STAR8000E",
+            "serie": "E72110150002",
+            "ubicacion": "OBSERVACIÓN"
+        },
+        "1l2qzg7b2NMfSed8ZoUI2dfqmkoW-sZ6G": {
+            "nombre": "MONITOR SIGNOS VITALES",
+            "dependencia": "URGENCIAS",
+            "marca_modelo": "COMEN / STAR8000E",
+            "serie": "E7211015006",
+            "ubicacion": "OBSERVACIÓN"
+        },
+        "1rBH9bzCDvXD43vyKCHCigIdrHm34-ijA": {
+            "nombre": "PULSO OXIMETRO",
+            "dependencia": "URGENCIAS",
+            "marca_modelo": "ADVANCED",
+            "serie": "NO VISIBLE",
+            "ubicacion": "CONSULTORIOS"
+        },
+        "1vTzmEmNEeN2vO9r3jQCFEz_6wPkvU_4G": {
+            "nombre": "MONITOR SIGNOS VITALES",
+            "dependencia": "URGENCIAS",
+            "marca_modelo": "COMEN / STAR8000E",
+            "serie": "E7211015017",
+            "ubicacion": "OBSERVACIÓN"
+        },
+        "1_N7S-uMjXEabwAHFkbkFLXgOAvdDclt9": {
+            "nombre": "MONITOR SIGNOS VITALES",
+            "dependencia": "URGENCIAS",
+            "marca_modelo": "COMEN / STAR8000E",
+            "serie": "E7211015004",
+            "ubicacion": "OBSERVACIÓN"
+        },
+        "1AmcGuT8qh58mtP8zBOx2FURmlIl-t-mb": {
+            "nombre": "MONITOR SIGNOS VITALES",
+            "dependencia": "URGENCIAS",
+            "marca_modelo": "COMEN / STAR8000E",
+            "serie": "E7211015013",
+            "ubicacion": "OBSERVACIÓN"
+        },
+        "1MEAlokTYS1FV8gBM4GZoJOfRUWfn7Oe5": {
+            "nombre": "MONITOR SIGNOS VITALES",
+            "dependencia": "URGENCIAS",
+            "marca_modelo": "COMEN / STAR8000E",
+            "serie": "NO VISIBLE",
+            "ubicacion": "REANIMACIÓN"
+        }
+
+    },
+
+    "VACUNACION": {
+        "10lRPKz4CLKEeQUXhTXqeo91RW60xo8fL": {
+            "nombre": "NEVERA HORIZONTAL",
+            "dependencia": "VACUNACION",
+            "marca_modelo": "VESTFROST / MK 304",
+            "serie": "20094674933",
+            "ubicacion": "CUARTO FRIO"
+        },
+        "1AnBTeSWSk8_lUYij59g7cfp8Cx33KJ1z": {
+            "nombre": "CONGELADOR",
+            "dependencia": "VACUNACION",
+            "marca_modelo": "OLIMPO / OLCH-TM-M198L",
+            "serie": "NO VISIBLE",
+            "ubicacion": "CUARTO FRIO"
+        }
+}
+
+}
+
