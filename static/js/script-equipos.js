@@ -2,19 +2,21 @@
 function showToast(message, type = 'info', duration = 3500) {
     const toast = document.getElementById('toast-message');
     if (!toast) {
-        console.warn("Elemento Toast con id 'toast-message' no encontrado. Usando alert.");
-        alert(message); 
+        console.warn("Elemento Toast con id 'toast-message' no encontrado. Usando alert para:", message);
+        if (type === 'error' || type === 'success') {
+            alert(message);
+        }
         return;
     }
     toast.textContent = message;
-    toast.classList.remove('info', 'error', 'success'); 
-    toast.className = 'toast show'; 
+    toast.classList.remove('info', 'error', 'success');
+    toast.className = 'toast show';
     if (type === 'error') {
         toast.classList.add('error');
     } else if (type === 'success') {
         toast.classList.add('success');
     } else {
-        toast.classList.add('info'); 
+        toast.classList.add('info');
     }
     setTimeout(() => {
         toast.classList.remove('show');
@@ -22,7 +24,7 @@ function showToast(message, type = 'info', duration = 3500) {
 }
 
 document.addEventListener('DOMContentLoaded', () => {
-    console.log("DOM completamente cargado y parseado.");
+    console.log("DOM completamente cargado y parseado. script-equipos.js (o similar)");
 
     // --- MENÚ PRINCIPAL (BOTÓN '+') ---
     const menuPrincipal = document.getElementById('menuOpciones');
@@ -33,41 +35,39 @@ document.addEventListener('DOMContentLoaded', () => {
             event.stopPropagation();
             menuPrincipal.classList.toggle('menu-visible');
         });
-
         document.addEventListener('click', (event) => {
             const registrarEquipoModal = document.getElementById('registrarEquipoModal');
             const isClickInsideModal = registrarEquipoModal && registrarEquipoModal.contains(event.target) && registrarEquipoModal.style.display === 'flex';
+            const isClickOnFabToggle = toggleMenuPrincipalButton.contains(event.target);
+            const isClickInsideFabMenu = menuPrincipal.contains(event.target);
 
-            if (!isClickInsideModal && !toggleMenuPrincipalButton.contains(event.target) && !menuPrincipal.contains(event.target)) {
+            if (!isClickInsideModal && !isClickOnFabToggle && !isClickInsideFabMenu) {
                 menuPrincipal.classList.remove('menu-visible');
             }
         });
-
         menuPrincipal.querySelectorAll('.menu-opcion').forEach(opcion => {
             if (opcion.id !== 'triggerFileUpload' && opcion.id !== 'btnRegistrarNuevoEquipoGlobalMenu' && opcion.id !== 'btnRegistrarNuevoEquipoModalTrigger') {
-                opcion.addEventListener('click', (event) => {
+                opcion.addEventListener('click', () => { // No es necesario 'event' si no se usa
                     setTimeout(() => {
                         menuPrincipal.classList.remove('menu-visible');
                     }, 50);
                 });
             } else {
-                 opcion.addEventListener('click', (event) => {
-                    event.stopPropagation(); 
-                 });
+                opcion.addEventListener('click', (event) => {
+                    event.stopPropagation();
+                    // Para estos botones, el menú se puede cerrar explícitamente en sus manejadores si es necesario.
+                    // o aquí: menuPrincipal.classList.remove('menu-visible'); (después de que hagan su acción)
+                });
             }
         });
-    } else {
-        console.warn("Advertencia: Elementos del menú principal ('#menuOpciones') o su toggle ('.btn-add-inside') no encontrados.");
     }
 
     // --- MODAL DE REGISTRO DE NUEVO EQUIPO ---
     const registrarEquipoModal = document.getElementById('registrarEquipoModal');
-    const btnsOpenModalRegistrarEquipo = document.querySelectorAll('#btnRegistrarNuevoEquipoGlobalMenu, #btnRegistrarNuevoEquipoModalTrigger'); 
-    
+    const btnsOpenModalRegistrarEquipo = document.querySelectorAll('#btnRegistrarNuevoEquipoGlobalMenu, #btnRegistrarNuevoEquipoModalTrigger');
     const btnCloseModal = registrarEquipoModal?.querySelector('.modal-close-button');
     const btnCancelModal = registrarEquipoModal?.querySelector('.modal-cancel-button');
     const formRegistrarEquipo = document.getElementById('formRegistrarEquipo');
-    
     const modalServiceNameDisplay = document.getElementById('modalServiceNameDisplay');
     const modalServiceKeyInput = document.getElementById('modalServiceKeyForJson');
     const modalParentDriveFolderIdInput = document.getElementById('modalParentDriveFolderId');
@@ -75,42 +75,31 @@ document.addEventListener('DOMContentLoaded', () => {
     const modalEquipoMarcaModeloInput = document.getElementById('modalEquipoMarcaModelo');
     const modalEquipoSerieInput = document.getElementById('modalEquipoSerie');
     const modalEquipoUbicacionInput = document.getElementById('modalEquipoUbicacion');
-    const modalEntidadJsonInput = document.getElementById('modalEntidadJson'); // Para la modal de registro
-    const modalEmpresaInput = document.getElementById('modalEmpresa');       // Para la modal de registro
+    const modalEntidadJsonInput = document.getElementById('modalEntidadJson');
+    const modalEmpresaInput = document.getElementById('modalEmpresa');
 
     if (btnsOpenModalRegistrarEquipo.length > 0 && registrarEquipoModal) {
         btnsOpenModalRegistrarEquipo.forEach(button => {
-            button.addEventListener('click', function(event) { 
+            button.addEventListener('click', function(event) {
                 event.preventDefault();
                 if (menuPrincipal) menuPrincipal.classList.remove('menu-visible');
 
-                const entidadJson = this.dataset.entidadJsonKey || this.dataset.entidadJsonKkey;
+                const entidadJson = this.dataset.entidadJsonKey; // Correcto es entidadJsonKey (camelCase)
                 const empresa = this.dataset.empresa;
                 let serviceNameForJson = this.dataset.currentServiceName;
                 let parentDriveFolderId = this.dataset.parentFolderId;
 
                 console.log("Abriendo modal de registro. Datos del botón:", { entidadJson, empresa, serviceNameForJson, parentDriveFolderId });
 
-                if (serviceNameForJson) {
-                    serviceNameForJson = serviceNameForJson.trim().toUpperCase();
-                }
-
-                if ((!serviceNameForJson || serviceNameForJson === "SERVICIO GENERAL") && !parentDriveFolderId ) {
-                    let promptedServiceName = prompt("Introduce el nombre del SERVICIO (ej: AMBULANCIA, QUIROFANO) para el nuevo equipo. Se guardará en mayúsculas:");
+                if (serviceNameForJson) serviceNameForJson = serviceNameForJson.trim().toUpperCase();
+                
+                if ((!serviceNameForJson || serviceNameForJson === "SERVICIO GENERAL") && !parentDriveFolderId) {
+                    let promptedServiceName = prompt("Introduce el nombre del SERVICIO para el nuevo equipo:");
                     if (!promptedServiceName || promptedServiceName.trim() === "") {
-                        showToast("Se requiere un nombre de servicio para registrar un equipo.", 'error');
-                        return; 
+                        showToast("Se requiere un nombre de servicio.", 'error'); return;
                     }
                     serviceNameForJson = promptedServiceName.trim().toUpperCase();
-                    // Si se pide el nombre del servicio, parentDriveFolderId DEBE ser el ID de la carpeta de la ENTIDAD
-                    // El botón que abre la modal debe tener este ID de entidad en data-parent-folder-id
-                    // o se debe obtener de otra forma (ej. una variable global JS si siempre es la misma entidad en la página).
-                    // Este es un punto crítico para asegurar que la carpeta del nuevo servicio se cree en el lugar correcto.
-                    // Por ahora, si se ingresa el nombre, mantenemos el parentDriveFolderId que traiga el botón.
-                    // Si parentDriveFolderId es vacío aquí, la creación en Drive podría ir a la raíz del usuario.
-                    if (!parentDriveFolderId) {
-                        console.warn("Nombre de servicio ingresado por prompt, pero no hay parentDriveFolderId. La carpeta de servicio se creará en la raíz de Drive del usuario o donde la API determine.");
-                    }
+                    if (!parentDriveFolderId) console.warn("Servicio por prompt, parentDriveFolderId no definido en botón.");
                 }
                 
                 if(modalEntidadJsonInput) modalEntidadJsonInput.value = entidadJson || '';
@@ -118,24 +107,19 @@ document.addEventListener('DOMContentLoaded', () => {
                 if(modalServiceNameDisplay) modalServiceNameDisplay.textContent = serviceNameForJson || 'N/A';
                 if(modalServiceKeyInput) modalServiceKeyInput.value = serviceNameForJson || ''; 
                 if(modalParentDriveFolderIdInput) modalParentDriveFolderIdInput.value = parentDriveFolderId || ''; 
-                
                 if(formRegistrarEquipo) formRegistrarEquipo.reset(); 
-
                 registrarEquipoModal.style.display = 'flex'; 
-                setTimeout(() => {
-                    if(modalEquipoNombreInput) modalEquipoNombreInput.focus(); 
-                }, 100); 
+                setTimeout(() => { if(modalEquipoNombreInput) modalEquipoNombreInput.focus(); }, 100); 
             });
         });
     }
 
-    if (btnCloseModal && registrarEquipoModal) btnCloseModal.addEventListener('click', () => { registrarEquipoModal.style.display = 'none'; if(formRegistrarEquipo) formRegistrarEquipo.reset(); });
-    if (btnCancelModal && registrarEquipoModal) btnCancelModal.addEventListener('click', () => { registrarEquipoModal.style.display = 'none'; if(formRegistrarEquipo) formRegistrarEquipo.reset(); });
+    if (btnCloseModal) btnCloseModal.addEventListener('click', () => { registrarEquipoModal.style.display = 'none'; if(formRegistrarEquipo) formRegistrarEquipo.reset(); });
+    if (btnCancelModal) btnCancelModal.addEventListener('click', () => { registrarEquipoModal.style.display = 'none'; if(formRegistrarEquipo) formRegistrarEquipo.reset(); });
     if (registrarEquipoModal) {
         registrarEquipoModal.addEventListener('click', (event) => {
             if (event.target === registrarEquipoModal) {
-                registrarEquipoModal.style.display = 'none';
-                if(formRegistrarEquipo) formRegistrarEquipo.reset();
+                registrarEquipoModal.style.display = 'none'; if(formRegistrarEquipo) formRegistrarEquipo.reset();
             }
         });
     }
@@ -143,56 +127,36 @@ document.addEventListener('DOMContentLoaded', () => {
     if (formRegistrarEquipo) {
         formRegistrarEquipo.addEventListener('submit', async (event) => {
             event.preventDefault(); 
+            const nombreInputVal = modalEquipoNombreInput?.value.trim() || '';
+            const marcaModeloInputVal = modalEquipoMarcaModeloInput?.value.trim() || '';
+            const serieInputVal = modalEquipoSerieInput?.value.trim() || '';
+            const ubicacionInputVal = modalEquipoUbicacionInput?.value.trim() || '';
+            const serviceKeyInputVal = modalServiceKeyInput?.value || '';
+            const parentFolderIdInputVal = modalParentDriveFolderIdInput?.value || '';
+            const entidadJsonParaApi = modalEntidadJsonInput?.value || '';
+            const empresaParaApi = modalEmpresaInput?.value || '';
 
-            const nombreInputVal = modalEquipoNombreInput ? modalEquipoNombreInput.value.trim() : '';
-            const marcaModeloInputVal = modalEquipoMarcaModeloInput ? modalEquipoMarcaModeloInput.value.trim() : '';
-            const serieInputVal = modalEquipoSerieInput ? modalEquipoSerieInput.value.trim() : '';
-            const ubicacionInputVal = modalEquipoUbicacionInput ? modalEquipoUbicacionInput.value.trim() : '';
-            const serviceKeyInputVal = modalServiceKeyInput ? modalServiceKeyInput.value : '';
-            const parentFolderIdInputVal = modalParentDriveFolderIdInput ? modalParentDriveFolderIdInput.value : '';
-            const entidadJsonParaApi = modalEntidadJsonInput ? modalEntidadJsonInput.value : '';
-            const empresaParaApi = modalEmpresaInput ? modalEmpresaInput.value : '';
+            if (!nombreInputVal) { showToast('El nombre del equipo es obligatorio.', 'error'); modalEquipoNombreInput?.focus(); return; }
+            if (!serviceKeyInputVal) { showToast('Error: No se pudo determinar el servicio.', 'error'); return; }
+            if (!entidadJsonParaApi) { showToast('Error: No se pudo determinar la entidad para el registro.', 'error'); return; }
+            if (!parentFolderIdInputVal) { showToast('Error: No se pudo determinar la carpeta de servicio en Drive.', 'error'); return; }
 
-            if (!nombreInputVal) { showToast('El nombre del equipo es obligatorio.', 'error'); if(modalEquipoNombreInput) modalEquipoNombreInput.focus(); return; }
-            if (!serviceKeyInputVal) { showToast('Error interno: No se pudo determinar el servicio.', 'error'); return; }
-            if (!entidadJsonParaApi) { showToast('Error interno: No se pudo determinar la entidad para el registro.', 'error'); console.error("Submit Error: entidadJsonParaApi está vacío."); return; }
-            if (!parentFolderIdInputVal) { showToast('Error interno: No se pudo determinar la carpeta de servicio en Drive.', 'error'); console.error("Submit Error: parentFolderIdInputVal está vacío."); return; }
+            const equipoDetails = { nombre: nombreInputVal.toUpperCase(), marca_modelo: marcaModeloInputVal, serie: serieInputVal, ubicacion: ubicacionInputVal };
+            const dataToSend = { entidad_json_key: entidadJsonParaApi, empresa: empresaParaApi, service_key_for_json: serviceKeyInputVal, parent_drive_folder_id: parentFolderIdInputVal, equipo_details: equipoDetails };
 
-            const equipoDetails = {
-                nombre: nombreInputVal.toUpperCase(),
-                marca_modelo: marcaModeloInputVal,
-                serie: serieInputVal,
-                ubicacion: ubicacionInputVal
-            };
-
-            const dataToSend = {
-                entidad_json_key: entidadJsonParaApi,
-                empresa: empresaParaApi,            
-                service_key_for_json: serviceKeyInputVal, 
-                parent_drive_folder_id: parentFolderIdInputVal, 
-                equipo_details: equipoDetails
-            };
-
-            console.log("[Registrar Equipo Submit] Datos a enviar:", JSON.stringify(dataToSend, null, 2));
-            showToast('Registrando equipo y creando carpeta...', 'info', 15000);
-
+            showToast('Registrando equipo...', 'info', 15000);
             try {
-                const response = await fetch('/api/registrar_equipo_completo', {
-                    method: 'POST', headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(dataToSend)
-                });
+                const response = await fetch('/api/registrar_equipo_completo', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(dataToSend) });
                 const result = await response.json(); 
                 if (response.ok && result.success) { 
                     showToast(result.message || 'Equipo registrado!', 'success', 5000);
-                    registrarEquipoModal.style.display = 'none'; 
-                    if(formRegistrarEquipo) formRegistrarEquipo.reset(); 
+                    registrarEquipoModal.style.display = 'none'; formRegistrarEquipo.reset(); 
                     setTimeout(() => window.location.reload(), 2000);
                 } else { 
-                    const errorMsg = result.error || 'Error desconocido del servidor.';
-                    showToast(`Error al registrar equipo: ${errorMsg}`, 'error', 7000);
+                    showToast(`Error al registrar: ${result.error || 'Error desconocido.'}`, 'error', 7000);
                 }
             } catch (error) { 
-                showToast('Error de red o conexión al registrar.', 'error', 7000);
+                showToast('Error de red al registrar.', 'error', 7000);
             }
         });
     }
@@ -200,145 +164,184 @@ document.addEventListener('DOMContentLoaded', () => {
     // --- SUBIDA DE ARCHIVOS INDIVIDUALES ---
     const triggerUploadButton = document.getElementById('triggerFileUpload');
     const fileUploaderInput = document.getElementById('fileUploader');
-    if (triggerUploadButton && fileUploaderInput) { /* ... tu código de subida ... */ }
 
-    // =====================================================
-    // Lógica para Menús y Eliminación de EQUIPOS (Carpetas)
-    // =====================================================
-    async function eliminarEquipo(folderId, elementToRemove, entidadJsonParaEliminar) { // Acepta entidadJsonParaEliminar
-        if (!confirm('¡ADVERTENCIA! ¿Estás seguro de que quieres eliminar este equipo y TODO su contenido? Esta acción no se puede deshacer.')) {
-            console.log("[Eliminar Equipo] Eliminación cancelada por el usuario.");
-            return;
-        }
+    if (triggerUploadButton && fileUploaderInput) {
+        triggerUploadButton.addEventListener('click', (event) => {
+            event.preventDefault();
+            event.stopPropagation(); // Evita que el menú se cierre por el listener global de documento
+            if (menuPrincipal) menuPrincipal.classList.remove('menu-visible');
+            fileUploaderInput.dataset.triggeringButtonFolderId = triggerUploadButton.dataset.folderId; // Guardar el folderId del botón
+            fileUploaderInput.click();
+        });
 
-        // --- MODIFICACIÓN: Validar entidadJsonParaEliminar ---
+        fileUploaderInput.addEventListener('change', async (event) => {
+            const file = event.target.files[0];
+            if (!file) return;
+
+            const folderId = fileUploaderInput.dataset.triggeringButtonFolderId; // Usar el folderId guardado
+            if (!folderId) {
+                showToast('Error: No se pudo determinar carpeta destino.', 'error');
+                fileUploaderInput.value = '';
+                return;
+            }
+
+            const formData = new FormData();
+            formData.append('pdfFile', file);
+            formData.append('folderId', folderId);
+            formData.append('fileName', file.name);
+
+            showToast(`Subiendo ${file.name}...`, 'info');
+            try {
+                const response = await fetch('/upload_pdf_to_drive', { method: 'POST', body: formData });
+                const result = await response.json();
+                if (response.ok && result.success) {
+                    showToast(`Archivo "${result.fileName || file.name}" subido!`, 'success');
+                    setTimeout(() => window.location.reload(), 1500);
+                } else {
+                    showToast(`Error al subir: ${result.error || 'desconocido'}`, 'error', 7000);
+                }
+            } catch (error) {
+                showToast('Error de red al intentar subir.', 'error', 7000);
+            } finally {
+                fileUploaderInput.value = ''; // Limpiar para permitir resubir el mismo archivo
+                delete fileUploaderInput.dataset.triggeringButtonFolderId; // Limpiar el folderId guardado
+            }
+        });
+    }
+
+    // --- LÓGICA PARA MENÚS Y ELIMINACIÓN DE EQUIPOS (CARPETAS) ---
+    async function eliminarEquipo(folderId, elementToRemove, entidadJsonParaEliminar) {
+        if (!confirm('¡ADVERTENCIA! ¿Seguro que quieres eliminar este equipo y TODO su contenido?')) return;
         if (!entidadJsonParaEliminar) {
-            console.error("[Eliminar Equipo] Error: Falta la clave de entidad (entidad_json_key) para la eliminación.");
-            showToast('Error interno: No se pudo determinar la entidad del equipo a eliminar.', 'error');
+            showToast('Error interno: Falta la entidad para eliminar el equipo.', 'error');
             return;
         }
-        // --- FIN MODIFICACIÓN ---
-
-        console.log(`[Eliminar Equipo] Procediendo a eliminar equipo ID: ${folderId} de entidad: ${entidadJsonParaEliminar}`);
-        showToast('Eliminando equipo y su contenido...', 'info');
-
+        showToast('Eliminando equipo...', 'info');
         try {
-            // --- MODIFICACIÓN: Incluir entidad_json_key en el payload ---
-            const payload = { 
-                folderId: folderId,
-                entidad_json_key: entidadJsonParaEliminar 
-            };
-            // --- FIN MODIFICACIÓN ---
-
+            const payload = { folderId: folderId, entidad_json_key: entidadJsonParaEliminar };
             const response = await fetch('/delete_equipo', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
+                method: 'POST', headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(payload)
             });
             const result = await response.json();
-            console.log("[Eliminar Equipo] Respuesta del servidor:", { status: response.status, ok: response.ok, body: result });
-
             if (response.ok && result.success) {
-                showToast(`Equipo eliminado con éxito!`, 'success', 4000);
-                if (elementToRemove?.parentNode) {
-                    elementToRemove.parentNode.removeChild(elementToRemove);
-                }
+                showToast('Equipo eliminado con éxito!', 'success');
+                elementToRemove?.remove(); // Más simple
             } else {
-                let errorMessage = result.error || `Error HTTP ${response.status}.`;
-                if (response.status === 404) errorMessage = 'Error: El equipo (carpeta) no fue encontrado en Drive.';
-                if (response.status === 403) errorMessage = 'Error: Permisos insuficientes para eliminar este equipo.';
-                showToast(`Error al eliminar el equipo: ${errorMessage}`, 'error', 8000);
+                showToast(`Error al eliminar equipo: ${result.error || 'Error desconocido'}`, 'error');
             }
         } catch (error) {
-            console.error('[Eliminar Equipo] Error en la petición fetch:', error);
-            showToast('Error de red al intentar eliminar el equipo.', 'error', 8000);
+            showToast('Error de red al eliminar equipo.', 'error');
         }
     }
 
     function setupDeleteTeamLinks() {
         document.querySelectorAll('.delete-team-option').forEach(link => {
             link.addEventListener('click', async (event) => {
-                event.preventDefault();
-                event.stopPropagation();
-
+                event.preventDefault(); event.stopPropagation();
                 const folderCardElement = event.target.closest('.folder-card');
-                if (!folderCardElement) {
-                    console.error("[setupDeleteTeamLinks] Error: No se encontró .folder-card padre.");
-                    showToast('Error interno al intentar eliminar.', 'error');
-                    return;
-                }
-
+                if (!folderCardElement) { showToast('Error: No se encontró la tarjeta del equipo.', 'error'); return; }
                 const folderId = folderCardElement.dataset.folderId;
-                // --- MODIFICACIÓN: Obtener entidad_json_key del data-attribute del folder-card ---
-                const entidadJsonParaEliminar = folderCardElement.dataset.entidadJsonKey; // HTML data-entidad-json-key
-                // --- FIN MODIFICACIÓN ---
-
+                const entidadJsonParaEliminar = folderCardElement.dataset.entidadJsonKey; // data-entidad-json-key
+                
                 const optionsMenu = event.target.closest('.folder-options-menu');
                 if (optionsMenu) optionsMenu.style.display = 'none';
 
-                if (folderId && folderCardElement) { // entidadJsonParaEliminar se validará dentro de eliminarEquipo
-                    await eliminarEquipo(folderId, folderCardElement, entidadJsonParaEliminar); // --- MODIFICACIÓN: Pasar entidad ---
+                if (folderId) { // entidadJsonParaEliminar se validará en la función eliminarEquipo
+                    await eliminarEquipo(folderId, folderCardElement, entidadJsonParaEliminar);
                 } else {
-                    console.error("[setupDeleteTeamLinks] Error: No se pudo obtener folderId o folderCardElement.", {folderId, folderCardElement});
-                    showToast('Error interno: No se pudo determinar qué equipo eliminar.', 'error');
+                    showToast('Error: No se pudo obtener el ID del equipo.', 'error');
                 }
             });
         });
     }
 
-    // --- (Tu lógica para setupFolderOptionMenus, eliminarArchivoDrive, setupFileOptionMenus, setupDeleteOptionLinks se mantiene igual que me la pasaste) ---
-    // Asegúrate que estén aquí y sean llamadas. Por brevedad, no las repito si no cambiaron para ESTA tarea.
-    // Solo como ejemplo, las funciones de menú:
-    function setupFolderOptionMenus() {
-        document.querySelectorAll('.folder-options-toggle').forEach(button => {
-            button.addEventListener('click', (event) => {
+    // --- LÓGICA PARA MENÚS Y ELIMINACIÓN DE ARCHIVOS ---
+    async function eliminarArchivoDrive(fileId, elementToRemove) {
+        if (!confirm('¿Seguro que quieres eliminar este archivo?')) return;
+        // NOTA: Si la eliminación de archivos también necesita 'entidad_json_key', deberás pasarla
+        // y añadirla al payload, similar a como se hizo con eliminarEquipo.
+        showToast('Eliminando archivo...', 'info');
+        try {
+            const response = await fetch('/delete_file_from_drive', {
+                method: 'POST', headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ fileId: fileId })
+            });
+            const result = await response.json();
+            if (response.ok && result.success) {
+                showToast('Archivo eliminado!', 'success');
+                elementToRemove?.remove();
+            } else {
+                showToast(`Error al eliminar archivo: ${result.error || 'Error desconocido'}`, 'error');
+            }
+        } catch (error) {
+            showToast('Error de red al eliminar archivo.', 'error');
+        }
+    }
+
+    function setupDeleteOptionLinks() { // Para archivos
+        document.querySelectorAll('.delete-file-option').forEach(link => {
+            link.addEventListener('click', async (event) => {
                 event.preventDefault(); event.stopPropagation();
-                const folderCard = event.target.closest('.folder-card');
-                const optionsMenu = folderCard?.querySelector('.folder-options-menu');
-                document.querySelectorAll('.file-options-menu, .folder-options-menu').forEach(menu => {
-                    if (menu !== optionsMenu) menu.style.display = 'none';
-                });
-                if (optionsMenu) optionsMenu.style.display = (optionsMenu.style.display === 'flex') ? 'none' : 'flex';
+                const fileCardElement = event.target.closest('.file-card');
+                if (!fileCardElement) { showToast('Error: No se encontró la tarjeta del archivo.', 'error'); return; }
+                const fileId = fileCardElement.dataset.fileId || event.target.dataset.fileId; // Tomar de la tarjeta o del enlace
+                
+                const optionsMenu = event.target.closest('.file-options-menu');
+                if (optionsMenu) optionsMenu.style.display = 'none';
+
+                if (fileId) {
+                    await eliminarArchivoDrive(fileId, fileCardElement);
+                } else {
+                    showToast('Error: No se pudo obtener el ID del archivo.', 'error');
+                }
             });
         });
     }
-    function setupFileOptionMenus() { 
-        document.querySelectorAll('.file-options-toggle').forEach(button => {
+    
+    // --- Setup de menús contextuales (3 puntos) ---
+    function setupOptionMenus(selectorToggle, selectorCard, selectorMenu) {
+        document.querySelectorAll(selectorToggle).forEach(button => {
             button.addEventListener('click', (event) => {
                 event.preventDefault(); event.stopPropagation();
-                const fileCard = event.target.closest('.file-card');
-                const optionsMenu = fileCard?.querySelector('.file-options-menu');
+                const card = event.target.closest(selectorCard);
+                const optionsMenu = card?.querySelector(selectorMenu);
+                
+                // Cerrar otros menús abiertos
                 document.querySelectorAll('.file-options-menu, .folder-options-menu').forEach(menu => {
                     if (menu !== optionsMenu) menu.style.display = 'none';
                 });
-                if (optionsMenu) optionsMenu.style.display = (optionsMenu.style.display === 'flex') ? 'none' : 'flex';
+
+                if (optionsMenu) {
+                    optionsMenu.style.display = (optionsMenu.style.display === 'flex') ? 'none' : 'flex';
+                }
             });
         });
     }
-     async function eliminarArchivoDrive(fileId, elementToRemove) { /* Tu función actual */ }
-     function setupDeleteOptionLinks() { /* Tu función actual */ }
+    setupOptionMenus('.folder-options-toggle', '.folder-card', '.folder-options-menu');
+    setupOptionMenus('.file-options-toggle', '.file-card', '.file-options-menu');
 
 
-    // Listener global para cerrar menús contextuales
+    // Listener global para cerrar menús contextuales y el menú principal FAB
     document.addEventListener('click', (event) => {
-        const isClickOnToggle = event.target.closest('.file-options-toggle, .folder-options-toggle');
-        const isClickInsideMenu = event.target.closest('.file-options-menu, .folder-options-menu');
-        // También verifica que no sea el botón principal del FAB ni su menú
+        const isClickOnContextToggle = event.target.closest('.file-options-toggle, .folder-options-toggle');
+        const isClickInsideContextMenu = event.target.closest('.file-options-menu, .folder-options-menu');
         const isClickOnFabToggle = toggleMenuPrincipalButton && toggleMenuPrincipalButton.contains(event.target);
         const isClickInsideFabMenu = menuPrincipal && menuPrincipal.contains(event.target);
+        const isClickInsideModal = registrarEquipoModal && registrarEquipoModal.style.display === 'flex' && registrarEquipoModal.contains(event.target);
 
-        if (!isClickOnToggle && !isClickInsideMenu && !isClickOnFabToggle && !isClickInsideFabMenu) {
+
+        if (!isClickOnContextToggle && !isClickInsideContextMenu && !isClickInsideModal) {
             document.querySelectorAll('.file-options-menu, .folder-options-menu').forEach(menu => {
                 menu.style.display = 'none';
             });
         }
+        // El cierre del menú FAB ya se maneja en su propio listener si el clic es fuera de él y de la modal.
     });
 
-    // Llamadas a las funciones de configuración
-    setupFileOptionMenus();
-    setupDeleteOptionLinks(); 
-    setupFolderOptionMenus();
-    setupDeleteTeamLinks();    
+    // Llamadas a las funciones de configuración de acciones
+    setupDeleteTeamLinks();    // Para los enlaces "Eliminar Equipo"
+    setupDeleteOptionLinks();  // Para los enlaces "Eliminar Archivo"
 
-    console.log("Todas las funciones de setup ejecutadas al final de DOMContentLoaded.");
+    console.log("script-equipos.js: Todos los listeners y setups configurados.");
 });
