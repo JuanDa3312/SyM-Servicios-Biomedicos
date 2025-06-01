@@ -4,116 +4,133 @@ const firmaState = {
     preventivo: { initialized: false, canvas: null, ctx: null, isEditing: false }
 };
 
-// --- Función Principal para Mostrar/Ocultar Formularios ---
+// --- Función Helper para mostrar mensajes (MODIFICADA para usar solo la consola) ---  
+function showToast(message, type = 'info', duration = 3500) {
+    const toast = document.getElementById('toast-message');
+
+    if (!toast) {
+        console.warn("Elemento Toast con id 'toast-message' no encontrado. Usando alert como fallback.");
+        alert(message); // Fallback a alert si no existe el elemento toast
+        return;
+    }
+
+    toast.textContent = message;
+
+    // Limpiar clases de tipo y visibilidad previas
+    // Se asume que la clase 'toast' está permanentemente en el elemento HTML
+    toast.classList.remove('show', 'info', 'success', 'error');
+
+    // Añadir clase de tipo actual
+    if (type === 'success') {
+        toast.classList.add('success');
+    } else if (type === 'error') {
+        toast.classList.add('error');
+    } else { // 'info' o cualquier otro tipo por defecto
+        toast.classList.add('info');
+    }
+
+    // Forzar reflujo para reiniciar la animación si es necesario (útil si hay transiciones CSS)
+    void toast.offsetWidth;
+
+    // Añadir 'show' para activar la visibilidad/animación
+    toast.classList.add('show');
+
+    // Configurar temporizador para ocultar el toast
+    setTimeout(() => {
+        toast.classList.remove('show');
+    }, duration);
+}
+
+// --- Función Principal para Mostrar/Ocular Formularios (del script de formato) ---
 function mostrarFormulario() {
+    console.log("[DEBUG] mostrarFormulario() llamada.");
     var tipo = document.getElementById("tipoMantenimiento").value;
     var formCorrectivo = document.getElementById("formCorrectivo");
     var formPreventivo = document.getElementById("formPreventivo");
-    var fotoInputElement = document.getElementById('fotoInput');
-    var previewElement = document.getElementById('preview');
+    var fotoInputElement = document.getElementById('fotoInput'); // Asumiendo que es para correctivo
+    var previewElement = document.getElementById('preview'); // Asumiendo que es para correctivo
 
-    // Ocultar ambos formularios inicialmente
     if (formCorrectivo) formCorrectivo.style.display = "none";
     if (formPreventivo) formPreventivo.style.display = "none";
 
-    // Mostrar el formulario seleccionado
     if (tipo === "correctivo" && formCorrectivo) {
+        console.log("[DEBUG] Mostrando formulario correctivo.");
         formCorrectivo.style.display = "block";
-        // Configurar listener para previsualización de fotos solo si no existe ya
-        if (fotoInputElement && previewElement && !fotoInputElement.hasAttribute('data-listener-added')) {
+        if (fotoInputElement && previewElement && !fotoInputElement.hasAttribute('data-listener-added-correctivo')) {
             fotoInputElement.addEventListener('change', function(event) {
                 if (!previewElement) return;
-                previewElement.innerHTML = ''; // Limpiar imágenes anteriores
+                previewElement.innerHTML = '';
                 const files = event.target.files;
                 for (let i = 0; i < files.length; i++) {
                     let reader = new FileReader();
                     reader.onload = function(e) {
                         let img = document.createElement('img');
                         img.src = e.target.result;
-                        img.style.maxWidth = '500px';
-                        img.style.maxHeight = '500px';
-                        img.style.height = 'auto';
-                        img.style.margin = '5px';
-                        img.style.border = '1px solid #ddd';
-                        img.style.borderRadius = '4px';
-                        img.style.boxShadow = '0 2px 4px rgba(0,0,0,0.1)';
+                        img.style.maxWidth = '500px'; img.style.maxHeight = '500px'; img.style.height = 'auto';
+                        img.style.margin = '5px'; img.style.border = '1px solid #ddd';
+                        img.style.borderRadius = '4px'; img.style.boxShadow = '0 2px 4px rgba(0,0,0,0.1)';
                         previewElement.appendChild(img);
                     }
                     reader.readAsDataURL(files[i]);
                 }
             });
-            fotoInputElement.setAttribute('data-listener-added', 'true');
-            console.log("Listener para fotos añadido.");
+            fotoInputElement.setAttribute('data-listener-added-correctivo', 'true');
+            console.log("[DEBUG] Listener para fotos añadido (correctivo).");
         }
-        // Inicializar la firma para el formulario correctivo si no se ha hecho
         if (!firmaState.correctivo.initialized) {
             inicializarFirma('correctivo');
         }
-
-
     } else if (tipo === "preventivo" && formPreventivo) {
+        console.log("[DEBUG] Mostrando formulario preventivo.");
         formPreventivo.style.display = "block";
-        // Inicializar la firma para el formulario preventivo si no se ha hecho
         if (!firmaState.preventivo.initialized) {
             inicializarFirma('preventivo');
         }
     }
 }
 
-
-// --- Función Separada para Inicializar el Canvas de la Firma ---
-// Ahora recibe el tipo de mantenimiento ('correctivo' o 'preventivo')
+// --- Función Separada para Inicializar el Canvas de la Firma (del script de formato) ---
 function inicializarFirma(tipoMantenimiento) {
-    const canvasId = `firmaCanvas${tipoMantenimiento.charAt(0).toUpperCase() + tipoMantenimiento.slice(1)}`; // Construye el ID: firmaCanvasCorrectivo o firmaCanvasPreventivo
+    console.log(`[DEBUG] inicializarFirma() llamada para tipo: ${tipoMantenimiento}.`);
+    const canvasId = `firmaCanvas${tipoMantenimiento.charAt(0).toUpperCase() + tipoMantenimiento.slice(1)}`;
     const canvas = document.getElementById(canvasId);
 
     if (!canvas) {
-        console.warn(`Elemento canvas con ID '${canvasId}' no encontrado.`);
+        console.warn(`[DEBUG] Elemento canvas con ID '${canvasId}' no encontrado.`);
         return;
     }
 
-    // Evitar reinicializar si ya se hizo para este tipo
     if (firmaState[tipoMantenimiento].initialized) {
-        console.log(`Canvas de firma para ${tipoMantenimiento} ya inicializado.`);
+        console.log(`[DEBUG] Canvas de firma para ${tipoMantenimiento} ya inicializado.`);
         return;
     }
-
 
     const ctx = canvas.getContext('2d');
     if (!ctx) {
-        console.warn("No se pudo obtener el contexto 2D del canvas.");
+        console.warn("[DEBUG] No se pudo obtener el contexto 2D del canvas.");
         return;
     }
 
-    // Almacenar el canvas y context en el estado global
     firmaState[tipoMantenimiento].canvas = canvas;
     firmaState[tipoMantenimiento].ctx = ctx;
 
-
-    // Ajustar tamaño inicial (puede ser necesario recalcular si el contenedor cambia de tamaño)
     try {
-        // Usa offsetParent para obtener el tamaño del contenedor visible si es necesario
         canvas.width = canvas.offsetWidth > 0 ? canvas.offsetWidth : 300;
         canvas.height = canvas.offsetHeight > 0 ? canvas.offsetHeight : 150;
-        // Limpiar el canvas después de redimensionar
         ctx.clearRect(0, 0, canvas.width, canvas.height);
     } catch (e) {
-        console.error(`Error ajustando tamaño inicial del canvas para ${tipoMantenimiento}:`, e);
+        console.error(`[DEBUG] Error ajustando tamaño inicial del canvas para ${tipoMantenimiento}:`, e);
         canvas.width = 300; canvas.height = 150;
         ctx.clearRect(0, 0, canvas.width, canvas.height);
     }
 
-
     ctx.lineWidth = 2;
     ctx.lineCap = 'round';
     ctx.strokeStyle = '#000000';
-
     let drawing = false;
-    // isEditing ahora se maneja en el estado global firmaState[tipoMantenimiento].isEditing
 
-    // --- Funciones auxiliares para dibujo (anidadas) ---
     const drawingUtils = {
-        getEventPos: function(evt) {
+        getEventPos: function(evt) { 
             const rect = canvas.getBoundingClientRect();
             const scaleX = canvas.width / rect.width;
             const scaleY = canvas.height / rect.height;
@@ -130,8 +147,7 @@ function inicializarFirma(tipoMantenimiento) {
                 y: (clientY - rect.top) * scaleY
             };
         },
-        start: function(e) {
-            // Usar el estado isEditing del tipo de mantenimiento actual
+        start: function(e) { 
             if (e.type === 'touchstart') e.preventDefault();
             if (!firmaState[tipoMantenimiento].isEditing) return;
             drawing = true;
@@ -140,24 +156,20 @@ function inicializarFirma(tipoMantenimiento) {
             ctx.moveTo(pos.x, pos.y);
             canvas.removeAttribute('data-empty');
         },
-        draw: function(e) {
-             // Usar el estado isEditing del tipo de mantenimiento actual
+        draw: function(e) { 
             if (e.type === 'touchmove') e.preventDefault();
             if (!drawing || !firmaState[tipoMantenimiento].isEditing) return;
             const pos = this.getEventPos(e);
             ctx.lineTo(pos.x, pos.y);
             ctx.stroke();
         },
-        stop: function() {
+        stop: function() { 
             if (!drawing) return;
             drawing = false;
             ctx.beginPath();
         }
     };
 
-
-    // --- Añadir Event Listeners al Canvas ---
-    // Es importante remover listeners antes de añadir para evitar duplicados si la inicialización se llamara varias veces (aunque con la bandera inicializada, esto no debería pasar)
     canvas.removeEventListener('mousedown', drawingUtils.start);
     canvas.removeEventListener('mousemove', drawingUtils.draw);
     canvas.removeEventListener('mouseup', drawingUtils.stop);
@@ -166,7 +178,6 @@ function inicializarFirma(tipoMantenimiento) {
     canvas.removeEventListener('touchmove', drawingUtils.draw);
     canvas.removeEventListener('touchend', drawingUtils.stop);
 
-    // Añadir los listeners con bind para mantener el contexto 'drawingUtils'
     canvas.addEventListener('mousedown', drawingUtils.start.bind(drawingUtils));
     canvas.addEventListener('mousemove', drawingUtils.draw.bind(drawingUtils));
     canvas.addEventListener('mouseup', drawingUtils.stop.bind(drawingUtils));
@@ -175,20 +186,16 @@ function inicializarFirma(tipoMantenimiento) {
     canvas.addEventListener('touchmove', drawingUtils.draw.bind(drawingUtils), { passive: false });
     canvas.addEventListener('touchend', drawingUtils.stop.bind(drawingUtils));
 
-    // Marcar como inicializado para este tipo de mantenimiento
     firmaState[tipoMantenimiento].initialized = true;
-
-    // Establecer el estado inicial de los botones y mensaje para este tipo de mantenimiento
-    clearSignature(tipoMantenimiento); // Llamar a clearSignature pasando el tipo
-    console.log(`Canvas de firma para ${tipoMantenimiento} inicializado.`);
+    clearSignature(tipoMantenimiento);
+    console.log(`[DEBUG] Canvas de firma para ${tipoMantenimiento} inicializado y configurado.`);
 }
 
-
-// --- Funciones para los botones (modificadas para recibir el tipo de mantenimiento) ---
+// --- Funciones para los botones de Firma (del script de formato) ---
 window.startSignature = function(tipoMantenimiento) {
+    console.log(`[DEBUG] startSignature() llamada para tipo: ${tipoMantenimiento}.`);
     const state = firmaState[tipoMantenimiento];
-    if (!state || !state.canvas || !state.ctx) return;
-
+    if (!state || !state.canvas || !state.ctx) { console.warn(`[DEBUG] startSignature: Estado de firma no válido para ${tipoMantenimiento}.`); return; }
     state.isEditing = true;
     document.getElementById(`clearButton${tipoMantenimiento.charAt(0).toUpperCase() + tipoMantenimiento.slice(1)}`).disabled = false;
     document.getElementById(`saveButton${tipoMantenimiento.charAt(0).toUpperCase() + tipoMantenimiento.slice(1)}`).disabled = false;
@@ -197,11 +204,10 @@ window.startSignature = function(tipoMantenimiento) {
     document.getElementById(`message${tipoMantenimiento.charAt(0).toUpperCase() + tipoMantenimiento.slice(1)}`).textContent = 'Dibuje su firma en el recuadro...';
     state.canvas.setAttribute('data-empty', 'true');
 };
-
 window.clearSignature = function(tipoMantenimiento) {
+    console.log(`[DEBUG] clearSignature() llamada para tipo: ${tipoMantenimiento}.`);
     const state = firmaState[tipoMantenimiento];
-    if (!state || !state.canvas || !state.ctx) return;
-
+    if (!state || !state.canvas || !state.ctx) { console.warn(`[DEBUG] clearSignature: Estado de firma no válido para ${tipoMantenimiento}.`); return; }
     state.ctx.clearRect(0, 0, state.canvas.width, state.canvas.height);
     document.getElementById(`message${tipoMantenimiento.charAt(0).toUpperCase() + tipoMantenimiento.slice(1)}`).textContent = 'Firma borrada. Presione "Anexar Firma" para iniciar.';
     state.isEditing = false;
@@ -211,30 +217,29 @@ window.clearSignature = function(tipoMantenimiento) {
     document.getElementById(`startButton${tipoMantenimiento.charAt(0).toUpperCase() + tipoMantenimiento.slice(1)}`).disabled = false;
     state.canvas.setAttribute('data-empty', 'true');
 };
-
 window.saveSignature = function(tipoMantenimiento) {
+    console.log(`[DEBUG] saveSignature() llamada para tipo: ${tipoMantenimiento}.`);
     const state = firmaState[tipoMantenimiento];
-    if (!state || !state.canvas || !state.ctx) return;
-
+    if (!state || !state.canvas || !state.ctx) { console.warn(`[DEBUG] saveSignature: Estado de firma no válido para ${tipoMantenimiento}.`); return; }
     state.isEditing = false;
     document.getElementById(`editButton${tipoMantenimiento.charAt(0).toUpperCase() + tipoMantenimiento.slice(1)}`).disabled = false;
     document.getElementById(`saveButton${tipoMantenimiento.charAt(0).toUpperCase() + tipoMantenimiento.slice(1)}`).disabled = true;
-
     const blank = document.createElement('canvas');
     blank.width = state.canvas.width; blank.height = state.canvas.height;
     if (state.canvas.toDataURL() !== blank.toDataURL()) {
         state.canvas.removeAttribute('data-empty');
         document.getElementById(`message${tipoMantenimiento.charAt(0).toUpperCase() + tipoMantenimiento.slice(1)}`).textContent = 'Firma guardada. Presione "Editar" para modificar.';
+        console.log(`[DEBUG] Firma guardada para ${tipoMantenimiento}.`);
     } else {
         document.getElementById(`message${tipoMantenimiento.charAt(0).toUpperCase() + tipoMantenimiento.slice(1)}`).textContent = 'Firma guardada (vacía). Presione "Editar" para modificar.';
         state.canvas.setAttribute('data-empty', 'true');
+        console.log(`[DEBUG] Firma guardada (vacía) para ${tipoMantenimiento}.`);
     }
 };
-
 window.enableEditing = function(tipoMantenimiento) {
+    console.log(`[DEBUG] enableEditing() llamada para tipo: ${tipoMantenimiento}.`);
     const state = firmaState[tipoMantenimiento];
-    if (!state || !state.canvas || !state.ctx) return;
-
+    if (!state || !state.canvas || !state.ctx) { console.warn(`[DEBUG] enableEditing: Estado de firma no válido para ${tipoMantenimiento}.`); return; }
     state.isEditing = true;
     document.getElementById(`editButton${tipoMantenimiento.charAt(0).toUpperCase() + tipoMantenimiento.slice(1)}`).disabled = true;
     document.getElementById(`saveButton${tipoMantenimiento.charAt(0).toUpperCase() + tipoMantenimiento.slice(1)}`).disabled = false;
@@ -242,213 +247,506 @@ window.enableEditing = function(tipoMantenimiento) {
     document.getElementById(`message${tipoMantenimiento.charAt(0).toUpperCase() + tipoMantenimiento.slice(1)}`).textContent = 'Modo de edición activado. Puede modificar la firma.';
 };
 
-// Resto de tu código para generarYSubirPdfADrive...
-
-// Función asíncrona para generar un PDF a partir de un formulario y subirlo a Google Drive
-async function generarYSubirPdfADrive(formId) {
+// --- Función para Generar y Subir PDF (del script de formato) ---
+async function generarYSubirPdfADrive(formId, folderIdDesdeHtml, statusElementId) {
+    console.log(`[DEBUG] generarYSubirPdfADrive() llamada con formId: ${formId}, folderId: ${folderIdDesdeHtml}, statusId: ${statusElementId}`);
     const element = document.getElementById(formId);
     const botonSubir = document.querySelector(`button[onclick*="generarYSubirPdfADrive('${formId}'"]`);
-    const statusDiv = document.getElementById('uploadStatus');
-    const targetFolderId = document.body.dataset.folderId;
+    const statusDiv = statusElementId ? document.getElementById(statusElementId) : null;
+
+    // Limpiar el statusDiv al inicio si existe y es relevante para esta función
+    if (statusDiv) {
+        statusDiv.textContent = '';
+        statusDiv.className = ''; // Limpiar clases
+    }
+    console.log(`[INFO] [PDF] Proceso iniciado para formId: ${formId}`);
 
     if (!element) {
-        console.error(`Error: Elemento con ID '${formId}' no encontrado.`);
-        if (statusDiv) {
-            statusDiv.textContent = 'Error: No se pudo encontrar el formulario para generar el PDF.';
-            statusDiv.className = 'text-danger';
-        }
+        console.log("[DEBUG] generarYSubirPdfADrive: Elemento de formulario no encontrado.");
+        showToast('Error: Formulario no encontrado para generar PDF.', 'error');
+        if (statusDiv) { statusDiv.textContent = 'Error: Formulario no encontrado.'; statusDiv.className = 'text-danger mt-2'; }
         return;
     }
 
-    let tipoMantenimiento;
-    let nombreCampoEquipoNombre;
-    let nombreCampoFecha;
-
-    if (formId === 'formCorrectivo') {
-        tipoMantenimiento = 'CORRECTIVO';
-        nombreCampoEquipoNombre = 'equipo_nombre_corr';
-        nombreCampoFecha = 'fecha_corr';
-    } else if (formId === 'formPreventivo') {
-        tipoMantenimiento = 'PREVENTIVO';
-        nombreCampoEquipoNombre = 'equipo_nombre_prev';
-        nombreCampoFecha = 'fecha_prev';
+    const targetFolderId = folderIdDesdeHtml;
+    if (!targetFolderId || targetFolderId === 'None' || targetFolderId === '' || String(targetFolderId).includes('{{')) {
+        const errorMsgCritico = `Error: ID de carpeta no válido o no resuelto: '${targetFolderId}'. No se puede subir el PDF.`;
+        console.log("[DEBUG] generarYSubirPdfADrive: " + errorMsgCritico);
+        showToast(errorMsgCritico, 'error', 7000); // La duración es ignorada por la nueva showToast
+        if (statusDiv) { statusDiv.textContent = errorMsgCritico; statusDiv.className = 'text-danger mt-2';}
+        if (botonSubir) botonSubir.disabled = false;
+        return;
     }
+
+    let tipoMantenimiento = formId.includes('Correctivo') ? 'CORRECTIVO' : 'PREVENTIVO';
+    let nombreCampoEquipoNombre = formId.includes('Correctivo') ? 'equipo_nombre_corr' : 'equipo_nombre_prev';
+    let nombreCampoFecha = formId.includes('Correctivo') ? 'fecha_corr' : 'fecha_prev';
 
     const equipoNombreInput = element.querySelector(`input[name="${nombreCampoEquipoNombre}"]`);
     const fechaInput = element.querySelector(`input[name="${nombreCampoFecha}"]`);
 
     if (!equipoNombreInput || !fechaInput) {
-        console.error('Error: Faltan campos requeridos en el formulario.');
-        if (statusDiv) {
-            statusDiv.textContent = 'Error: Faltan campos requeridos en el formulario.';
-            statusDiv.className = 'text-danger';
-        }
+        console.log("[DEBUG] generarYSubirPdfADrive: Campos de nombre de equipo o fecha faltantes.");
+        showToast('Error: Faltan campos de nombre de equipo o fecha en el formulario.', 'error');
+        if (statusDiv) { statusDiv.textContent = 'Error: Faltan campos de nombre de equipo o fecha en el formulario.'; statusDiv.className = 'text-danger mt-2'; }
         if (botonSubir) botonSubir.disabled = false;
         return;
     }
-
     let equipoNombre = equipoNombreInput.value.trim();
     let fechaValor = fechaInput.value;
-
     if (!equipoNombre || !fechaValor) {
-        if (statusDiv) {
-            statusDiv.textContent = 'Error: El nombre del equipo y la fecha no pueden estar vacíos.';
-            statusDiv.className = 'text-danger';
-        }
+        console.log("[DEBUG] generarYSubirPdfADrive: Nombre de equipo o fecha no proporcionados.");
+        showToast('La fecha es obligatoria para realizar el mantenimiento.', 'error');
+        if (statusDiv) { statusDiv.textContent = 'La fecha es obligatoria para realizar el mantenimiento.'; statusDiv.className = 'text-danger mt-2'; }
         if (botonSubir) botonSubir.disabled = false;
         return;
     }
-
-    let equipoNombreLimpio = equipoNombre.replace(/\s+/g, '_').replace(/[^a-zA-Z0-9_.-]/g, '');
+    
+    let equipoNombreLimpio = equipoNombre.replace(/\s+/g, '_').replace(/[^a-zA-Z0-9_.\-]/g, '');
     if (equipoNombreLimpio.length > 30) equipoNombreLimpio = equipoNombreLimpio.substring(0, 30);
-    if (!equipoNombreLimpio) equipoNombreLimpio = 'nombre_invalido';
+    if (!equipoNombreLimpio) equipoNombreLimpio = 'EQUIPO_SIN_NOMBRE';
+    const nombreArchivo = `${tipoMantenimiento}-${equipoNombreLimpio}-${fechaValor}.pdf`;
+    console.log(`[DEBUG] Nombre de archivo PDF generado: ${nombreArchivo}`);
 
-    const nombreArchivo = `${tipoMantenimiento.toUpperCase()}-${equipoNombreLimpio}-${fechaValor}.pdf`;
-    console.log(`Nombre de archivo generado: ${nombreArchivo}`);
-
-    // --- INICIO: MODIFICACIONES PARA OCULTAR Y CAMBIAR ANCHO TEMPORALMENTE ---
-
-    // 9. Ocultar temporalmente elementos que no quieres que aparezcan en el PDF
     const elementsToHide = element.querySelectorAll('.no-print');
-    // Almacena el estado original de display para poder restaurarlo de forma segura
-    const originalDisplay = {};
-    elementsToHide.forEach(el => {
-        originalDisplay[el] = el.style.display; // Guarda el estilo original
-        el.style.display = 'none'; // Oculta el elemento usando estilo en línea
-    });
-
-    // Aplicar temporalmente el ancho del 80% al elemento del formulario
-    // Guarda el ancho original del formulario (puede estar definido en línea o ser vacío si no lo está)
+    const originalDisplayState = new Map();
+    elementsToHide.forEach(el => { originalDisplayState.set(el, el.style.display); el.style.display = 'none'; });
     const originalFormWidth = element.style.width;
-    // Aplica el ancho del 80% para la generación del PDF
     element.style.width = '80%';
-     // Si necesitas ajustar box-sizing, descomenta las siguientes líneas:
-     // const originalBoxSizing = element.style.boxSizing;
-     // element.style.boxSizing = 'border-box';
 
-    // --- FIN: MODIFICACIONES PARA OCULTAR Y CAMBIAR ANCHO TEMPORALMENTE ---
-
-
-    // 10. Definir las opciones para la generación del PDF (esta constante NO SE MODIFICA según tu indicación)
     const options = {
-        margin: [10, 0, 0, 0],
-        filename: nombreArchivo,
-        image: { type: 'jpeg', quality: 0.98 },
+        margin: [10, 0, 0, 0], filename: nombreArchivo, image: { type: 'jpeg', quality: 0.98 },
         html2canvas: { scale: 3, logging: false, useCORS: true, scrollY: 0 },
-        jsPDF: { unit: 'mm', format: [300, 520], orientation: 'portrait' }, // <--- SE MANTIENE EXACTAMENTE IGUAL
+        jsPDF: { unit: 'mm', format: [300, 520], orientation: 'portrait' },
         pagebreak: { mode: ['css', 'avoid-all'] }
     };
+    
+    if (botonSubir) botonSubir.disabled = true;
+    const generatingMsg = `Generando y subiendo: ${nombreArchivo}... Por favor, espere.`;
+    showToast(generatingMsg, 'info'); // Los mensajes "info" también irán a la consola
+    if (statusDiv) { statusDiv.textContent = generatingMsg; statusDiv.className = 'text-info mt-2'; }
 
-    // 11. Generar el PDF
+
     try {
-        console.log("Generando PDF como Blob...");
-        // La librería html2pdf capturará el 'element' con el ancho del 80% aplicado
+        console.log("[DEBUG] Iniciando generación de PDF con html2pdf...");
         const pdfBlob = await html2pdf().from(element).set(options).outputPdf('blob');
-        console.log("PDF generado como Blob.");
-
-        // --- INICIO: RESTAURAR ESTILOS DESPUÉS DE GENERAR EL PDF (ÉXITO) ---
-
-        // Restaurar el ancho original del formulario
+        console.log("[DEBUG] PDF generado como Blob. Tamaño:", pdfBlob.size);
+        
         element.style.width = originalFormWidth;
-        // Si ajustaste box-sizing, restáuralo:
-        // element.style.boxSizing = originalBoxSizing;
+        elementsToHide.forEach(el => { el.style.display = originalDisplayState.get(el); });
 
-        // Restaurar la visibilidad original de los elementos que se ocultaron
-        elementsToHide.forEach(el => {
-            el.style.display = originalDisplay[el];
-        });
-
-        // --- FIN: RESTAURAR ESTILOS DESPUÉS DE GENERAR EL PDF (ÉXITO) ---
-
-
-        // 13. Preparar los datos para enviar al servidor (backend)
         const formData = new FormData();
         formData.append('pdfFile', pdfBlob, nombreArchivo);
         formData.append('fileName', nombreArchivo);
+        formData.append('folderId', targetFolderId);
+        
+        console.log("[DEBUG] FormData para enviar:", {folderId: targetFolderId, fileName: nombreArchivo, pdfFileBlobName: pdfBlob.name, pdfFileBlobSize: pdfBlob.size});
 
-        if (targetFolderId && targetFolderId !== 'None' && targetFolderId !== '') {
-            formData.append('folderId', targetFolderId);
-            console.log(`Enviando a carpeta ID: ${targetFolderId}`);
-        }
+        const response = await fetch('/upload_pdf_to_drive', { method: 'POST', body: formData });
+        
+        if (statusDiv) { statusDiv.textContent = ''; statusDiv.className = '';} // Limpiar statusDiv antes de poner nuevo mensaje
 
-        // 14. Enviar el PDF al backend usando Fetch API
-        console.log("Enviando PDF al backend (/upload_pdf_to_drive)...");
-        const response = await fetch('/upload_pdf_to_drive', {
-            method: 'POST',
-            body: formData
-        });
-
-        // 15. Manejar la respuesta del servidor
         if (response.ok) {
             const result = await response.json();
+            console.log("[DEBUG] Respuesta del servidor (upload_pdf_to_drive):", result);
             if (result.success) {
-                console.log(`PDF subido exitosamente. ID: ${result.fileId}, Nombre: ${result.fileName}`);
-                alert(`¡Éxito! Archivo "${result.fileName}" subido a Google Drive.`);
-
-                // 16. Limpiar y restablecer la interfaz después del éxito
-                try {
-                    if (element && typeof element.reset === 'function') {
-                        console.log(`Limpiando formulario: #${element.id}`);
-                        element.reset();
-                    }
-                    const formCorrectivo = document.getElementById('formCorrectivo');
-                    const formPreventivo = document.getElementById('formPreventivo');
-                    const tipoMantenimientoSelect = document.getElementById('tipoMantenimiento');
-                    if (formCorrectivo) formCorrectivo.style.display = 'none';
-                    if (formPreventivo) formPreventivo.style.display = 'none';
-                    if (tipoMantenimientoSelect) tipoMantenimientoSelect.selectedIndex = 0;
-                    console.log("Vista restablecida al menú de selección.");
-                } catch (resetError) {
-                    console.error("Error al restablecer la vista:", resetError);
-                    alert("Archivo subido, pero ocurrió un error al restablecer el formulario. Selecciona manualmente el tipo de mantenimiento.");
-                }
-            } else {
-                console.error('Error reportado por el backend:', result.error);
+                const successMsg = `¡Informe "${result.fileName}" subido exitosamente!`;
+                showToast(successMsg + (result.fileId ? ` (ID: ${result.fileId})` : ''), 'success');
                 if (statusDiv) {
-                    statusDiv.textContent = `Error del servidor al subir: ${result.error || 'Error desconocido'}`;
-                    statusDiv.className = 'text-danger';
+                    statusDiv.textContent = successMsg;
+                    statusDiv.className = 'text-success mt-2 font-weight-bold';
+                }
+
+                if (element && typeof element.reset === 'function') element.reset();
+                const tipoSelect = document.getElementById('tipoMantenimiento');
+                if(tipoSelect) tipoSelect.selectedIndex = 0;
+                if (document.getElementById('formCorrectivo')) document.getElementById('formCorrectivo').style.display = 'none';
+                if (document.getElementById('formPreventivo')) document.getElementById('formPreventivo').style.display = 'none';
+                const previewContainer = document.getElementById('preview'); 
+                if (previewContainer) previewContainer.innerHTML = ''; 
+                const fotoInputEl = document.getElementById('fotoInput'); 
+                if (fotoInputEl) fotoInputEl.value = ''; 
+                if (firmaState.correctivo.initialized) clearSignature('correctivo');
+                if (firmaState.preventivo.initialized) clearSignature('preventivo');
+            } else {
+                const errorUploadMsg = `Error al subir el archivo: ${result.error || 'Error desconocido del servidor.'}`;
+                showToast(errorUploadMsg, 'error');
+                if (statusDiv) {
+                    statusDiv.textContent = errorUploadMsg;
+                    statusDiv.className = 'text-danger mt-2';
                 }
             }
         } else {
-            console.error(`Error HTTP ${response.status}: ${response.statusText}`);
-            let errorText = response.statusText;
-            try {
-                const errorBody = await response.json();
-                if (errorBody && errorBody.error) errorText = errorBody.error;
-            } catch (e) { /* Ignorar si no es JSON */ }
+            let errorHttpText = `Error HTTP ${response.status}: ${response.statusText}. No se pudo subir el archivo.`;
+            try { 
+                const errorBody = await response.json(); 
+                if (errorBody && errorBody.error) errorHttpText = `Error al subir: ${errorBody.error}`; 
+                console.log("[DEBUG] Cuerpo del error HTTP:", errorBody);
+            } catch (e) { console.log("[DEBUG] No se pudo parsear el cuerpo del error HTTP como JSON."); }
+            
+            showToast(errorHttpText, 'error');
             if (statusDiv) {
-                statusDiv.textContent = `Error ${response.status} al contactar el servidor: ${errorText}`;
-                statusDiv.className = 'text-danger';
+                statusDiv.textContent = errorHttpText;
+                statusDiv.className = 'text-danger mt-2';
             }
+
             if (response.status === 401) {
-                alert("Tu sesión ha expirado. Serás redirigido para autenticarte de nuevo.");
-                window.location.href = '/authorize';
+                const authMsg = "Sesión expirada o no autorizado. Redirigiendo para autenticar...";
+                showToast(authMsg, 'error'); 
+                if(statusDiv) statusDiv.textContent = authMsg;
+                setTimeout(() => { window.location.href = '/authorize'; }, 3000);
             }
         }
     } catch (err) {
-        console.error(`Error inesperado en generarYSubirPdfADrive:`, err);
+        console.error("[DEBUG] Error crítico en generarYSubirPdfADrive:", err);
+        const criticalErrorMsg = 'Error inesperado durante la generación o envío del PDF. Revise la consola para detalles.';
+        showToast(criticalErrorMsg, 'error');
         if (statusDiv) {
-            statusDiv.textContent = 'Error inesperado durante la generación o envío del PDF.';
-            statusDiv.className = 'text-danger';
+            statusDiv.textContent = criticalErrorMsg;
+            statusDiv.className = 'text-danger mt-2';
         }
-
-        // --- INICIO: RESTAURAR ESTILOS DESPUÉS DE UN ERROR ---
-
-        // Restaurar ancho original en caso de error
         element.style.width = originalFormWidth;
-         // Si ajustaste box-sizing, restáuralo:
-         // element.style.boxSizing = originalBoxSizing;
-
-        // Restaurar visibilidad de elementos ocultos en caso de error
-         elementsToHide.forEach(el => {
-            el.style.display = originalDisplay[el];
-        });
-
-        // --- FIN: RESTAURAR ESTILOS DESPUÉS DE UN ERROR ---
-
+        elementsToHide.forEach(el => { el.style.display = originalDisplayState.get(el); });
     } finally {
-        // 17. Código que se ejecuta siempre al final (haya éxito o error)
-        if (botonSubir) botonSubir.disabled = false; // Re-habilita el botón
-        console.log("Proceso de generación y subida finalizado.");
+        if (botonSubir) botonSubir.disabled = false;
+        console.log("[INFO] [PDF] Proceso de generación y subida de PDF finalizado.");
     }
 }
+
+
+// --- Listener DOMContentLoaded (Integrando TU lógica) ---
+document.addEventListener('DOMContentLoaded', () => {
+    console.log("DOM completamente cargado y parseado. (Mensaje del script general)");
+
+    // --- INICIO DE TU LÓGICA DOMContentLoaded ---
+    const menuPrincipal = document.getElementById('menuOpciones');
+    const toggleMenuPrincipalButton = document.querySelector('.btn-add-inside');
+
+    if (toggleMenuPrincipalButton && menuPrincipal) {
+        toggleMenuPrincipalButton.addEventListener('click', (event) => {
+            event.stopPropagation();
+            menuPrincipal.classList.toggle('menu-visible');
+            console.log("[DEBUG] Menú principal toggleado. Visible:", menuPrincipal.classList.contains('menu-visible'));
+        });
+
+        document.addEventListener('click', (event) => {
+            const registrarEquipoModal = document.getElementById('registrarEquipoModal');
+            const isClickInsideModalVisible = registrarEquipoModal && registrarEquipoModal.style.display !== 'none' && registrarEquipoModal.contains(event.target);
+        
+            if (!isClickInsideModalVisible && 
+                toggleMenuPrincipalButton && !toggleMenuPrincipalButton.contains(event.target) &&
+                menuPrincipal && !menuPrincipal.contains(event.target)) {
+                if (menuPrincipal.classList.contains('menu-visible')) {
+                    console.log("[DEBUG] Cerrando menú principal por clic fuera.");
+                    menuPrincipal.classList.remove('menu-visible');
+                }
+            }
+        });
+        
+        menuPrincipal.querySelectorAll('.menu-opcion').forEach(opcion => {
+            const noAutoCloseIds = ['triggerFileUpload', 'btnRegistrarNuevoEquipoGlobalMenu', 'btnRegistrarNuevoEquipoModalTrigger'];
+            
+            if (!noAutoCloseIds.includes(opcion.id)) {
+                opcion.addEventListener('click', (event) => {
+                    console.log(`[DEBUG] Opción de menú '${opcion.id || opcion.textContent.trim()}' clickeada, cerrando menú.`);
+                    setTimeout(() => { 
+                        menuPrincipal.classList.remove('menu-visible');
+                    }, 50);
+                });
+            } else {
+                opcion.addEventListener('click', (event) => {
+                    console.log(`[DEBUG] Opción de menú '${opcion.id || opcion.textContent.trim()}' clickeada, no se cierra automáticamente.`);
+                    event.stopPropagation(); 
+                });
+            }
+        });
+    } else {
+        console.warn("Advertencia: Elementos del menú principal ('#menuOpciones') o su toggle ('.btn-add-inside') no encontrados.");
+    }
+
+    const registrarEquipoModal = document.getElementById('registrarEquipoModal');
+    const btnsOpenModalRegistrarEquipo = document.querySelectorAll('#btnRegistrarNuevoEquipoGlobalMenu, #btnRegistrarNuevoEquipoModalTrigger');
+    const btnCloseModal = registrarEquipoModal?.querySelector('.modal-close-button');
+    const btnCancelModal = registrarEquipoModal?.querySelector('.modal-cancel-button');
+    const formRegistrarEquipo = document.getElementById('formRegistrarEquipo');
+    
+    const modalServiceNameDisplay = document.getElementById('modalServiceNameDisplay');
+    const modalServiceKeyInput = document.getElementById('modalServiceKeyForJson');
+    const modalParentDriveFolderIdInput = document.getElementById('modalParentDriveFolderId');
+    const modalEquipoNombreInput = document.getElementById('modalEquipoNombre');
+    const modalEquipoMarcaModeloInput = document.getElementById('modalEquipoMarcaModelo');
+    const modalEquipoSerieInput = document.getElementById('modalEquipoSerie');
+    const modalEquipoUbicacionInput = document.getElementById('modalEquipoUbicacion');
+    const modalEntidadJsonInput = document.getElementById('modalEntidadJson');
+    const modalEmpresaInput = document.getElementById('modalEmpresa');
+
+    if (btnsOpenModalRegistrarEquipo.length > 0 && registrarEquipoModal) {
+        btnsOpenModalRegistrarEquipo.forEach(button => {
+            button.addEventListener('click', function(event) {
+                event.preventDefault();
+                console.log("[DEBUG] Botón para abrir modal de registro de equipo clickeado:", this.id);
+                if (menuPrincipal) menuPrincipal.classList.remove('menu-visible');
+
+                const entidadJson = this.dataset.entidadJsonKey || this.dataset.entidadJsonKkey; 
+                const empresa = this.dataset.empresa;
+                let serviceNameForJson = this.dataset.currentServiceName;
+                let parentDriveFolderId = this.dataset.parentFolderId;
+
+                console.log("[DEBUG] Abriendo modal de registro. Datos del botón:", { entidadJson, empresa, serviceNameForJson, parentDriveFolderId });
+
+                if (serviceNameForJson) {
+                    serviceNameForJson = serviceNameForJson.trim().toUpperCase();
+                }
+
+                if ((!serviceNameForJson || serviceNameForJson === "SERVICIO GENERAL") && !parentDriveFolderId) {
+                    let promptedServiceName = prompt("Introduce el nombre del SERVICIO (ej: AMBULANCIA, QUIROFANO) para el nuevo equipo. Se guardará en mayúsculas:");
+                    if (!promptedServiceName || promptedServiceName.trim() === "") {
+                        showToast("Se requiere un nombre de servicio para registrar un equipo.", 'error');
+                        return;
+                    }
+                    serviceNameForJson = promptedServiceName.trim().toUpperCase();
+                    if (!parentDriveFolderId) {
+                        console.warn("[DEBUG] Nombre de servicio ingresado por prompt, pero no hay parentDriveFolderId. La carpeta de servicio se creará en la raíz de Drive del usuario o donde la API determine.");
+                    }
+                }
+                
+                if(modalEntidadJsonInput) modalEntidadJsonInput.value = entidadJson || '';
+                if(modalEmpresaInput) modalEmpresaInput.value = empresa || '';
+                if(modalServiceNameDisplay) modalServiceNameDisplay.textContent = serviceNameForJson || 'N/A';
+                if(modalServiceKeyInput) modalServiceKeyInput.value = serviceNameForJson || '';
+                if(modalParentDriveFolderIdInput) modalParentDriveFolderIdInput.value = parentDriveFolderId || '';
+                
+                if(formRegistrarEquipo) formRegistrarEquipo.reset();
+
+                registrarEquipoModal.style.display = 'flex';
+                console.log("[DEBUG] Modal de registro de equipo mostrada.");
+                setTimeout(() => {
+                    if(modalEquipoNombreInput) modalEquipoNombreInput.focus();
+                }, 100);
+            });
+        });
+    } else {
+        console.warn("[DEBUG] No se encontraron botones para abrir el modal de registro o el modal mismo.");
+    }
+
+    if (btnCloseModal && registrarEquipoModal) btnCloseModal.addEventListener('click', () => { registrarEquipoModal.style.display = 'none'; if(formRegistrarEquipo) formRegistrarEquipo.reset(); console.log("[DEBUG] Modal de registro cerrada por botón X."); });
+    if (btnCancelModal && registrarEquipoModal) btnCancelModal.addEventListener('click', () => { registrarEquipoModal.style.display = 'none'; if(formRegistrarEquipo) formRegistrarEquipo.reset(); console.log("[DEBUG] Modal de registro cancelada."); });
+    if (registrarEquipoModal) {
+        registrarEquipoModal.addEventListener('click', (event) => {
+            if (event.target === registrarEquipoModal) {
+                registrarEquipoModal.style.display = 'none';
+                if(formRegistrarEquipo) formRegistrarEquipo.reset();
+                console.log("[DEBUG] Modal de registro cerrada por clic fuera.");
+            }
+        });
+    }
+
+    if (formRegistrarEquipo) {
+        formRegistrarEquipo.addEventListener('submit', async (event) => {
+            event.preventDefault();
+            console.log("[DEBUG] Formulario de registro de equipo enviado.");
+
+            const nombreInputVal = modalEquipoNombreInput ? modalEquipoNombreInput.value.trim() : '';
+            const marcaModeloInputVal = modalEquipoMarcaModeloInput ? modalEquipoMarcaModeloInput.value.trim() : '';
+            const serieInputVal = modalEquipoSerieInput ? modalEquipoSerieInput.value.trim() : '';
+            const ubicacionInputVal = modalEquipoUbicacionInput ? modalEquipoUbicacionInput.value.trim() : '';
+            const serviceKeyInputVal = modalServiceKeyInput ? modalServiceKeyInput.value : '';
+            const parentFolderIdInputVal = modalParentDriveFolderIdInput ? modalParentDriveFolderIdInput.value : '';
+            const entidadJsonParaApi = modalEntidadJsonInput ? modalEntidadJsonInput.value : '';
+            const empresaParaApi = modalEmpresaInput ? modalEmpresaInput.value : '';
+
+            if (!nombreInputVal) { showToast('El nombre del equipo es obligatorio.', 'error'); if(modalEquipoNombreInput) modalEquipoNombreInput.focus(); return; }
+            if (!serviceKeyInputVal) { showToast('Error interno: No se pudo determinar el servicio.', 'error'); return; }
+            if (!entidadJsonParaApi) { showToast('Error interno: No se pudo determinar la entidad para el registro.', 'error'); console.error("[DEBUG] Submit Error: entidadJsonParaApi está vacío."); return; }
+            if (!parentFolderIdInputVal) { showToast('Error interno: No se pudo determinar la carpeta de servicio en Drive.', 'error'); console.error("[DEBUG] Submit Error: parentFolderIdInputVal está vacío."); return; }
+
+            const equipoDetails = {
+                nombre: nombreInputVal.toUpperCase(),
+                marca_modelo: marcaModeloInputVal,
+                serie: serieInputVal,
+                ubicacion: ubicacionInputVal
+            };
+            const dataToSend = {
+                entidad_json_key: entidadJsonParaApi,
+                empresa: empresaParaApi,
+                service_key_for_json: serviceKeyInputVal,
+                parent_drive_folder_id: parentFolderIdInputVal,
+                equipo_details: equipoDetails
+            };
+
+            console.log("[DEBUG] [Registrar Equipo Submit] Datos a enviar:", JSON.stringify(dataToSend, null, 2));
+            showToast('Registrando equipo y creando carpeta...', 'info', 15000); // Duración ignorada
+
+            try {
+                const response = await fetch('/api/registrar_equipo_completo', {
+                    method: 'POST', headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(dataToSend)
+                });
+                const result = await response.json();
+                console.log("[DEBUG] [Registrar Equipo Submit] Respuesta del servidor:", result);
+                if (response.ok && result.success) {
+                    showToast(result.message || 'Equipo registrado!', 'success', 5000); // Duración ignorada
+                    registrarEquipoModal.style.display = 'none';
+                    if(formRegistrarEquipo) formRegistrarEquipo.reset();
+                    setTimeout(() => window.location.reload(), 2000);
+                } else {
+                    const errorMsg = result.error || 'Error desconocido del servidor.';
+                    showToast(`Error al registrar equipo: ${errorMsg}`, 'error', 7000); // Duración ignorada
+                }
+            } catch (error) {
+                console.error("[DEBUG] [Registrar Equipo Submit] Error en fetch:", error);
+                showToast('Error de red o conexión al registrar.', 'error', 7000); // Duración ignorada
+            }
+        });
+    } else {
+        console.warn("[DEBUG] Formulario 'formRegistrarEquipo' no encontrado.");
+    }
+
+    const triggerUploadButton = document.getElementById('triggerFileUpload');
+    const fileUploaderInput = document.getElementById('fileUploader');
+    if (triggerUploadButton && fileUploaderInput) { 
+        console.log("[DEBUG] Elementos para subida de archivos individuales encontrados.");
+    } else {
+        console.warn("[DEBUG] Elementos 'triggerFileUpload' o 'fileUploader' no encontrados.");
+    }
+
+    async function eliminarEquipo(folderId, elementToRemove, entidadJsonParaEliminar) {
+        if (!confirm('¡ADVERTENCIA! ¿Estás seguro de que quieres eliminar este equipo y TODO su contenido? Esta acción no se puede deshacer.')) {
+            console.log("[DEBUG] [Eliminar Equipo] Eliminación cancelada por el usuario.");
+            return;
+        }
+        if (!entidadJsonParaEliminar) {
+            console.error("[DEBUG] [Eliminar Equipo] Error: Falta la clave de entidad (entidad_json_key) para la eliminación.");
+            showToast('Error interno: No se pudo determinar la entidad del equipo a eliminar.', 'error');
+            return;
+        }
+
+        console.log(`[DEBUG] [Eliminar Equipo] Procediendo a eliminar equipo ID: ${folderId} de entidad: ${entidadJsonParaEliminar}`);
+        showToast('Eliminando equipo y su contenido...', 'info');
+
+        try {
+            const payload = { folderId: folderId, entidad_json_key: entidadJsonParaEliminar };
+            const response = await fetch('/delete_equipo', {
+                method: 'POST', headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(payload)
+            });
+            const result = await response.json();
+            console.log("[DEBUG] [Eliminar Equipo] Respuesta del servidor:", { status: response.status, ok: response.ok, body: result });
+
+            if (response.ok && result.success) {
+                showToast(`Equipo eliminado con éxito!`, 'success', 4000); // Duración ignorada
+                if (elementToRemove?.parentNode) {
+                    elementToRemove.parentNode.removeChild(elementToRemove);
+                }
+            } else {
+                let errorMessage = result.error || `Error HTTP ${response.status}.`;
+                if (response.status === 404) errorMessage = 'Error: El equipo (carpeta) no fue encontrado en Drive.';
+                if (response.status === 403) errorMessage = 'Error: Permisos insuficientes para eliminar este equipo.';
+                showToast(`Error al eliminar el equipo: ${errorMessage}`, 'error', 8000); // Duración ignorada
+            }
+        } catch (error) {
+            console.error('[DEBUG] [Eliminar Equipo] Error en la petición fetch:', error);
+            showToast('Error de red al intentar eliminar el equipo.', 'error', 8000); // Duración ignorada
+        }
+    }
+
+    function setupDeleteTeamLinks() {
+        console.log("[DEBUG] Ejecutando setupDeleteTeamLinks()");
+        document.querySelectorAll('.delete-team-option').forEach(link => {
+            link.addEventListener('click', async (event) => {
+                event.preventDefault(); event.stopPropagation();
+                console.log("[DEBUG] Clic en .delete-team-option");
+
+                const folderCardElement = event.target.closest('.folder-card');
+                if (!folderCardElement) {
+                    console.error("[DEBUG] [setupDeleteTeamLinks] Error: No se encontró .folder-card padre.");
+                    showToast('Error interno al intentar eliminar.', 'error');
+                    return;
+                }
+
+                const folderId = folderCardElement.dataset.folderId;
+                const entidadJsonParaEliminar = folderCardElement.dataset.entidadJsonKey;
+                console.log("[DEBUG] [setupDeleteTeamLinks] folderId:", folderId, "entidadJson:", entidadJsonParaEliminar);
+
+                const optionsMenu = event.target.closest('.folder-options-menu');
+                if (optionsMenu) optionsMenu.style.display = 'none';
+
+                if (folderId && folderCardElement) {
+                    await eliminarEquipo(folderId, folderCardElement, entidadJsonParaEliminar);
+                } else {
+                    console.error("[DEBUG] [setupDeleteTeamLinks] Error: No se pudo obtener folderId o folderCardElement.", {folderId, folderCardElement});
+                    showToast('Error interno: No se pudo determinar qué equipo eliminar.', 'error');
+                }
+            });
+        });
+    }
+
+    function setupFolderOptionMenus() {
+        console.log("[DEBUG] Ejecutando setupFolderOptionMenus()");
+        document.querySelectorAll('.folder-options-toggle').forEach(button => {
+            button.addEventListener('click', (event) => {
+                event.preventDefault(); event.stopPropagation();
+                const folderCard = event.target.closest('.folder-card');
+                const optionsMenu = folderCard?.querySelector('.folder-options-menu');
+                document.querySelectorAll('.file-options-menu, .folder-options-menu').forEach(menu => {
+                    if (menu !== optionsMenu) menu.style.display = 'none';
+                });
+                if (optionsMenu) {
+                    optionsMenu.style.display = (optionsMenu.style.display === 'flex') ? 'none' : 'flex';
+                    console.log("[DEBUG] Menú de opciones de carpeta toggleado. Visible:", optionsMenu.style.display === 'flex');
+                }
+            });
+        });
+    }
+    function setupFileOptionMenus() {
+        console.log("[DEBUG] Ejecutando setupFileOptionMenus()");
+        document.querySelectorAll('.file-options-toggle').forEach(button => {
+            button.addEventListener('click', (event) => {
+                event.preventDefault(); event.stopPropagation();
+                const fileCard = event.target.closest('.file-card');
+                const optionsMenu = fileCard?.querySelector('.file-options-menu');
+                document.querySelectorAll('.file-options-menu, .folder-options-menu').forEach(menu => {
+                    if (menu !== optionsMenu) menu.style.display = 'none';
+                });
+                if (optionsMenu) {
+                    optionsMenu.style.display = (optionsMenu.style.display === 'flex') ? 'none' : 'flex';
+                    console.log("[DEBUG] Menú de opciones de archivo toggleado. Visible:", optionsMenu.style.display === 'flex');
+                }
+            });
+        });
+    }
+    
+    async function eliminarArchivoDrive(fileId, elementToRemove) { 
+        console.log(`[DEBUG] Placeholder para eliminarArchivoDrive(${fileId})`);
+        showToast('Funcionalidad de eliminar archivo no completamente implementada en este script de ejemplo.', 'info');
+    }
+    function setupDeleteOptionLinks() { 
+        console.log("[DEBUG] Placeholder para setupDeleteOptionLinks(). Si es para archivos, vincular a eliminarArchivoDrive.");
+    }
+
+    document.addEventListener('click', (event) => {
+        const isClickOnToggle = event.target.closest('.file-options-toggle, .folder-options-toggle');
+        const isClickInsideMenu = event.target.closest('.file-options-menu, .folder-options-menu');
+        const isClickOnFabToggle = toggleMenuPrincipalButton && toggleMenuPrincipalButton.contains(event.target);
+        const isClickInsideFabMenu = menuPrincipal && menuPrincipal.contains(event.target);
+
+        if (!isClickOnToggle && !isClickInsideMenu && !isClickOnFabToggle && !isClickInsideFabMenu) {
+            let menuClosed = false;
+            document.querySelectorAll('.file-options-menu, .folder-options-menu').forEach(menu => {
+                if (menu.style.display !== 'none') {
+                    menu.style.display = 'none';
+                    menuClosed = true;
+                }
+            });
+            if (menuClosed) console.log("[DEBUG] Menús de opciones de archivo/carpeta cerrados por clic fuera.");
+        }
+    });
+
+    console.log("[DEBUG] Llamando a las funciones de setup al final de DOMContentLoaded.");
+    setupFileOptionMenus();
+    setupDeleteOptionLinks(); 
+    setupFolderOptionMenus();
+    setupDeleteTeamLinks();
+
+    console.log("Todas las funciones de setup especificadas ejecutadas.");
+});
