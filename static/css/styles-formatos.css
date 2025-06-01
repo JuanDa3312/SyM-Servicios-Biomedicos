@@ -14,6 +14,7 @@ body {
 @media print {
     .no-print {
         display: none !important;
+        
     }
     #formPreventivo, #formCorrectivo {
         width: 80% !important;
@@ -76,6 +77,8 @@ header {
     margin-bottom: 20px;
     text-align: center;
 }
+
+
 
 /* Icono */
 .icono {
@@ -201,6 +204,12 @@ textarea {
 
 /* Responsivo: en pantallas pequeñas, las firmas se apilan */
 @media (max-width: 600px) {
+
+    body.theme-simbiosas header .icono {
+    width: 220px; /* EJEMPLO: Define el ancho que deseas para el logo de Simbiosas aquí */
+    height: auto;   /* Para mantener la proporción de la imagen */
+    margin: 0;
+    }
     .Firmas {
         flex-direction: column;
         align-items: center;
@@ -304,6 +313,12 @@ textarea {
   
 /* Responsivo: si la pantalla es muy pequeña, los botones se apilan */
 @media (max-width: 400px) {
+    
+    body.theme-simbiosas header .icono {
+    width: 220px; /* EJEMPLO: Define el ancho que deseas para el logo de Simbiosas aquí */
+    height: auto;   /* Para mantener la proporción de la imagen */
+    margin: 0;
+    }
     .botones-firma {
         flex-direction: column;
         display: inline-block;
@@ -375,6 +390,12 @@ body.theme-simbiosas .header-container .icono {
 }
 /* Solo para pantallas */
 @media screen and (max-width: 768px) {
+
+    body.theme-simbiosas header .icono {
+    width: 220px; /* EJEMPLO: Define el ancho que deseas para el logo de Simbiosas aquí */
+    height: auto;   /* Para mantener la proporción de la imagen */
+    margin: 0;
+    }
     #tipoMantenimientoContainer, #formPreventivo, #formCorrectivo {
         width: 80%;
         padding: 20px;
@@ -402,5 +423,51 @@ body.theme-simbiosas .icono { /* Este selector apunta al icono dentro de un body
     border-radius: 8px;
 }
 
+/* --- Estilos para el Mensaje Toast --- */
 
+#toast-message {
+    visibility: hidden; /* Oculto por defecto */
+    opacity: 0;         /* Empezar transparente para animación de fundido */
+    min-width: 280px;
+    background-color: #333; /* Color de fondo por defecto */
+    color: #fff;            /* Color de texto por defecto */
+    text-align: center;
+    border-radius: 5px;
+    padding: 16px 20px;
+    position: fixed;     /* Posición fija en la pantalla */
+    z-index: 1050;       /* Asegurar que esté por encima de otros elementos */
+    left: 50%;
+    transform: translateX(-50%); /* Centrar horizontalmente */
+    bottom: -100px;      /* Empezar fuera de la pantalla (para animación de subida) */
+    font-size: 1rem;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+    transition: opacity 0.4s ease-in-out, bottom 0.4s ease-in-out, visibility 0.4s; /* Transiciones suaves */
+}
 
+/* Estilo cuando el toast se muestra */
+#toast-message.show {
+    visibility: visible;
+    opacity: 1;
+    bottom: 30px; /* Posición final en la parte inferior */
+}
+
+/* Colores específicos por tipo de mensaje */
+#toast-message.success {
+    background-color: #28a745; /* Verde para éxito */
+    color: white;
+}
+
+#toast-message.error {
+    background-color: #dc3545; /* Rojo para error */
+    color: white;
+}
+
+#toast-message.info {
+    background-color: #17a2b8; /* Azul para información */
+    color: white;
+}
+
+/* Opcional: Si quieres que la clase 'no-print' también se aplique al toast
+   (ya la tienes en tu HTML <div id="toast-message" class="toast no-print"></div>,
+   así que la regla @media print que ya tienes debería funcionar)
+*/
