@@ -378,6 +378,11 @@ body.theme-simbiosas {
 
 /* Ajustes generales para pantallas pequeñas */
 @media (max-width: 768px) {
+    .header-title h1 {
+        font-size: 15px;
+        gap: 5px;
+    }
+    
     /* Reducir padding en los contenedores */
     .container {
         padding: 15px;
@@ -386,6 +391,7 @@ body.theme-simbiosas {
     /* Ajustar tamaños de fuente en títulos si son demasiado grandes */
     h1 {
         font-size: 18px;
+        
     }
      .equipment-count, .list-container h2 {
         font-size: 1rem;
