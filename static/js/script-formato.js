@@ -246,34 +246,35 @@ window.enableEditing = function(tipoMantenimiento) {
     document.getElementById(`clearButton${tipoMantenimiento.charAt(0).toUpperCase() + tipoMantenimiento.slice(1)}`).disabled = false;
     document.getElementById(`message${tipoMantenimiento.charAt(0).toUpperCase() + tipoMantenimiento.slice(1)}`).textContent = 'Modo de edición activado. Puede modificar la firma.';
 };
+// Asegúrate de que la función showToast esté definida antes en tu script o globalmente.
+// function showToast(message, type = 'info', duration = 3500) { /* ... tu función ... */ }
 
-// --- Función para Generar y Subir PDF (del script de formato) ---
+// Asegúrate de que la función showToast esté definida antes en tu script o globalmente.
+// function showToast(message, type = 'info', duration = 3500) { /* ... tu función ... */ }
+
 async function generarYSubirPdfADrive(formId, folderIdDesdeHtml, statusElementId) {
-    console.log(`[DEBUG] generarYSubirPdfADrive() llamada con formId: ${formId}, folderId: ${folderIdDesdeHtml}, statusId: ${statusElementId}`);
+    console.log(`[FormatoJS][PDF] Iniciando para formId: ${formId}, folderIdDesdeHtml: ${folderIdDesdeHtml}, statusId: ${statusElementId}`);
     const element = document.getElementById(formId);
     const botonSubir = document.querySelector(`button[onclick*="generarYSubirPdfADrive('${formId}'"]`);
     const statusDiv = statusElementId ? document.getElementById(statusElementId) : null;
 
-    // Limpiar el statusDiv al inicio si existe y es relevante para esta función
-    if (statusDiv) {
+    if (statusDiv) { // Limpiar mensaje de estado previo si existe
         statusDiv.textContent = '';
-        statusDiv.className = ''; // Limpiar clases
+        statusDiv.className = ''; // Limpiar clases de estilo previas
     }
-    console.log(`[INFO] [PDF] Proceso iniciado para formId: ${formId}`);
 
     if (!element) {
-        console.log("[DEBUG] generarYSubirPdfADrive: Elemento de formulario no encontrado.");
         showToast('Error: Formulario no encontrado para generar PDF.', 'error');
-        if (statusDiv) { statusDiv.textContent = 'Error: Formulario no encontrado.'; statusDiv.className = 'text-danger mt-2'; }
+        if (statusDiv) { statusDiv.textContent = 'Error: Formulario no encontrado.'; }
         return;
     }
 
-    const targetFolderId = folderIdDesdeHtml;
+    const targetFolderId = folderIdDesdeHtml; 
     if (!targetFolderId || targetFolderId === 'None' || targetFolderId === '' || String(targetFolderId).includes('{{')) {
-        const errorMsgCritico = `Error: ID de carpeta no válido o no resuelto: '${targetFolderId}'. No se puede subir el PDF.`;
-        console.log("[DEBUG] generarYSubirPdfADrive: " + errorMsgCritico);
-        showToast(errorMsgCritico, 'error', 7000); // La duración es ignorada por la nueva showToast
-        if (statusDiv) { statusDiv.textContent = errorMsgCritico; statusDiv.className = 'text-danger mt-2';}
+        const errorMsgCritico = `Error: ID de carpeta destino para Drive no válido (recibido: '${targetFolderId}'). No se puede subir el PDF.`;
+        console.error("[FormatoJS][PDF] " + errorMsgCritico);
+        showToast(errorMsgCritico, 'error', 7000);
+        if (statusDiv) { statusDiv.textContent = errorMsgCritico; }
         if (botonSubir) botonSubir.disabled = false;
         return;
     }
@@ -286,77 +287,81 @@ async function generarYSubirPdfADrive(formId, folderIdDesdeHtml, statusElementId
     const fechaInput = element.querySelector(`input[name="${nombreCampoFecha}"]`);
 
     if (!equipoNombreInput || !fechaInput) {
-        console.log("[DEBUG] generarYSubirPdfADrive: Campos de nombre de equipo o fecha faltantes.");
         showToast('Error: Faltan campos de nombre de equipo o fecha en el formulario.', 'error');
-        if (statusDiv) { statusDiv.textContent = 'Error: Faltan campos de nombre de equipo o fecha en el formulario.'; statusDiv.className = 'text-danger mt-2'; }
         if (botonSubir) botonSubir.disabled = false;
         return;
     }
     let equipoNombre = equipoNombreInput.value.trim();
     let fechaValor = fechaInput.value;
     if (!equipoNombre || !fechaValor) {
-        console.log("[DEBUG] generarYSubirPdfADrive: Nombre de equipo o fecha no proporcionados.");
         showToast('La fecha es obligatoria para realizar el mantenimiento.', 'error');
-        if (statusDiv) { statusDiv.textContent = 'La fecha es obligatoria para realizar el mantenimiento.'; statusDiv.className = 'text-danger mt-2'; }
         if (botonSubir) botonSubir.disabled = false;
         return;
     }
-    
+
     let equipoNombreLimpio = equipoNombre.replace(/\s+/g, '_').replace(/[^a-zA-Z0-9_.\-]/g, '');
-    if (equipoNombreLimpio.length > 30) equipoNombreLimpio = equipoNombreLimpio.substring(0, 30);
+    if (equipoNombreLimpio.length > 50) equipoNombreLimpio = equipoNombreLimpio.substring(0, 50);
     if (!equipoNombreLimpio) equipoNombreLimpio = 'EQUIPO_SIN_NOMBRE';
     const nombreArchivo = `${tipoMantenimiento}-${equipoNombreLimpio}-${fechaValor}.pdf`;
-    console.log(`[DEBUG] Nombre de archivo PDF generado: ${nombreArchivo}`);
+    console.log(`[FormatoJS][PDF] Nombre de archivo generado: ${nombreArchivo}`);
 
     const elementsToHide = element.querySelectorAll('.no-print');
     const originalDisplayState = new Map();
-    elementsToHide.forEach(el => { originalDisplayState.set(el, el.style.display); el.style.display = 'none'; });
+    elementsToHide.forEach(el => {
+        originalDisplayState.set(el, el.style.display);
+        el.style.display = 'none';
+    });
     const originalFormWidth = element.style.width;
-    element.style.width = '80%';
+    element.style.width = '80%'; // Mantenemos tu ancho para captura que te funcionaba para el formato interno
 
-    const options = {
-        margin: [10, 0, 0, 0], filename: nombreArchivo, image: { type: 'jpeg', quality: 0.98 },
-        html2canvas: { scale: 3, logging: false, useCORS: true, scrollY: 0 },
-        jsPDF: { unit: 'mm', format: [300, 520], orientation: 'portrait' },
+    // --- OPCIONES DE html2pdf.js AJUSTADAS ---
+    const options = { 
+        margin: [10, 15, 10, 15], // Margen: [arriba, izquierda, abajo, derecha] en mm. 15mm a los lados.
+        filename: nombreArchivo, 
+        image: { type: 'jpeg', quality: 0.98 }, 
+        html2canvas: { 
+            scale: 3, // Tu escala preferida que te daba buen formato interno
+            logging: false, 
+            useCORS: true, 
+            scrollY: 0
+            // Quitamos windowWidth para que se base en el '80%' del viewport que estableciste
+        },
+        jsPDF: { 
+            unit: 'mm', 
+            format: [300, 520], // Tu formato de página grande
+            orientation: 'portrait' 
+        }, 
         pagebreak: { mode: ['css', 'avoid-all'] }
     };
+    // --- FIN OPCIONES AJUSTADAS ---
     
     if (botonSubir) botonSubir.disabled = true;
-    const generatingMsg = `Generando y subiendo: ${nombreArchivo}... Por favor, espere.`;
-    showToast(generatingMsg, 'info'); // Los mensajes "info" también irán a la consola
-    if (statusDiv) { statusDiv.textContent = generatingMsg; statusDiv.className = 'text-info mt-2'; }
-
+    showToast(`Generando y subiendo: ${nombreArchivo}... Por favor espere.`, 'info', 25000);
 
     try {
-        console.log("[DEBUG] Iniciando generación de PDF con html2pdf...");
         const pdfBlob = await html2pdf().from(element).set(options).outputPdf('blob');
-        console.log("[DEBUG] PDF generado como Blob. Tamaño:", pdfBlob.size);
+        console.log("[FormatoJS][PDF] PDF generado como Blob.");
         
-        element.style.width = originalFormWidth;
-        elementsToHide.forEach(el => { el.style.display = originalDisplayState.get(el); });
+        element.style.width = originalFormWidth; 
+        elementsToHide.forEach(el => { 
+            el.style.display = originalDisplayState.get(el);
+        });
 
         const formData = new FormData();
         formData.append('pdfFile', pdfBlob, nombreArchivo);
         formData.append('fileName', nombreArchivo);
         formData.append('folderId', targetFolderId);
         
-        console.log("[DEBUG] FormData para enviar:", {folderId: targetFolderId, fileName: nombreArchivo, pdfFileBlobName: pdfBlob.name, pdfFileBlobSize: pdfBlob.size});
+        console.log("[FormatoJS][PDF] FormData para enviar:", {folderId: targetFolderId, fileName: nombreArchivo, pdfFileBlobName: pdfBlob.name});
 
         const response = await fetch('/upload_pdf_to_drive', { method: 'POST', body: formData });
-        
-        if (statusDiv) { statusDiv.textContent = ''; statusDiv.className = '';} // Limpiar statusDiv antes de poner nuevo mensaje
+        if (statusDiv) statusDiv.textContent = '';
 
         if (response.ok) {
             const result = await response.json();
-            console.log("[DEBUG] Respuesta del servidor (upload_pdf_to_drive):", result);
             if (result.success) {
-                const successMsg = `¡Informe "${result.fileName}" subido exitosamente!`;
-                showToast(successMsg + (result.fileId ? ` (ID: ${result.fileId})` : ''), 'success');
-                if (statusDiv) {
-                    statusDiv.textContent = successMsg;
-                    statusDiv.className = 'text-success mt-2 font-weight-bold';
-                }
-
+                showToast(`¡Éxito! Archivo "${result.fileName}" subido. Redirigiendo...`, 'success', 3000);
+                
                 if (element && typeof element.reset === 'function') element.reset();
                 const tipoSelect = document.getElementById('tipoMantenimiento');
                 if(tipoSelect) tipoSelect.selectedIndex = 0;
@@ -368,52 +373,45 @@ async function generarYSubirPdfADrive(formId, folderIdDesdeHtml, statusElementId
                 if (fotoInputEl) fotoInputEl.value = ''; 
                 if (firmaState.correctivo.initialized) clearSignature('correctivo');
                 if (firmaState.preventivo.initialized) clearSignature('preventivo');
-            } else {
-                const errorUploadMsg = `Error al subir el archivo: ${result.error || 'Error desconocido del servidor.'}`;
-                showToast(errorUploadMsg, 'error');
-                if (statusDiv) {
-                    statusDiv.textContent = errorUploadMsg;
-                    statusDiv.className = 'text-danger mt-2';
+
+                const currentParams = new URLSearchParams(window.location.search);
+                const empresaParaRedirect = currentParams.get('empresa');
+                const entidadJsonParaRedirect = currentParams.get('entidad_json');
+
+                if (folderIdDesdeHtml && empresaParaRedirect && entidadJsonParaRedirect) {
+                    const redirectUrl = `/carpeta/${folderIdDesdeHtml}?empresa=${encodeURIComponent(empresaParaRedirect)}&entidad_json_key=${encodeURIComponent(entidadJsonParaRedirect)}`;
+                    console.log("[FormatoJS][PDF] Redirigiendo a:", redirectUrl);
+                    setTimeout(() => { window.location.href = redirectUrl; }, 3100);
+                } else {
+                    console.error("[FormatoJS][PDF] Error al construir URL de redirección: faltan parámetros.", 
+                                { folder: folderIdDesdeHtml, empresa: empresaParaRedirect, entidad: entidadJsonParaRedirect });
+                    showToast("PDF subido. Error al redirigir. Recargando formulario actual.", 'warn', 4000);
+                    setTimeout(() => { window.location.reload(); }, 4100);
                 }
+            } else {
+                showToast(`Error al subir: ${result.error || 'Error desconocido del servidor.'}`, 'error', 7000);
             }
         } else {
-            let errorHttpText = `Error HTTP ${response.status}: ${response.statusText}. No se pudo subir el archivo.`;
-            try { 
-                const errorBody = await response.json(); 
-                if (errorBody && errorBody.error) errorHttpText = `Error al subir: ${errorBody.error}`; 
-                console.log("[DEBUG] Cuerpo del error HTTP:", errorBody);
-            } catch (e) { console.log("[DEBUG] No se pudo parsear el cuerpo del error HTTP como JSON."); }
-            
-            showToast(errorHttpText, 'error');
-            if (statusDiv) {
-                statusDiv.textContent = errorHttpText;
-                statusDiv.className = 'text-danger mt-2';
-            }
-
+            let errorText = `Error HTTP ${response.status}: ${response.statusText}`;
+            try { const errorBody = await response.json(); if (errorBody && errorBody.error) errorText = errorBody.error; } catch (e) {}
+            showToast(errorText, 'error', 7000);
             if (response.status === 401) {
-                const authMsg = "Sesión expirada o no autorizado. Redirigiendo para autenticar...";
-                showToast(authMsg, 'error'); 
-                if(statusDiv) statusDiv.textContent = authMsg;
+                showToast("Sesión expirada. Redirigiendo para autenticar...", 'error', 3000);
                 setTimeout(() => { window.location.href = '/authorize'; }, 3000);
             }
         }
     } catch (err) {
-        console.error("[DEBUG] Error crítico en generarYSubirPdfADrive:", err);
-        const criticalErrorMsg = 'Error inesperado durante la generación o envío del PDF. Revise la consola para detalles.';
-        showToast(criticalErrorMsg, 'error');
-        if (statusDiv) {
-            statusDiv.textContent = criticalErrorMsg;
-            statusDiv.className = 'text-danger mt-2';
-        }
-        element.style.width = originalFormWidth;
-        elementsToHide.forEach(el => { el.style.display = originalDisplayState.get(el); });
+        showToast('Error inesperado durante la generación o envío del PDF.', 'error', 7000);
+        console.error("[FormatoJS][PDF] Error crítico en generarYSubirPdfADrive:", err);
+        if (element) element.style.width = originalFormWidth;
+        elementsToHide.forEach(el => {
+            el.style.display = originalDisplayState.get(el);
+        });
     } finally {
         if (botonSubir) botonSubir.disabled = false;
-        console.log("[INFO] [PDF] Proceso de generación y subida de PDF finalizado.");
+        console.log("[FormatoJS][PDF] Proceso de PDF finalizado.");
     }
 }
-
-
 // --- Listener DOMContentLoaded (Integrando TU lógica) ---
 document.addEventListener('DOMContentLoaded', () => {
     console.log("DOM completamente cargado y parseado. (Mensaje del script general)");
