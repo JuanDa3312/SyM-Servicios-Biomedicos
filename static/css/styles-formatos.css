@@ -4,22 +4,90 @@ body {
     padding: 0;
 }
 
-@page {
-    size: 13in 22in; /* Tamaño tabloide (11x17 pulgadas) */
-    margin: 5mm;
-    margin-top: 30mm;
-    margin-bottom: 10mm;
-    
-}
 @media print {
     .no-print {
         display: none !important;
-        
     }
+
+    body {
+        font-family: sans-serif; /* Asegúrate de que la fuente base esté definida */
+        margin: 0;
+        padding: 0;
+        background: #fff; /* Fondo blanco para el PDF */
+        width: auto; /* Permite que el contenido fluya naturalmente */
+    }
+
+    
+
     #formPreventivo, #formCorrectivo {
-        width: 80% !important;
+        width: 100% !important; /* Hará que el formulario ocupe el ancho disponible en el PDF (definido por jsPDF y sus márgenes) */
+        margin: 0 auto !important; /* Centra el formulario si no ocupa todo el ancho por alguna razón */
+        padding: 15px !important; /* Ajusta el padding interno para el PDF */
+        border: none !important;
+        box-shadow: none !important;
+        display: block !important; /* Asegura que sea un bloque */
+        margin-top: 0 !important; /* Quita el margen superior que tenías para la vista en pantalla */
+        margin-bottom: 0 !important;
+    }
+
+      /* Encabezado */
+    header {
+        display: flex !important;
+        flex-direction: row !important; /* Asegura la dirección de fila como en escritorio */
+        align-items: center !important;
+        border-bottom: 2px solid #ddd !important;
+        padding-bottom: 10px !important;
+        margin-bottom: 20px !important;
+        text-align: left !important; /* Alineación de escritorio */
+    }
+
+    .icono {
+        width: 25% !important; /* Ancho de icono de escritorio */
+        max-width: 180px !important; /* Un máximo razonable para el PDF */
+        margin-right: 25px !important; /* Margen de escritorio */
+        margin-left: 0 !important;
+        margin-bottom: 0 !important; /* Elimina el margen inferior de la vista móvil */
+        height: auto !important;
+        border-radius: 8px !important;
     }
     
+      /* Ajuste específico para el tema Simbiosas en impresión */
+    body.theme-simbiosas header .icono {
+        width: 27% !important; /* O el ancho deseado para Simbiosas en PDF */
+        height: auto !important; /* O un alto fijo como 87px si es crucial */
+        max-width: 200px !important; /* Ajusta según sea necesario */
+        margin-right: 15px !important;
+    }
+
+      /* Firmas */
+    .Firmas {
+        display: flex !important;
+        flex-direction: row !important; /* Firmas en fila */
+        flex-wrap: nowrap !important; /* Evita que pasen a la siguiente línea si el espacio es justo */
+        justify-content: space-between !important; /* O 'center', 'space-around' */
+        gap: 20px !important;
+        width: 100% !important; /* Ocupa el ancho del contenedor del formulario */
+    }
+
+    .firma {
+          flex: 1 1 45% !important; /* Distribuye el espacio entre las firmas */
+          max-width: 48% !important; /* Asegura que no se expandan demasiado */
+          /* Otros estilos de .firma para PDF */
+    }
+
+    .firma-box img {
+        max-width: 100% !important; /* La imagen de la firma debe ajustarse bien */
+        height: auto !important;
+    }
+    
+      /* Oculta los botones de la firma y mensajes de ayuda en el PDF */
+    .botones-firma, #messageCorrectivo, #messagePreventivo {
+        display: none !important;
+    }
+    
+    .seccion-importante-para-pdf, .firma-container {
+        page-break-inside: avoid !important;
+    }
 }
 
 /* Contenedor Principal */
@@ -77,8 +145,6 @@ header {
     margin-bottom: 20px;
     text-align: center;
 }
-
-
 
 /* Icono */
 .icono {
@@ -202,25 +268,6 @@ textarea {
 }
 
 
-/* Responsivo: en pantallas pequeñas, las firmas se apilan */
-@media (max-width: 600px) {
-
-    body.theme-simbiosas header .icono {
-    width: 220px; /* EJEMPLO: Define el ancho que deseas para el logo de Simbiosas aquí */
-    height: auto;   /* Para mantener la proporción de la imagen */
-    margin: 0;
-    }
-    .Firmas {
-        flex-direction: column;
-        align-items: center;
-    }
-
-    .firma {
-        width: 90%;
-        max-width: 600px;
-    }
-}
-
 .firma h3 {
     font-size: 1.2em;
     margin-bottom: 8px;
@@ -309,32 +356,8 @@ textarea {
     height: 24px;
     cursor: pointer;
     z-index: 2;
-  }
-  
-/* Responsivo: si la pantalla es muy pequeña, los botones se apilan */
-@media (max-width: 400px) {
-    
-    body.theme-simbiosas header .icono {
-    width: 220px; /* EJEMPLO: Define el ancho que deseas para el logo de Simbiosas aquí */
-    height: auto;   /* Para mantener la proporción de la imagen */
-    margin: 0;
-    }
-    .botones-firma {
-        flex-direction: column;
-        display: inline-block;
-        display: flex;              /* Activa flexbox */
-        justify-content: center;    /* Centra horizontalmente */
-        align-items: center;        /* Centra verticalmente si das altura */
-        gap: 0.5rem;                  /* Espacio entre botones */
-        flex-wrap: wrap;            /* Permite que bajen si no caben */
-        margin-top: 2rem;           /* separarlo del contenido superior */
-    }
-    
-    .btn-firma {
-        width: 100%;
-    }
-    
 }
+
 
 /* Imagen dentro de la firma */
 .firma-box img {
@@ -388,36 +411,13 @@ body.theme-simbiosas .header-container .icono {
     max-width: 300px;
     border-radius: 8px; 
 }
-/* Solo para pantallas */
-@media screen and (max-width: 768px) {
-
-    body.theme-simbiosas header .icono {
-    width: 220px; /* EJEMPLO: Define el ancho que deseas para el logo de Simbiosas aquí */
-    height: auto;   /* Para mantener la proporción de la imagen */
-    margin: 0;
-    }
-    #tipoMantenimientoContainer, #formPreventivo, #formCorrectivo {
-        width: 80%;
-        padding: 20px;
-    }
-
-    header {
-        flex-direction: column;
-        text-align: center;
-    }
-
-    .icono {
-        margin: 0 0 15px 0;
-        width: 50%;
-    }
-}
 
 /* --- Tema Simbiosas --- */
 
 /* Cambiar tamaño y otros estilos del icono para Simbiosas */
 body.theme-simbiosas .icono { /* Este selector apunta al icono dentro de un body con theme-simbiosas */
     width: 27%;
-    height: 87PX;
+    height: 116PX;
     margin-right: 15px;
     max-width: 300px;
     border-radius: 8px;
@@ -467,7 +467,29 @@ body.theme-simbiosas .icono { /* Este selector apunta al icono dentro de un body
     color: white;
 }
 
-/* Opcional: Si quieres que la clase 'no-print' también se aplique al toast
-   (ya la tienes en tu HTML <div id="toast-message" class="toast no-print"></div>,
-   así que la regla @media print que ya tienes debería funcionar)
-*/
+
+/* Solo para pantallas */
+@media screen and (max-width: 768px) {
+
+    body.theme-simbiosas header .icono {
+    width: 220px; /* EJEMPLO: Define el ancho que deseas para el logo de Simbiosas aquí */
+    height: auto;   /* Para mantener la proporción de la imagen */
+    margin: 0;
+    }
+    #tipoMantenimientoContainer, #formPreventivo, #formCorrectivo {
+        width: 80%;
+        padding: 20px;
+    }
+
+    header {
+        flex-direction: column;
+        text-align: center;
+    }
+
+    .icono {
+        margin: 0 0 15px 0;
+        width: 50%;
+    }
+    
+  
+}

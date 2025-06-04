@@ -7,7 +7,7 @@
     {# --- Título Dinámico (Opcional, si quieres que mencione la empresa) --- #}
     <title>{% if empresa_actual %}{{ empresa_actual.upper() }}{% else %}MV{% endif %}-Formato</title>
     
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles-formatos.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles-fromato-enBlanco.css') }}">
     
     {# --- Favicon Dinámico --- #}
     {% set favicon_path = 'images/icono-mv.JPG' %} {# Default para MV #}

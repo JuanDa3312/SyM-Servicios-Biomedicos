@@ -312,15 +312,19 @@ async function generarYSubirPdfADrive(formId, folderIdDesdeHtml, statusElementId
         el.style.display = 'none';
     });
     const originalFormWidth = element.style.width;
-    element.style.width = '80%'; // Mantenemos tu ancho para captura que te funcionaba para el formato interno
+    const originalOverflow = document.body.style.overflow; // Guardar estado del overflow
+    document.body.style.overflow = 'hidden'; // Evitar barras de scroll inesperadas
+
+    element.style.width = '840px'; // Un ancho fijo temporal para la captura
+    // O un ancho que sepas que hace que tu contenido se vea bien para el PDF
 
     // --- OPCIONES DE html2pdf.js AJUSTADAS ---
     const options = { 
-        margin: [10, 15, 10, 15], // Margen: [arriba, izquierda, abajo, derecha] en mm. 15mm a los lados.
+        margin: [15, 0, 0, 0], // Margen: [arriba, izquierda, abajo, derecha] en mm. 15mm a los lados.
         filename: nombreArchivo, 
         image: { type: 'jpeg', quality: 0.98 }, 
         html2canvas: { 
-            scale: 3, // Tu escala preferida que te daba buen formato interno
+            scale: 2.5, // Tu escala preferida que te daba buen formato interno
             logging: false, 
             useCORS: true, 
             scrollY: 0
@@ -328,7 +332,7 @@ async function generarYSubirPdfADrive(formId, folderIdDesdeHtml, statusElementId
         },
         jsPDF: { 
             unit: 'mm', 
-            format: [300, 520], // Tu formato de página grande
+            format: [300, 540], // Tu formato de página grande
             orientation: 'portrait' 
         }, 
         pagebreak: { mode: ['css', 'avoid-all'] }
@@ -360,7 +364,7 @@ async function generarYSubirPdfADrive(formId, folderIdDesdeHtml, statusElementId
         if (response.ok) {
             const result = await response.json();
             if (result.success) {
-                showToast(`¡Éxito! Archivo "${result.fileName}" subido. Redirigiendo...`, 'success', 3000);
+                showToast(`¡Éxito! Archivo "${result.fileName}" subido. Redirigiendo...`, 'success', 2000);
                 
                 if (element && typeof element.reset === 'function') element.reset();
                 const tipoSelect = document.getElementById('tipoMantenimiento');
