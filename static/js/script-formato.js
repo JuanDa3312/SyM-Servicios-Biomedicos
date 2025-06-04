@@ -324,7 +324,7 @@ async function generarYSubirPdfADrive(formId, folderIdDesdeHtml, statusElementId
         filename: nombreArchivo, 
         image: { type: 'jpeg', quality: 0.98 }, 
         html2canvas: { 
-            scale: 2.5, // Tu escala preferida que te daba buen formato interno
+            scale: 2, // Tu escala preferida que te daba buen formato interno
             logging: false, 
             useCORS: true, 
             scrollY: 0
