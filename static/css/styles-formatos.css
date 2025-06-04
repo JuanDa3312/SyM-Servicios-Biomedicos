@@ -491,5 +491,19 @@ body.theme-simbiosas .icono { /* Este selector apunta al icono dentro de un body
         width: 50%;
     }
     
+       .Firmas {
+        flex-direction: column; /* Cambia la dirección a columna para apilar las firmas */
+        align-items: center; /* Centra las firmas en la columna */
+        gap: 20px; /* Ajusta el espacio si es necesario */
+    }
+
+    .firma {
+        flex: 1 1 100%; /* Hace que cada firma ocupe todo el ancho disponible */
+        max-width: 100%; /* Asegura que no exceda el contenedor */
+        /* Puedes ajustar el padding si es necesario para móviles */
+        /* padding: 10px; */
+    }
+    /* ---- FIN: ESTILOS RESPONSIVOS PARA FIRMAS ---- */
+
   
 }
