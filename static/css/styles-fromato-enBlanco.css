@@ -403,14 +403,59 @@ body.theme-simbiosas .icono { /* Este selector apunta al icono dentro de un body
 /* Solo para pantallas */
 @media screen and (max-width: 768px) {
 
+    /* En styles-formatos.css */
+    @media print {
+        
+    
+        body {
+            margin: 0; padding: 0; background: #fff;
+            width: auto; 
+            
+        }
+        
+        #formPreventivo, #formCorrectivo {
+           width:100% !important; /* Ocupará el windowWidth que le diste a html2canvas */
+            margin: 0 !important;   /* Los márgenes se manejan por jsPDF en options.margin */
+            padding: 0 !important;  /* Ajusta si necesitas padding interno en el PDF */
+            box-shadow: none !important;
+            border: none !important; 
+        
+        
+        }
+        body.theme-simbiosas header .icono {
+        width: 50%;; /* EJEMPLO: Define el ancho que deseas para el logo de Simbiosas aquí */
+        height: auto;   /* Para mantener la proporción de la imagen */
+        margin: 0;
+        }
+
+            /* Encabezado (Comportamiento de bloque más estático) */
+        header {
+            /* display: flex; */ /* Eliminado para comportamiento de bloque estándar */
+            /* align-items: center; */ /* Eliminado, no aplica sin flex/grid */
+
+            border-bottom: 2px solid #ddd;
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+            text-align: center; /* Esto intentará centrar el contenido en línea (como una <img> para el icono)
+                                y el texto dentro de los elementos de bloque hijos (como los h1/p en .descripcion)
+                                si estos no tienen su propio text-align definido. */
+        }
+         body.theme-simbiosas header .icono {
+            width:50px; /* EJEMPLO: Define el ancho que deseas para el logo de Simbiosas aquí */
+            height: auto;   /* Para mantener la proporción de la imagen */
+            margin: 0;
+            }
+    }
+
+
     body.theme-simbiosas header .icono {
-    width: 220px; /* EJEMPLO: Define el ancho que deseas para el logo de Simbiosas aquí */
-    height: auto;   /* Para mantener la proporción de la imagen */
-    margin: 0;
+        width: 220px; /* EJEMPLO: Define el ancho que deseas para el logo de Simbiosas aquí */
+        height: auto;   /* Para mantener la proporción de la imagen */
+        margin: 0;
     }
     #tipoMantenimientoContainer, #formPreventivo, #formCorrectivo {
-        width: 80%;
-        padding: 20px;
+        width: 85%; /* Ajustado para dar un poco más de espacio en móviles */
+        padding: 15px; /* Ajustado para móviles */
     }
 
     header {
@@ -422,4 +467,21 @@ body.theme-simbiosas .icono { /* Este selector apunta al icono dentro de un body
         margin: 0 0 15px 0;
         width: 50%;
     }
+
+    /* ---- INICIO: ESTILOS RESPONSIVOS PARA FIRMAS ---- */
+    .Firmas {
+        flex-direction: column; /* Cambia la dirección a columna para apilar las firmas */
+        align-items: center; /* Centra las firmas en la columna */
+        gap: 20px; /* Ajusta el espacio si es necesario */
+    }
+
+    .firma {
+        flex: 1 1 100%; /* Hace que cada firma ocupe todo el ancho disponible */
+        max-width: 100%; /* Asegura que no exceda el contenedor */
+        /* Puedes ajustar el padding si es necesario para móviles */
+        /* padding: 10px; */
+    }
+    /* ---- FIN: ESTILOS RESPONSIVOS PARA FIRMAS ---- */
+
 }
+

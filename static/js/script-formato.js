@@ -315,7 +315,7 @@ async function generarYSubirPdfADrive(formId, folderIdDesdeHtml, statusElementId
     const originalOverflow = document.body.style.overflow; // Guardar estado del overflow
     document.body.style.overflow = 'hidden'; // Evitar barras de scroll inesperadas
 
-    element.style.width = '840px'; // Un ancho fijo temporal para la captura
+    element.style.width = '800px'; // Un ancho fijo temporal para la captura
     // O un ancho que sepas que hace que tu contenido se vea bien para el PDF
 
     // --- OPCIONES DE html2pdf.js AJUSTADAS ---
@@ -332,7 +332,7 @@ async function generarYSubirPdfADrive(formId, folderIdDesdeHtml, statusElementId
         },
         jsPDF: { 
             unit: 'mm', 
-            format: [300, 540], // Tu formato de página grande
+            format: [300, 580], // Tu formato de página grande
             orientation: 'portrait' 
         }, 
         pagebreak: { mode: ['css', 'avoid-all'] }
