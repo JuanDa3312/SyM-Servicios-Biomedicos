@@ -332,7 +332,7 @@ async function generarYSubirPdfADrive(formId, folderIdDesdeHtml, statusElementId
         },
         jsPDF: { 
             unit: 'mm', 
-            format: [300, 590], // Tu formato de página grande
+            format: [300, 610], // Tu formato de página grande
             orientation: 'portrait' 
         }, 
         pagebreak: { mode: ['css', 'avoid-all'] }
