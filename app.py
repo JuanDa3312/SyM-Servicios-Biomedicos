@@ -87,7 +87,7 @@ ENTIDADES_FOLDER_IDS = {
 DATOS_CLIENTE_POR_ENTIDAD = {
 
     'sagrado_corazon': {
-        'nombre_cliente': 'ESE SAGRADO CORAZON DE JESUS',
+        'nombre_cliente': 'ESE SAGRADO CORAZÓN DE JESUS',
         'direccion_cliente': 'Calle 12 No. 8-99 B/Nazareth, Valencia, Colombia',
         'ciudad_cliente': 'VALENCIA'
     },
