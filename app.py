@@ -15,9 +15,14 @@ from googleapiclient.http import MediaIoBaseUpload
 from googleapiclient.errors import HttpError
 import google.auth.transport.requests
 from cryptography.fernet import Fernet
-
+from flask import Response
 from flask import request
 from werkzeug.middleware.proxy_fix import ProxyFix
+from googleapiclient.http import MediaIoBaseDownload
+# import google.auth.transport.requests # Ya lo tienes
+# -----------------------------------------------------------------------------
+# Configuración de la Aplicación Flask
+# -----------------------------------------------------------------------------
 
 
 # -----------------------------------------------------------------------------
@@ -1520,6 +1525,138 @@ def delete_equipo_api():
         }), 500
 
     return jsonify({'success': True, 'message': f'Equipo de entidad "{entidad_json_clave}" enviado a la papelera en Drive y eliminado del registro local.'}), 200
+
+
+
+#Anexar firma al formato de mantenimiento
+@app.route('/download_file/<file_id>', methods=['GET'])
+# Usa @login_required si tienes un decorador para esto, o asegúrate de que get_drive_service lo maneje.
+def download_file(file_id):
+    """
+    Descarga el contenido de un archivo específico de Google Drive.
+    """
+    service = get_drive_service()
+    if not service:
+        # Aquí se asume que si get_drive_service devuelve None, es porque la autenticación falló
+        # y el frontend debe ser redirigido para re-autenticar.
+        return jsonify({"error": "Autenticación de Drive requerida o inválida."}), 401
+
+    try:
+        # Usa files().get_media() para obtener el contenido del archivo.
+        # Esto devuelve un objeto que debe ser descargado en chunks.
+        request_file = service.files().get_media(fileId=file_id)
+        
+        # Usa BytesIO para almacenar el contenido del archivo en memoria.
+        fh = BytesIO()
+        downloader = MediaIoBaseDownload(fh, request_file)
+        done = False
+        while done is False:
+            status, done = downloader.next_chunk()
+            # print(f"Download {int(status.progress() * 100)}%.") # Descomentar para depuración
+        
+        fh.seek(0) # Vuelve al inicio del stream para leerlo.
+
+        # Intenta obtener el tipo MIME del archivo si es posible, para una respuesta más precisa.
+        # Esto requiere un segundo llamado a la API, o puedes asumirlo si solo son PDFs.
+        file_metadata = service.files().get(fileId=file_id, fields='mimeType').execute()
+        mime_type = file_metadata.get('mimeType', 'application/octet-stream') # Default si no se encuentra.
+
+        print(f"DEBUG: Archivo '{file_id}' descargado con éxito. Tipo MIME: {mime_type}.")
+        
+        # Devuelve el contenido del archivo como una respuesta HTTP.
+        return Response(fh.getvalue(), mimetype=mime_type)
+
+    except HttpError as e:
+        status_code = e.resp.status
+        error_message = e.resp.reason
+        print(f"ERROR HttpError al descargar archivo {file_id}: Status {status_code}, Reason: {error_message}")
+        if status_code == 404:
+            return jsonify({"error": f"Archivo no encontrado en Drive (ID: {file_id})."}), 404
+        elif status_code == 403:
+            return jsonify({"error": f"Permisos insuficientes para descargar el archivo (ID: {file_id})."}), 403
+        else:
+            return jsonify({"error": f"Error de Drive al descargar el archivo: {error_message}"}), status_code
+    except Exception as e:
+        print(f"ERROR inesperado al descargar archivo {file_id}: {type(e).__name__} - {e}")
+        return jsonify({"error": f"Ocurrió un error inesperado al descargar el archivo: {str(e)}"}), 500
+
+@app.route('/update_file_in_drive', methods=['POST'])
+# Usa @login_required si tienes un decorador para esto, o asegúrate de que get_drive_service lo maneje.
+def update_file_in_drive():
+    """
+    Actualiza el contenido de un archivo existente en Google Drive.
+    """
+    service = get_drive_service()
+    if not service:
+        return jsonify({'success': False, 'error': 'No autenticado o sesión de Drive inválida. Por favor, re-autentíquese.'}), 401
+
+    # Obtener el archivo y los metadatos del request
+    if 'pdfFile' not in request.files:
+        return jsonify({'success': False, 'error': 'No se encontró el archivo PDF (campo "pdfFile") en la petición.'}), 400
+
+    uploaded_file = request.files['pdfFile']
+    file_id_to_update = request.form.get('fileId') # El ID del archivo existente a sobrescribir
+    file_name = request.form.get('fileName', uploaded_file.filename) # El nombre del archivo (puede ser el mismo)
+
+    if not file_id_to_update:
+        return jsonify({'success': False, 'error': 'Falta el ID del archivo a actualizar (campo "fileId").'}), 400
+
+    file_content_bytes = uploaded_file.read() # Leer el contenido del archivo
+    mime_type = uploaded_file.mimetype or 'application/pdf' # Usa el mimetype real del archivo subido
+
+    print(f"DEBUG: Intentando actualizar archivo Drive ID: '{file_id_to_update}' con nuevo contenido y nombre '{file_name}'...")
+
+    # Preparar el cuerpo de la media para la API de Drive
+    media_body_upload = MediaIoBaseUpload(
+        BytesIO(file_content_bytes),
+        mimetype=mime_type,
+        resumable=True
+    )
+
+    try:
+        # Actualizar el archivo existente. Solo pasamos el 'name' si queremos cambiarlo,
+        # pero para sobrescribir contenido, 'media_body' es lo principal.
+        # Incluye 'fields' para obtener el ID y nombre del archivo actualizado.
+        updated_file_info = service.files().update(
+            fileId=file_id_to_update,
+            media_body=media_body_upload,
+            # body={'name': file_name}, # Descomenta si también quieres actualizar el nombre si ha cambiado
+            fields='id, name, webViewLink'
+        ).execute()
+
+        print(f"DEBUG: Archivo '{file_id_to_update}' actualizado con éxito. Nuevo nombre: '{updated_file_info.get('name')}'")
+
+        return jsonify({
+            'success': True,
+            'message': 'Archivo actualizado con éxito.',
+            'fileId': updated_file_info.get('id'),
+            'fileName': updated_file_info.get('name'),
+            'viewLink': updated_file_info.get('webViewLink')
+        }), 200
+
+    except HttpError as e:
+        status_code = e.resp.status
+        error_content = e.content.decode('utf-8') if e.content else "{}"
+        error_details = {}
+        try:
+            error_details = json.loads(error_content).get('error', {})
+        except json.JSONDecodeError:
+            pass
+
+        error_message_api = error_details.get('message', f"Error de API de Drive no especificado (Status: {status_code}).")
+        user_message = f"Error al actualizar en Drive ({status_code}): {error_message_api}"
+
+        if status_code == 404:
+            user_message = f'El archivo con ID {file_id_to_update} no fue encontrado en Drive para actualizar.'
+        elif status_code == 403:
+            user_message = f'No tienes permiso para actualizar el archivo con ID {file_id_to_update} en Drive.'
+
+        print(f"ERROR HttpError ({status_code}) actualizando archivo {file_id_to_update} en Drive: {user_message}. Detalles: {error_content}")
+        return jsonify({'success': False, 'error': user_message}), status_code
+
+    except Exception as e:
+        print(f"ERROR inesperado al actualizar archivo {file_id_to_update} en Drive: {type(e).__name__} - {e}")
+        return jsonify({'success': False, 'error': f"Ocurrió un error inesperado en el servidor al actualizar el archivo: {type(e).__name__}"}), 500
 
 
 
