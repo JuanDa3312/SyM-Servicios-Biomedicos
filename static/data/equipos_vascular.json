@@ -6,13 +6,15 @@
             "marca_modelo": "GMD / BD 1522",
             "serie": "201608310312",
             "ubicacion": "CONSULTORIO 1"
+
         },"10J41XHUrsNh_qjMXR4rW9LK1gyJCZkHw": {
             "nombre": "EQUIPO DE ORGANOS",
             "dependencia": "CONSULTA EXTERNA",
             "marca_modelo": "WELCH ALLYN / POCKET LED",
             "serie": "NO VISIBLE",
             "ubicacion": "CONSULTORIO 1"
-        },"1qRF8bmHpoSup_VVejbL3WU7DV_DXfGilk": {
+
+        },"1qRF8bmHpoSup_VVejbL3WU7DV_DXfGil": {
             "nombre": "FONENDOSCOPIO",
             "dependencia": "CONSULTA EXTERNA",
             "marca_modelo": "LLORD / HS-301",
@@ -20,13 +22,14 @@
             "ubicacion": "CONSULTORIO 1"
         },
 
-        "1wE_XBjgB-rnKndbMwzm4_qn0MzQcXcmC": {
+        "1Q_qt9h3V0RYM2c9SBQyLMzwZbqtq7q9J": {
             "nombre": "TENSIOMETRO",
             "dependencia": "CONSULTA EXTERNA",
             "marca_modelo": "WELCH ALLYN / TYCOS",
             "serie": "181221E11",
             "ubicacion": "CONSULTORIO 1"
         },
+
         "1Q_qt9h3V0RYM2c9SBQyLMzZbqtq7q9J": {
             "nombre": "TERMOHIGROMETRO",
             "dependencia": "CONSULTA EXTERNA",
@@ -34,6 +37,7 @@
             "serie": "NO VISIBLE",
             "ubicacion": "CONSULTORIO 1"
         },
+
         "1pFpJFxglgnKzJN4hklgEiojU4l9vbQmI": {
             "nombre": "TERMOMETRO DIGITAL",
             "dependencia": "CONSULTA EXTERNA",
@@ -41,6 +45,7 @@
             "serie": "NO VISIBLE",
             "ubicacion": "CONSULTORIO 1"
         },
+
         "1qtaoXz3CpooxTTxx1y8Fm0JeNhyuDWph": {
             "nombre": "DISPOSITIVO AUTOMATIZADO PARA DETERMINACION DEI NDICE TOBILLOO BRAZO ABPIMD",
             "dependencia": "CONSULTA EXTERNA",
