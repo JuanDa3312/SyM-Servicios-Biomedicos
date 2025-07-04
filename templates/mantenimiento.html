@@ -12,7 +12,7 @@
     {# --- Favicon Dinámico --- #}
     {% set favicon_path = 'images/icono-mv.JPG' %} {# Default para MV #}
     {% if empresa_actual and empresa_actual.lower() == 'simbiosas' %}
-        {% set favicon_path = 'images/icono-symbiosas.png' %} {# Ajusta esta ruta si es diferente para Simbiosas #}
+        {% set favicon_path = 'images/icono-symbiosas.PNG' %} {# Ajusta esta ruta si es diferente para Simbiosas #}
     {% endif %}
     <link rel="icon" href="{{ url_for('static', filename=favicon_path) }}" type="image/x-icon" />
     {# --- Fin Favicon Dinámico --- #}
@@ -23,6 +23,7 @@
 
 {# --- Clase de tema dinámico en el body, con 'mv' como fallback --- #}
 <body class="theme-{{ empresa_actual.lower() if empresa_actual else 'mv' }}">
+    <div id="toast-message" class="toast" class =no print></div>
 
     <form id="tipoMantenimientoContainer" class="no-print">
         <label for="tipoMantenimiento" ><strong>Seleccione el tipo de mantenimiento:</strong></label>
@@ -35,7 +36,7 @@
     {# --- Preparar la ruta del logo dinámico --- #}
     {% set header_icon_path = 'images/iconoMV.jpg' %} {# Default para MV, OJO: es 'iconoMV.jpg' no 'icono-mv.JPG' como el favicon #}
     {% if empresa_actual and empresa_actual.lower() == 'simbiosas' %}
-        {% set header_icon_path = 'images/logo-symbiosas.PNG' %} {# Ajusta esta ruta si es diferente para Simbiosas #}
+        {% set header_icon_path = 'images/logo-symbiosas.png' %} {# Ajusta esta ruta si es diferente para Simbiosas #}
     {% endif %}
     {# --- Fin preparación ruta logo --- #}
     <!-- Formulario Correctivo -->
@@ -44,7 +45,7 @@
             <img src="{{ url_for('static', filename=header_icon_path) }}" alt="Icono Empresa" class="icono">
             <div class="descripcion">
                 <h1>Formulario de Mantenimiento</h1>
-                <p>Registro de mantenimiento correctivo</p>
+                <h2>Registro de mantenimiento correctivo</h2>
             </div>
         </header>
         
@@ -118,7 +119,7 @@
             <img src="{{ url_for('static', filename=header_icon_path) }}" alt="Icono Empresa" class="icono">
             <div class="descripcion">
                 <h1>Formulario de Mantenimiento</h1>
-                <p>Registro de mantenimiento preventivo </p>
+                <h2>Registro de mantenimiento preventivo </h2>
             </div>
         </header>
         <section class="datos-cliente">
@@ -185,6 +186,8 @@
         <button type="button" class="btn btn-primary no-print"onclick="generarYSubirPdfADrive('formPreventivo', '{{ folder_id }}')">
             Generar y Subir PDF Preventivo
         </button>
+        
     </form>
+    
 </body>
 </html>

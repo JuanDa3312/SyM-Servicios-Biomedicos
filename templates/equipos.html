@@ -13,9 +13,11 @@
 
     {% set favicon_image_path = 'images/icono-mv.JPG' %}
     {% if empresa_actual and empresa_actual.lower() == 'simbiosas' %}
-        {% set favicon_image_path = 'images/icono-symbiosas.png' %}
+        {% set favicon_image_path = 'images/icono-symbiosas.PNG' %}
     {% endif %}
     <link rel="icon" href="{{ url_for('static', filename=favicon_image_path) }}" type="image/x-icon" />
+
+    <script src="https://unpkg.com/pdf-lib@1.17.1/dist/pdf-lib.min.js"></script>
 
     <script src="{{ url_for('static', filename='js/script-equipos.js') }}" defer></script>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
@@ -26,7 +28,7 @@
             <div class="header-container">
                 {% set header_logo_path = 'images/icono-mv.JPG' %}
                 {% if empresa_actual and empresa_actual.lower() == 'simbiosas' %}
-                    {% set header_logo_path = 'images/icono-symbiosas.png' %}
+                    {% set header_logo_path = 'images/icono-symbiosas.PNG' %}
                 {% endif %}
                 <img src="{{ url_for('static', filename=header_logo_path) }}" alt="Icono Empresa" class="icono-empresa" /> 
                 <h1>
@@ -46,9 +48,8 @@
                     
                         <div class="folder-card {% if not carpeta_item.has_subfolders %}equipment-card{% endif %}"
                             data-folder-id="{{ carpeta_item.id }}"
-                            data-entidad-json-key="{{ entidad_raiz_para_json or '' }}"> {# <--- ¡ASEGÚRATE DE TENER ESTE DATA-ATTRIBUTE! #}
+                            data-entidad-json-key="{{ entidad_raiz_para_json or '' }}">
                             
-                            {# Enlace para navegar a la subcarpeta (ya lo teníamos correcto) #}
                             <a href="{{ url_for('ver_equipos', folder_id=carpeta_item.id, empresa=empresa_actual, entidad_json_key=entidad_raiz_para_json) }}" class="folder-link">
                                 <img src="{{ url_for('static', filename='images/icono-equipos.svg') }}" class="folder-icon" alt="Ícono de carpeta/equipo" />
                                 <div class="folder-name">{{ carpeta_item.name }}</div>
@@ -58,10 +59,7 @@
                                 <span></span><span></span><span></span>
                             </button>
                             <div class="folder-options-menu">
-                                {# El enlace de eliminar equipo. El JS tomará el folderId y entidad del div.folder-card padre #}
                                 <a href="#" class="menu-item delete-team-option">Eliminar Equipo</a> 
-                                {# Ya no es estrictamente necesario el data-folder-id aquí si el JS lo toma del .folder-card #}
-                                {# Pero no hace daño tenerlo: data-folder-id="{{ carpeta_item.id }}" #}
                             </div>
                         </div>
 
@@ -88,11 +86,12 @@
                                     <img src="{{ url_for('static', filename='images/archivo.svg') }}" alt="Archivo" class="archivo-icon" />
                                 {% endif %}
                             {% endif %}
-                            <div class="file-name">{{ archivo.name }}</div>
+                            <div class="file-name">{{ archivo.name }}</div> 
                         </a>
                         <button class="file-options-toggle" title="Opciones del archivo">...</button>
                         <div class="file-options-menu">
                             <a href="#" class="menu-item delete-file-option" data-file-id="{{ archivo.id }}">Eliminar Archivo</a>
+                            <a href="#" class="menu-item firma-file-option" data-file-id="{{ archivo.id }}" data-file-name="{{ archivo.name }}">Anexar firma</a>
                         </div>
                     </div>
                     {% endfor %}
@@ -112,22 +111,18 @@
                 {% if folder_id is defined and folder_id %}
                     <a href="{{ url_for('mantenimiento', folder_id=folder_id, entidad_json=entidad_raiz_para_json, empresa=empresa_actual) }}" class="menu-opcion" target="_blank" rel="noopener noreferrer">Realizar Mantenimiento</a>
                     <a href="#" class="menu-opcion" id="triggerFileUpload" 
-                       data-folder-id="{{ folder_id }}"
-                       data-hospital-name="{{ entidad_actual }}">Subir Archivo a {% if nombre_carpeta %}"{{ nombre_carpeta }}"{% else %}esta carpeta{% endif %}</a>
+                        data-folder-id="{{ folder_id }}"
+                        data-hospital-name="{{ entidad_actual }}">Subir Archivo a {% if nombre_carpeta %}"{{ nombre_carpeta }}"{% else %}esta carpeta{% endif %}</a>
                 {% endif %}
             {% endif %}
 
-            {# Condición para mostrar "Registrar nuevo equipo" #}
-            {# Se muestra si estamos en la vista de servicios o en una carpeta que NO es de equipo individual (o sea, es una carpeta de servicio) #}
             {% if request.endpoint == 'servicios' or (request.endpoint == 'ver_equipos' and not es_carpeta_de_equipo_individual) %}
-                <a href="#" class="menu-opcion" id="btnRegistrarNuevoEquipoModalTrigger" {# CAMBIO: ID más específico #}
-                   {# --- INICIO CAMBIOS/ADICIONES DATA ATTRIBUTES --- #}
-                   data-entidad-json-key="{{ entidad_raiz_para_json or entidad_actual_nombre or '' }}" {# La clave de entidad para el JSON #}
-                   data-empresa="{{ empresa_actual or '' }}"
-                   data-current-service-name="{{ nombre_carpeta if nombre_carpeta else (nombre_de_ese if nombre_de_ese else 'Servicio General') }}" {# Nombre del servicio actual #}
-                   data-parent-folder-id="{{ folder_id if folder_id else (entidad_folder_id if entidad_folder_id else '') }}"> {# ID de la carpeta del servicio actual #}
-                   {# --- FIN CAMBIOS/ADICIONES DATA ATTRIBUTES --- #}
-                   Registrar nuevo equipo {% if request.endpoint == 'ver_equipos' and nombre_carpeta %}<span>en "{{ nombre_carpeta }}"</span>{% endif %}
+                <a href="#" class="menu-opcion" id="btnRegistrarNuevoEquipoModalTrigger"
+                    data-entidad-json-key="{{ entidad_raiz_para_json or entidad_actual_nombre or '' }}"
+                    data-empresa="{{ empresa_actual or '' }}"
+                    data-current-service-name="{{ nombre_carpeta if nombre_carpeta else (nombre_de_ese if nombre_de_ese else 'Servicio General') }}"
+                    data-parent-folder-id="{{ folder_id if folder_id else (entidad_folder_id if entidad_folder_id else '') }}">
+                    Registrar nuevo equipo {% if request.endpoint == 'ver_equipos' and nombre_carpeta %}<span>en "{{ nombre_carpeta }}"</span>{% endif %}
                 </a>
             {% endif %}
 
@@ -138,21 +133,29 @@
 
         <input type="file" id="fileUploader" style="display: none;" accept=".pdf,.doc,.docx,.xls,.xlsx,.jpg,.jpeg,.png,.txt,.odt,.ods,.odp">
 
+        <div id="anexarFirmaModal" class="modal-overlay">
+            <div class="modal-content">
+                <span class="modal-close-button" title="Cerrar">&times;</span>
+                <h3>Anexar Firma a: <strong id="fileNameToSignDisplay"></strong></h3>
+                <p>Por favor, selecciona la imagen de la firma.</p>
+                <input type="file" id="signatureImageInput" accept="image/jpeg, image/png">
+                <p id="firmaLoadingMessage" style="display: none; color: blue;">Procesando firma y actualizando PDF, por favor espera...</p>
+                <div class="form-actions">
+                    <button id="btnConfirmarFirma" class="btn-primary">Anexar Firma</button>
+                    <button type="button" class="btn-secondary modal-cancel-button-firma">Cancelar</button>
+                </div>
+            </div>
+        </div>
         <div id="registrarEquipoModal" class="modal-overlay">
             <div class="modal-content">
                 <span class="modal-close-button" title="Cerrar">&times;</span>
                 <h3>Registrar Nuevo Equipo</h3>
                 <p>Servicio: <strong id="modalServiceNameDisplay">N/A</strong></p>
                 <form id="formRegistrarEquipo">
-                    {# --- INICIO CAMBIOS/ADICIONES CAMPOS OCULTOS --- #}
                     <input type="hidden" id="modalEntidadJson" name="entidad_json_key" />
                     <input type="hidden" id="modalEmpresa" name="empresa" />
-                    {# --- FIN CAMBIOS/ADICIONES CAMPOS OCULTOS --- #}
                     <input type="hidden" id="modalServiceKeyForJson" name="service_key_for_json" />
                     <input type="hidden" id="modalParentDriveFolderId" name="parent_drive_folder_id" />
-                    {# Ya no necesitamos modalHospitalName si usamos modalEntidadJson y modalEmpresa #}
-                    {# <input type="hidden" id="modalHospitalName" name="hospital_name" /> #}
-
                     <div class="form-group">
                         <label for="modalEquipoNombre">Nombre del Equipo:</label>
                         <input type="text" id="modalEquipoNombre" name="nombre" required />
@@ -177,6 +180,6 @@
             </div>
         </div>
         <div id="toast-message" class="toast"></div>
-    </div> 
+    </div>
 </body>
 </html>

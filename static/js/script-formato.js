@@ -5,7 +5,7 @@ const firmaState = {
 };
 
 // --- Función Helper para mostrar mensajes (MODIFICADA para usar solo la consola) ---  
-function showToast(message, type = 'info', duration = 3500) {
+function showToast(message, type = 'info', duration = 1500) {
     const toast = document.getElementById('toast-message');
 
     if (!toast) {
@@ -315,12 +315,12 @@ async function generarYSubirPdfADrive(formId, folderIdDesdeHtml, statusElementId
     const originalOverflow = document.body.style.overflow; // Guardar estado del overflow
     document.body.style.overflow = 'hidden'; // Evitar barras de scroll inesperadas
 
-    element.style.width = '800px'; // Un ancho fijo temporal para la captura
+    element.style.width = '900px'; // Un ancho fijo temporal para la captura
     // O un ancho que sepas que hace que tu contenido se vea bien para el PDF
 
     // --- OPCIONES DE html2pdf.js AJUSTADAS ---
     const options = { 
-        margin: [15, 0, 0, 0], // Margen: [arriba, izquierda, abajo, derecha] en mm. 15mm a los lados.
+        margin: [10, 0, 5, 0], // Margen: [arriba, izquierda, abajo, derecha] en mm. 15mm a los lados.
         filename: nombreArchivo, 
         image: { type: 'jpeg', quality: 0.98 }, 
         html2canvas: { 
@@ -332,7 +332,7 @@ async function generarYSubirPdfADrive(formId, folderIdDesdeHtml, statusElementId
         },
         jsPDF: { 
             unit: 'mm', 
-            format: [300, 580], // Tu formato de página grande
+            format: [300, 520], // Tu formato de página grande
             orientation: 'portrait' 
         }, 
         pagebreak: { mode: ['css', 'avoid-all'] }
