@@ -320,7 +320,11 @@ async function generarYSubirPdfADrive(formId, folderIdDesdeHtml, statusElementId
 
     // --- OPCIONES DE html2pdf.js AJUSTADAS ---
     const options = { 
+<<<<<<< HEAD
         margin: [10, 0, 5, 0], // Margen: [arriba, izquierda, abajo, derecha] en mm. 15mm a los lados.
+=======
+        margin: [10, 0, 0, 0], // Margen: [arriba, izquierda, abajo, derecha] en mm. 15mm a los lados.
+>>>>>>> b955edd1c6dd548dc75ce90bf18476c8a42b7da2
         filename: nombreArchivo, 
         image: { type: 'jpeg', quality: 0.98 }, 
         html2canvas: { 
@@ -332,7 +336,11 @@ async function generarYSubirPdfADrive(formId, folderIdDesdeHtml, statusElementId
         },
         jsPDF: { 
             unit: 'mm', 
+<<<<<<< HEAD
             format: [300, 520], // Tu formato de página grande
+=======
+            format: [300, 610], // Tu formato de página grande
+>>>>>>> b955edd1c6dd548dc75ce90bf18476c8a42b7da2
             orientation: 'portrait' 
         }, 
         pagebreak: { mode: ['css', 'avoid-all'] }
