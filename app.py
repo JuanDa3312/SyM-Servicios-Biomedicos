@@ -76,6 +76,7 @@ ROOT_FOLDER_IDS = {
     },
     'Simbiosas': { # Otra empresa o agrupación
         'ayapel': '1qB1H3PJ8luryntO7lRzD1lS50xXy0Msb', # Reemplazar con IDs reales
+        'ese_vida_sinu': '1eTTxrbrp3M9U43bm2JWUkkYyWh5oPhq2',
         
     }
 }
@@ -99,20 +100,25 @@ DATOS_CLIENTE_POR_ENTIDAD = {
 
     'vascular': {
         'nombre_cliente': 'UNIDAD MEDICA VASCULAR', # Ejemplo
-        'direccion_cliente': 'CALLE 26 # 6 – 36', # Ejemplo
-        'ciudad_cliente': 'Montería' # Ejemplo
+        'direccion_cliente': 'CALLE 26 # 6 – 36', 
+        'ciudad_cliente': 'Montería'
     },
 
     'palmitos': {
-        'nombre_cliente': 'ESE CENTRO DE SALUD DE LOS PALMITOS', # Ejemplo
-        'direccion_cliente': 'CRA 11 # 02 -12 Los Palmitos, Sucre', # Ejemplo
-        'ciudad_cliente': 'LOS PALMITOS, SUCRE' # Ejemplo
+        'nombre_cliente': 'ESE CENTRO DE SALUD DE LOS PALMITOS', 
+        'direccion_cliente': 'CRA 11 # 02 -12 Los Palmitos, Sucre', 
+        'ciudad_cliente': 'LOS PALMITOS, SUCRE' 
     },
     
     'ayapel': {
-        'nombre_cliente': 'ESE HOSPITAL SAN JORGE DE AYAPEL', # Ejemplo
+        'nombre_cliente': 'ESE HOSPITAL SAN JORGE DE AYAPEL', 
+        'direccion_cliente': 'Calle Principal, Ayapel, Córdoba', 
+        'ciudad_cliente': 'AYAPEL' 
+    }
+    'ese_vida_sinu': {
+        'nombre_cliente': 'ESE VIDA SINU', 
         'direccion_cliente': 'Calle Principal, Ayapel, Córdoba', # Ejemplo
-        'ciudad_cliente': 'AYAPEL' # Ejemplo
+        'ciudad_cliente': 'AYAPEL' 
     }
 }
 # Credenciales de usuarios para el login interno de la aplicación.
@@ -120,17 +126,22 @@ DATOS_CLIENTE_POR_ENTIDAD = {
 # Credenciales de usuarios para el login interno de la aplicación.
 # En un entorno de producción, esto debería manejarse de forma más segura (ej. base de datos con hashes).
 USUARIOS_SEGUROS = {
-    "Juan Antonio": "Juan10021",
+    "JuanA": "Juan10021",
+    "JuanR": "JuanR1007",
+    "Ivonne":"Ivonne1000",
     "Marlon": "Marlon10021",
     "Erika": "Erika53075",
+    
 }
 
 # Nombres completos asociados a los usuarios.
 NOMBRES_COMPLETOS = {
-    "Juan Antonio": "Juan Antonio Ely Ramirez",
+    "JuanA": "Juan Antonio Ely Ramirez",
+    "JuanR": "Juan Carlos Rojano",
+    "Ivonne": "Ivonne Angarita",
     "Marlon": "Marlon Rojano Parra",
     "Erika": "Erika Puello Bernal",
-    "admin": "Administrador del Sistema"
+    
 }
 
 # -----------------------------------------------------------------------------
