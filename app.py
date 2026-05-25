@@ -115,7 +115,7 @@ DATOS_CLIENTE_POR_ENTIDAD = {
         'nombre_cliente': 'ESE HOSPITAL SAN JORGE DE AYAPEL', 
         'direccion_cliente': 'Calle Principal, Ayapel, Córdoba', 
         'ciudad_cliente': 'AYAPEL' 
-    }
+    },
     'ese_vida_sinu': {
         'nombre_cliente': 'ESE VIDA SINU', 
         'direccion_cliente': 'Calle 21D #4W-33', 
