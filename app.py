@@ -89,6 +89,7 @@ ENTIDADES_FOLDER_IDS = {
     'palmitos': ROOT_FOLDER_IDS['MV']['palmitos'],
     'vascular': ROOT_FOLDER_IDS['MV']['vascular'],
     'ayapel': ROOT_FOLDER_IDS['Simbiosas']['ayapel'],
+    'ese_vida_sinu': ROOT_FOLDER_IDS['Simbiosas']['ese_vida_sinu'],
 }
 DATOS_CLIENTE_POR_ENTIDAD = {
 
@@ -117,8 +118,8 @@ DATOS_CLIENTE_POR_ENTIDAD = {
     }
     'ese_vida_sinu': {
         'nombre_cliente': 'ESE VIDA SINU', 
-        'direccion_cliente': 'Calle Principal, Ayapel, Córdoba', # Ejemplo
-        'ciudad_cliente': 'AYAPEL' 
+        'direccion_cliente': 'Calle 21D #4W-33', 
+        'ciudad_cliente': 'Montería' 
     }
 }
 # Credenciales de usuarios para el login interno de la aplicación.
@@ -126,7 +127,7 @@ DATOS_CLIENTE_POR_ENTIDAD = {
 # Credenciales de usuarios para el login interno de la aplicación.
 # En un entorno de producción, esto debería manejarse de forma más segura (ej. base de datos con hashes).
 USUARIOS_SEGUROS = {
-    "JuanA": "Juan10021",
+    "JuanA": "JuanA10021",
     "JuanR": "JuanR1007",
     "Ivonne":"Ivonne1000",
     "Marlon": "Marlon10021",
