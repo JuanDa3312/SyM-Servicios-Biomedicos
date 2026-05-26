@@ -1120,113 +1120,290 @@ def formato_mantenimiento():
     )
 
 
-
-#Mantenimiento de Equipos (Formulario y JSON)
+# =============================================================================
+# Mantenimiento de Equipos (Formulario y JSON)
+# =============================================================================
 @app.route('/Mantenimiento/<folder_id>', methods=['GET', 'POST'])
 def mantenimiento(folder_id):
+
+    # =========================================================================
+    # Verificar sesión interna
+    # =========================================================================
     if not session.get('logged_in'):
         return redirect(url_for('inicio_sesion_pagina'))
 
-    # --- NUEVO: Obtener la entidad propietaria del JSON ---
-    entidad_json_clave = request.args.get('entidad_json') # ej: 'sagrado_corazon', 'ayapel'
-    if not entidad_json_clave:
-        print(f"ERROR (ruta /Mantenimiento/{folder_id}): Falta el parámetro 'entidad_json' en la URL.")
-        abort(400, description="Falta la clave de entidad para el archivo JSON.")
-    # --- FIN NUEVO ---
+    # =========================================================================
+    # Obtener entidad dueña del JSON
+    # Ejemplo:
+    # /Mantenimiento/123?entidad_json=sagrado_corazon
+    # =========================================================================
+    entidad_json_clave = request.args.get('entidad_json')
 
+    if not entidad_json_clave:
+
+        print(
+            f"ERROR (/Mantenimiento/{folder_id}): "
+            f"Falta parámetro entidad_json."
+        )
+
+        abort(
+            400,
+            description="Falta la clave de entidad."
+        )
+    # =========================================================================
+    # Obtener servicio de Google Drive
+    # =========================================================================
     service = get_drive_service()
+    # =========================================================================
+    # Si no hay autenticación con Google
+    # =========================================================================
     if not service:
-        # ... (tu lógica de redirección a authorize, considera pasar entidad_json_clave también) ...
-        target_url_with_params = url_for('mantenimiento', folder_id=folder_id, entidad_json=entidad_json_clave, _external=True) # MODIFICADO
+
+        target_url_with_params = url_for(
+            'mantenimiento',
+            folder_id=folder_id,
+            entidad_json=entidad_json_clave,
+            _external=True
+        )
+
         session['target_url_after_auth'] = target_url_with_params
-        response = make_response(redirect(url_for('authorize_google_drive')))
+
+        response = make_response(
+            redirect(url_for('authorize_google_drive'))
+        )
+
         return response
 
-    # --- MODIFICADO: Cargar JSON específico de la entidad ---
-    # La función ahora espera el nombre de la entidad para construir la ruta del archivo.
-    datos_json_entidad_especifica = load_equipos_json(entidad_json_clave)
-    # --- FIN MODIFICADO ---
+    # =========================================================================
+    # Cargar JSON correspondiente a la entidad
+    # =========================================================================
+    datos_json_entidad_especifica = load_equipos_json(
+        entidad_json_clave
+    )
 
+    # =========================================================================
+    # Variables auxiliares
+    # =========================================================================
     equipo_encontrado_dict = None
-    servicio_del_equipo_json_key = None # La clave de "servicio" dentro del JSON de la entidad
-    
-    # Buscar el equipo dentro del JSON de la entidad específica
+
+    servicio_del_equipo_json_key = None
+
+    # =========================================================================
+    # Buscar equipo dentro del JSON
+    # =========================================================================
     for servicio_key, items_en_servicio_dict in datos_json_entidad_especifica.items():
-        if isinstance(items_en_servicio_dict, dict) and folder_id in items_en_servicio_dict:
+
+        if (
+            isinstance(items_en_servicio_dict, dict)
+            and folder_id in items_en_servicio_dict
+        ):
+
             equipo_encontrado_dict = items_en_servicio_dict[folder_id]
+
             servicio_del_equipo_json_key = servicio_key
+
             break
 
+    # =========================================================================
+    # Si el equipo no existe en el JSON
+    # =========================================================================
     if equipo_encontrado_dict is None:
-        print(f"ADVERTENCIA (/Mantenimiento): Equipo ID {folder_id} no encontrado en JSON de entidad '{entidad_json_clave}'.")
+
+        print(
+            f"ADVERTENCIA: Equipo {folder_id} "
+            f"no encontrado en entidad "
+            f"'{entidad_json_clave}'."
+        )
+
         equipo_encontrado_dict = {
-            "nombre": "Equipo Nuevo (No Registrado en JSON)",
-            "dependencia": "", "marca_modelo": "", "serie": "", "ubicacion": ""
+
+            "nombre": "Equipo Nuevo (No Registrado)",
+
+            "dependencia": "",
+
+            "marca_modelo": "",
+
+            "serie": "",
+
+            "ubicacion": ""
         }
-        print(f"DEBUG (/Mantenimiento): Se usará plantilla de equipo nuevo para {folder_id} en JSON de entidad '{entidad_json_clave}'.")
 
+    # =========================================================================
+    # POST -> Guardar cambios del formulario
+    # =========================================================================
     if request.method == 'POST':
-        if servicio_del_equipo_json_key is None:
-            servicio_del_equipo_json_key = request.form.get('service_key_for_json', "Sin Servicio Registrado")
-            if servicio_del_equipo_json_key not in datos_json_entidad_especifica:
-                datos_json_entidad_especifica[servicio_del_equipo_json_key] = {}
-            datos_json_entidad_especifica[servicio_del_equipo_json_key].setdefault(folder_id, {})
-        
+
         try:
-            target_equipo_dict_in_json = datos_json_entidad_especifica[servicio_del_equipo_json_key][folder_id]
-            # ... (tu lógica para actualizar target_equipo_dict_in_json con request.form.get) ...
-            target_equipo_dict_in_json['nombre'] = request.form.get('nombre', target_equipo_dict_in_json.get('nombre'))
-            target_equipo_dict_in_json['dependencia'] = request.form.get('dependencia', target_equipo_dict_in_json.get('dependencia'))
-            target_equipo_dict_in_json['marca_modelo'] = request.form.get('marca_modelo', target_equipo_dict_in_json.get('marca_modelo'))
-            target_equipo_dict_in_json['serie'] = request.form.get('serie', target_equipo_dict_in_json.get('serie'))
-            target_equipo_dict_in_json['ubicacion'] = request.form.get('ubicacion', target_equipo_dict_in_json.get('ubicacion'))
 
+            # ================================================================
+            # Si no existe servicio asociado
+            # ================================================================
+            if servicio_del_equipo_json_key is None:
 
-            # --- MODIFICADO: Guardar en el JSON específico de la entidad ---
-            json_filename_to_save = f"equipos_{entidad_json_clave.lower().replace(' ', '_')}.json"
-            json_path_to_save = os.path.join('static', 'data', json_filename_to_save)
-            
-            with open(json_path_to_save, 'w', encoding='utf-8') as f:
-                json.dump(datos_json_entidad_especifica, f, ensure_ascii=False, indent=4)
-            print(f"DEBUG (POST /Mantenimiento): Datos JSON actualizados y GUARDADOS para {folder_id} en {json_path_to_save}")
-            # --- FIN MODIFICADO ---
+                servicio_del_equipo_json_key = request.form.get(
+                    'service_key_for_json',
+                    "Sin Servicio Registrado"
+                )
 
-            # MODIFICADO: Pasar entidad_json_clave en la redirección
-            return redirect(url_for('mantenimiento', folder_id=folder_id, entidad_json=entidad_json_clave)) 
+                if servicio_del_equipo_json_key not in datos_json_entidad_especifica:
+
+                    datos_json_entidad_especifica[
+                        servicio_del_equipo_json_key
+                    ] = {}
+
+                datos_json_entidad_especifica[
+                    servicio_del_equipo_json_key
+                ].setdefault(folder_id, {})
+
+            # ================================================================
+            # Referencia al equipo dentro del JSON
+            # ================================================================
+            target_equipo_dict_in_json = (
+                datos_json_entidad_especifica[
+                    servicio_del_equipo_json_key
+                ][folder_id]
+            )
+
+            # ================================================================
+            # Actualizar datos del equipo
+            # ================================================================
+            target_equipo_dict_in_json['nombre'] = request.form.get(
+                'nombre',
+                target_equipo_dict_in_json.get('nombre')
+            )
+
+            target_equipo_dict_in_json['dependencia'] = request.form.get(
+                'dependencia',
+                target_equipo_dict_in_json.get('dependencia')
+            )
+
+            target_equipo_dict_in_json['marca_modelo'] = request.form.get(
+                'marca_modelo',
+                target_equipo_dict_in_json.get('marca_modelo')
+            )
+
+            target_equipo_dict_in_json['serie'] = request.form.get(
+                'serie',
+                target_equipo_dict_in_json.get('serie')
+            )
+
+            target_equipo_dict_in_json['ubicacion'] = request.form.get(
+                'ubicacion',
+                target_equipo_dict_in_json.get('ubicacion')
+            )
+
+            # ================================================================
+            # Guardar JSON actualizado
+            # ================================================================
+            json_filename_to_save = (
+                f"equipos_{entidad_json_clave.lower().replace(' ', '_')}.json"
+            )
+
+            json_path_to_save = os.path.join(
+                'static',
+                'data',
+                json_filename_to_save
+            )
+
+            with open(
+                json_path_to_save,
+                'w',
+                encoding='utf-8'
+            ) as f:
+
+                json.dump(
+                    datos_json_entidad_especifica,
+                    f,
+                    ensure_ascii=False,
+                    indent=4
+                )
+
+            print(
+                f"DEBUG: JSON actualizado correctamente -> "
+                f"{json_path_to_save}"
+            )
+
+            # ================================================================
+            # Redireccionar nuevamente al mantenimiento
+            # ================================================================
+            return redirect(
+                url_for(
+                    'mantenimiento',
+                    folder_id=folder_id,
+                    entidad_json=entidad_json_clave
+                )
+            )
+
         except Exception as e:
-            # ... (tu manejo de errores, asegúrate de pasar entidad_json_clave si renderizas de nuevo) ...
-            print(f"Error inesperado procesando POST en /Mantenimiento para {folder_id}, entidad {entidad_json_clave}: {e}")
-            # ... Renderizar de nuevo con error_message y entidad_json=entidad_json_clave ...
 
+            print(
+                f"ERROR POST /Mantenimiento/{folder_id}: {e}"
+            )
 
-    # Para GET (mostrar formulario)
-    # ... (tu lógica para firma, nombre_responsable) ...
-    username_session = session.get('username', 'default').lower()
-    nombre_responsable_session = session.get('nombre_completo', 'Usuario del Sistema')
-    firma_filename = f'firma-{username_session}.jpg'
-    firma_path_in_static = os.path.join('images', firma_filename)
-    firma_absolute_path = os.path.join(app.static_folder, firma_path_in_static)
-    firma_relativa_para_template = firma_path_in_static.replace(os.sep, '/') \
-        if os.path.exists(firma_absolute_path) else 'images/firma-marlon.jpg'
+    # =========================================================================
+    # Firma dinámica profesional
+    # =========================================================================
+    username_session = session.get('username')
 
+    usuario_data = USUARIOS.get(username_session)
 
-    datos_del_cliente_especifico = DATOS_CLIENTE_POR_ENTIDAD.get(entidad_json_clave.lower(), {
-        'nombre_cliente': 'Cliente no especificado',
-        'direccion_cliente': 'Dirección no especificada',
-        'ciudad_cliente': 'Ciudad no especificada'
-    })
+    if usuario_data:
 
+        nombre_responsable_session = usuario_data['nombre']
+
+        firma_relativa_para_template = usuario_data.get(
+            'firma',
+            'images/default.png'
+        )
+
+    else:
+
+        nombre_responsable_session = 'Usuario del Sistema'
+
+        firma_relativa_para_template = 'images/default.png'
+
+    # =========================================================================
+    # Datos del cliente según entidad
+    # =========================================================================
+    datos_del_cliente_especifico = DATOS_CLIENTE_POR_ENTIDAD.get(
+
+        entidad_json_clave.lower(),
+
+        {
+            'nombre_cliente': 'Cliente no especificado',
+
+            'direccion_cliente': 'Dirección no especificada',
+
+            'ciudad_cliente': 'Ciudad no especificada'
+        }
+    )
+
+    # =========================================================================
+    # Empresa actual enviada por URL
+    # =========================================================================
     empresa_actual_desde_url = request.args.get('empresa')
+
+    # =========================================================================
+    # Renderizar template
+    # =========================================================================
     return render_template(
+
         'mantenimiento.html',
-        equipo=equipo_encontrado_dict, 
+
+        equipo=equipo_encontrado_dict,
+
         folder_id=folder_id,
+
         firma=firma_relativa_para_template,
+
         nombre_responsable=nombre_responsable_session,
-        entidad_json_actual=entidad_json_clave, # Para que la plantilla lo sepa si es necesario
+
+        entidad_json_actual=entidad_json_clave,
+
         cliente_data=datos_del_cliente_especifico,
+
         empresa_actual=empresa_actual_desde_url
-    )   
+    )
 
 
 # -----------------------------------------------------------------------------
