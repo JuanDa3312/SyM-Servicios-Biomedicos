@@ -26,6 +26,10 @@
             <a href="{{ url_for('servicios_drive', entidad='ayapel', empresa=empresa_seleccionada|default('simbiosas', true) ) }}" class="btn entidad">
                 <i class="fas fa-flask"></i> ESE Hospital San Jorge de Ayapel
             </a>
+
+            <a href="{{ url_for('servicios_drive', entidad='ese_vida_sinu', empresa=empresa_seleccionada|default('simbiosas', true) ) }}" class="btn entidad">
+                <i class="fa-solid fa-kit-medical"></i>ESE VIDA SINU
+            </a>
             {# Si tienes más entidades de Simbiosas, añade 'empresa=empresa_seleccionada' a sus enlaces también #}
         </div>
     </div>
