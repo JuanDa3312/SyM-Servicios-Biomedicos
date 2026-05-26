@@ -122,27 +122,38 @@ DATOS_CLIENTE_POR_ENTIDAD = {
         'ciudad_cliente': 'Montería' 
     }
 }
-# Credenciales de usuarios para el login interno de la aplicación.
-# En un entorno de producción, esto debería manejarse de forma más segura (ej. base de datos con hashes).
-# Credenciales de usuarios para el login interno de la aplicación.
-# En un entorno de producción, esto debería manejarse de forma más segura (ej. base de datos con hashes).
-USUARIOS_SEGUROS = {
-    "JuanA": "JuanA10021",
-    "JuanR": "JuanR1007",
-    "Ivonne":"Ivonne1000",
-    "Marlon": "Marlon10021",
-    "Erika": "Erika53075",
-    
-}
+#Diccionario con usuarios 
+USUARIOS = {
 
-# Nombres completos asociados a los usuarios.
-NOMBRES_COMPLETOS = {
-    "JuanA": "Juan Antonio Ely Ramirez",
-    "JuanR": "Juan Carlos Rojano",
-    "Ivonne": "Ivonne Angarita",
-    "Marlon": "Marlon Rojano Parra",
-    "Erika": "Erika Puello Bernal",
-    
+    "JuanA": {
+        "password": "JuanA10021",
+        "nombre": "Juan Antonio Ely Ramirez",
+        "firma": "images/juana.png"
+    },
+
+    "JuanR": {
+        "password": "JuanR1007",
+        "nombre": "Juan Carlos Rojano",
+        "firma": "images/juanr.png"
+    },
+
+    "Ivonne": {
+        "password": "Ivonne1000",
+        "nombre": "Ivonne Angarita",
+        "firma": "images/ivonne.png"
+    },
+
+    "Marlon": {
+        "password": "Marlon10021",
+        "nombre": "Marlon Rojano Parra",
+        "firma": "images/marlon.png"
+    },
+
+    "Erika": {
+        "password": "Erika53075",
+        "nombre": "Erika Puello Bernal",
+        "firma": "images/erika.png"
+    }
 }
 
 # -----------------------------------------------------------------------------
@@ -514,10 +525,13 @@ def login_backend_procesar():
 
     print(f"DEBUG (/login_backend): Intento de login para usuario: '{username}'")
 
-    if username in USUARIOS_SEGUROS and USUARIOS_SEGUROS[username] == password:
+    usuario_data = USUARIOS.get(username)
+
+    if usuario_data and usuario_data['password'] == password:
         session['logged_in'] = True
         session['username'] = username
-        session['nombre_completo'] = NOMBRES_COMPLETOS.get(username, username)
+        session['nombre_completo'] = usuario_data['nombre']
+        session['firma_usuario'] = usuario_data['firma']
         print(f"DEBUG (/login_backend): Inicio de sesión interno exitoso para '{username}'.")
         
         # En lugar de redirigir directamente a select_empresa,
@@ -1051,54 +1065,57 @@ def filtro():
 
 
 @app.route('/formato_mantenimiento')
+
 def formato_mantenimiento():
-    """
-    Muestra un formato de mantenimiento en blanco.
-    Requiere autenticación de Drive (para asegurar consistencia en el flujo de usuario).
-    """
+
     if not session.get('logged_in'):
         return redirect(url_for('inicio_sesion_pagina'))
-    
-    # Obtener el parámetro 'empresa' de la URL
-    empresa_actual = request.args.get('empresa') 
+
+    empresa_actual = request.args.get('empresa')
+
     service = get_drive_service()
+
     if not service:
-        print("DEBUG (ruta /formato_mantenimiento): No hay servicio Drive. Redirigiendo a /authorize.")
-        
-        # --- MODIFICACIÓN PARA CONSERVAR 'empresa' TRAS AUTORIZACIÓN ---
-        # Guardar la URL completa a la que el usuario intentaba acceder, incluyendo 'empresa'
-        target_url_with_params = url_for('formato_mantenimiento', empresa=empresa_actual, _external=True)
+
+        target_url_with_params = url_for(
+            'formato_mantenimiento',
+            empresa=empresa_actual,
+            _external=True
+        )
+
         session['target_url_after_auth'] = target_url_with_params
-        # --- FIN MODIFICACIÓN ---
-        
-        response = make_response(redirect(url_for('authorize_google_drive')))
-        # No es necesario borrar cookie aquí, get_drive_service lo maneja si falla el refresh.
-        return response
 
-    # Determinar la firma del usuario logueado.
-    username_session = session.get('username', 'default').lower()
-    nombre_responsable_session = session.get('nombre_completo', 'Usuario del Sistema') # Usar nombre completo.
+        return make_response(
+            redirect(url_for('authorize_google_drive'))
+        )
 
-    # Construir ruta relativa a la firma para el template.
-    # Asume que las firmas están en 'static/images/firma-USERNAME.jpg'.
-    firma_filename = f'firma-{username_session}.jpg'
-    firma_path_in_static = os.path.join('images', firma_filename) # Ruta relativa a 'static'
-    firma_absolute_path = os.path.join(app.static_folder, firma_path_in_static)
+    username_session = session.get('username')
 
-    if os.path.exists(firma_absolute_path):
-        firma_relativa_para_template = firma_path_in_static.replace(os.sep, '/') # Asegurar separadores web.
+    usuario_data = USUARIOS.get(username_session)
+
+    if usuario_data:
+
+        nombre_responsable_session = usuario_data['nombre']
+
+        firma_relativa_para_template = usuario_data.get(
+            'firma',
+            'firmas/default.png'
+        )
+
     else:
-        # Firma por defecto si la del usuario no existe.
-        print(f"ADVERTENCIA: Firma no encontrada para '{username_session}' en '{firma_absolute_path}'. Usando firma por defecto.")
-        firma_relativa_para_template = 'images/firma-marlon.jpg' # Asumiendo que esta es la de Marlon.
 
-    print(f"DEBUG (/formato_mantenimiento): Usuario: {username_session}, Firma relativa: {firma_relativa_para_template}")
+        nombre_responsable_session = 'Usuario del Sistema'
 
-    # La cookie se maneja en `after_request`.
+        firma_relativa_para_template = 'firmas/default.png'
+
     return render_template(
-        'formato-preventivo-correctivo.html', # Nombre del template para el formato.
+
+        'formato-preventivo-correctivo.html',
+
         firma=firma_relativa_para_template,
+
         nombre_responsable=nombre_responsable_session,
+
         empresa_actual=empresa_actual
     )
 
