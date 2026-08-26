@@ -14,12 +14,6 @@
             "serie": "NO VISIBLE",
             "ubicacion": "CONSULTORIO 1"
 
-        },"1qRF8bmHpoSup_VVejbL3WU7DV_DXfGil": {
-            "nombre": "FONENDOSCOPIO",
-            "dependencia": "CONSULTA EXTERNA",
-            "marca_modelo": "LLORD / HS-301",
-            "serie": "180301979",
-            "ubicacion": "CONSULTORIO 1"
         },
 
         "1Q_qt9h3V0RYM2c9SBQyLMzwZbqtq7q9J": {
@@ -126,6 +120,13 @@
 
 
     "PROCEDIMIENTOS": {
+        "1qRF8bmHpoSup_VVejbL3WU7DV_DXfGil": {
+            "nombre": "FONENDOSCOPIO SN1504",
+            "dependencia": "CONSULTA EXTERNA",
+            "marca_modelo": "LLORD / HS-301",
+            "serie": "180301979",
+            "ubicacion": "PROCEDIMIENTOS""
+        },
         "1moQgHrQr9AQGENJm5dk0gYG6mKfgpYPg": {
             "nombre": "AUTOCLAVE",
             "dependencia": "PROCEDIMIENTOS",
