@@ -122,10 +122,10 @@
     "PROCEDIMIENTOS": {
         "1qRF8bmHpoSup_VVejbL3WU7DV_DXfGil": {
             "nombre": "FONENDOSCOPIO SN1504",
-            "dependencia": "CONSULTA EXTERNA",
+            "dependencia": "PROCEDIMIENTOS",
             "marca_modelo": "LLORD / HS-301",
             "serie": "180301979",
-            "ubicacion": "PROCEDIMIENTOS"
+            "ubicacion": "SALA DE PROCEDIMIENTOS"
         },
         "1moQgHrQr9AQGENJm5dk0gYG6mKfgpYPg": {
             "nombre": "AUTOCLAVE",
