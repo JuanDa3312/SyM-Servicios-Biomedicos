@@ -68,9 +68,158 @@
     "1r1V2QS5lrit2IoL8RwpQwkbd271sorMa": {
       "nombre": "GLUCOMETRO",
       "dependencia": "CONSULTA EXTERNA",
-      "marca_modelo": "VIVACHECK / CO",
+      "marca_modelo": "VIVACHECK / ECO",
       "serie": "302S0000047",
       "ubicacion": "CONSULTORIO 2"
+    },
+    "1rIZhB4LmKa9sC06IySaoEfGp_TSjn-7c": {
+      "nombre": "TERMOMETRO",
+      "dependencia": "CONSULTA EXTERNA",
+      "marca_modelo": "Valcri / DT008",
+      "serie": "241200447",
+      "ubicacion": "CONSULTORIO 2"
+    }
+  },
+  "FISIOTERAPIA": {
+    "1z3Qt1-Qs8_uXRu5qz86HmZPduTm579B2": {
+      "nombre": "ULTRASONIDO PORTATIL",
+      "dependencia": "FISIOTERAPIA",
+      "marca_modelo": "US1000 / US1000N 3A EDITION",
+      "serie": "DU1025",
+      "ubicacion": "AREA DE FISIOTERAPIA"
+    },
+    "1XWCzORd_mHjmD2ye4b3wFj21ofsRHquV": {
+      "nombre": "ESTIMULADOR PORTATIL",
+      "dependencia": "FISIOTERAPIA",
+      "marca_modelo": "CHATTANOOGA / PHYSIO",
+      "serie": "ZIS008286",
+      "ubicacion": "AREA DE FISIOTERAPIA"
+    },
+    "19bUpSS4Ma5KWkRsdkI9hDm7F1umwCqF5": {
+      "nombre": "PRESOTERAPIA",
+      "dependencia": "FISIOTERAPIA",
+      "marca_modelo": "MEICOL / PRESSOR PLUSS",
+      "serie": "132TD1021011",
+      "ubicacion": "AREA DE FISIOTERAPIA"
+    }
+  },
+  "PROCEDIMIENTOS": {
+    "1Lsmmjz2Hob3HwpDZojJj8mlbXHVzloN1": {
+      "nombre": "REGULADOR MEDICINAL DE OXIGENO",
+      "dependencia": "PROCEDIMIENTOS",
+      "marca_modelo": "GMR / CGA870",
+      "serie": "20071451",
+      "ubicacion": "SALA DE PROCEDIMIENTOS"
+    }
+  },
+  "FARMACIA": {
+    "1UpyxF_eSM575U4XX_h0DiSKSIuOwtRiD": {
+      "nombre": "TERMOMETRO",
+      "dependencia": "FARMACIA",
+      "marca_modelo": "DIGITAL THERMOMETER",
+      "serie": "NO VISIBLE",
+      "ubicacion": "FARMACIA"
+    },
+    "1RnpgQqkZim13LR-Vb1SFF6B7TDbG2_AU": {
+      "nombre": "TERMOHIGROMETRO",
+      "dependencia": "FARMACIA",
+      "marca_modelo": "HERALD & BARNE / DIGITAL",
+      "serie": "NO VISIBLE",
+      "ubicacion": "FARMACIA-ALMACEN"
+    },
+    "1WCMrJjkVZu1KC6N3Bs6GzqK8PDjeOOFI": {
+      "nombre": "TERMOHIGROMETRO",
+      "dependencia": "FARMACIA",
+      "marca_modelo": "HERALD & BARNE / DIGITAL",
+      "serie": "NO VISIBLE",
+      "ubicacion": "FARMACIA - RECEPCIÓN"
+    },
+    "1L2K1KPBxII9J_O5YqgP4vfvv91jtx1Y7": {
+      "nombre": "NEVERA DE TRANSPORTE CON TERMOHIGOMETRO",
+      "dependencia": "FARMACIA",
+      "marca_modelo": "NEVERA 10L CLASSIC",
+      "serie": "V20231023",
+      "ubicacion": "FARMACIA"
+    },
+    "1B-Azea6enxMV-fIP5_C5yDDToAf-_rom": {
+      "nombre": "TERMOMETRO DIGITAL DE PUNZON",
+      "dependencia": "FARMACIA",
+      "marca_modelo": "BRIXCO / 5065 - TP101",
+      "serie": "NO VISIBLE",
+      "ubicacion": "FARMACIA"
+    }
+  },
+  "GASES MEDICINALES": {
+    "19pp4O89P3atTaUyQ3IIxZVnwfCT_ouVd": {
+      "nombre": "REGULADOR DE OXIGENO MEDICINAL",
+      "dependencia": "GASES MEDICINALES",
+      "marca_modelo": "GMR / CGA870",
+      "serie": "21100104",
+      "ubicacion": "GASES MEDICINALES"
+    },
+    "1cSlNqVrcgnAyfagHVqfbvlOyKEJBc_SP": {
+      "nombre": "REGULADOR DE OXIGENO MEDICINAL",
+      "dependencia": "GASES MEDICINALES",
+      "marca_modelo": "GMR / CGA870",
+      "serie": "20071452",
+      "ubicacion": "GASES MEDICINALES"
+    }
+  },
+  "CIRUGIA": {
+    "1Xu428uHkDp7GF_V8RrazBevWn2fcLhEM": {
+      "nombre": "GLUCOMETRO",
+      "dependencia": "CIRUGIA",
+      "marca_modelo": "VIVACHEK / ECO",
+      "serie": "312Q00006C1",
+      "ubicacion": "CIRUGIA - PREPARACIÓN"
+    },
+    "1RHrGccse5LmLSm6KSdIKVrhMbYUKiNo6": {
+      "nombre": "TERMOHIGOMETRO",
+      "dependencia": "CIRUGIA",
+      "marca_modelo": "DIGITAL THERMOMETER / HTC-2",
+      "serie": "80000292",
+      "ubicacion": "CIRUGIA-QUIROFANO"
+    },
+    "1Ibz6Zo2NTuGkxZLjaDZcyGs2EM02KCem": {
+      "nombre": "FONENDOSCOPIO",
+      "dependencia": "CIRUGIA",
+      "marca_modelo": "LORD / LORD",
+      "serie": "NO VISIBLE",
+      "ubicacion": "CIRUGIA-QUIROFANO"
+    }
+  },
+  "ARCHIVO": {
+    "1CWbGnPSaD5WoXlGM_oV2JbdW3Bzzq1ge": {
+      "nombre": "TERMOHIGOMETRO",
+      "dependencia": "ARCHIVO",
+      "marca_modelo": "GREEN TECH / HTC-2",
+      "serie": "2040548403",
+      "ubicacion": "ARCHIVO"
+    }
+  },
+  "ALMACENAMIENTO": {
+    "1ZHtD4Mz2zYrWpNLDspBVWnQ7lc_DaFQo": {
+      "nombre": "EQUIPO DE ORGANOS",
+      "dependencia": "ALMACENAMIENTO",
+      "marca_modelo": "WELCHALLYN / SKANE APELES FALLS",
+      "serie": "13010",
+      "ubicacion": "ALMACENAMIENTO"
+    },
+    "1yl4qHt6Oj5v7fWtakFaAfd5neef6tGwd": {
+      "nombre": "TERMOHIGOMETRO DIGITAL",
+      "dependencia": "ALMACENAMIENTO",
+      "marca_modelo": "KTK / TA318",
+      "serie": "202606",
+      "ubicacion": "NEVERA ALMACEN CENTRAL"
+    }
+  },
+  "CUARTO DE EQUIPOS": {
+    "1TdSnxZ_YAbS7CyPU0oAed4A4wd5NxdOn": {
+      "nombre": "MONITOR DE SIGNOS VITALES MULTIPARAMETRO",
+      "dependencia": "CUARTO DE EQUIPOS",
+      "marca_modelo": "COMEN / STAR8000E",
+      "serie": "E7210512144",
+      "ubicacion": "CUARTO DE EQUIPOS"
     }
   }
 }
